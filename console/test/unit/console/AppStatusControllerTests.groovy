@@ -1,6 +1,5 @@
+
 package console
-
-
 
 import org.junit.*
 import grails.test.mixin.*
@@ -9,10 +8,13 @@ import grails.test.mixin.*
 @Mock(AppStatus)
 class AppStatusControllerTests {
 
-    def populateValidParams(params) {
+    def populateValidParams(params) 
+	{
         assert params != null
-        // TODO: Populate valid properties like...
-        //params["name"] = 'someValidName'
+		
+        params["lastUpdate"] = new Date() 
+		params["runningOK"] = true;
+		params["message"] = "This is a test object"
     }
 
     void testIndex() {
@@ -101,7 +103,7 @@ class AppStatusControllerTests {
 
         // test invalid parameters in update
         params.id = appStatus.id
-        //TODO: add invalid values to params object
+		params["lastUpdate"] = "Jango Boogaloo"
 
         controller.update()
 
