@@ -19,8 +19,12 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+			pooled = true
+			dbCreate = "update"
+			url = "jdbc:mysql://ec2-23-21-211-172.compute-1.amazonaws.com/console-test"
+			driverClassName = "com.mysql.jdbc.Driver"
+			username = "museum-test"
+			password = "museum@11"
         }
     }
     production {
