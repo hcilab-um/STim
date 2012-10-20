@@ -9,5 +9,7 @@ import org.junit.*
 @TestFor(AppStatus)
 class AppStatusTests 
 {
-
+	void testVoid() 
+	{
+	}
 }
