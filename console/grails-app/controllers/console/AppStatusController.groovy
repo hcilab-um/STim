@@ -1,6 +1,7 @@
 package console
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.converters.JSON
 
 class AppStatusController {
 
@@ -12,7 +13,19 @@ class AppStatusController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        [appStatusInstanceList: AppStatus.list(params), appStatusInstanceTotal: AppStatus.count()]
+		def instanceList = AppStatus.list(params)
+		
+		withFormat
+		{
+			html 
+			{
+				[appStatusInstanceList: instanceList, appStatusInstanceTotal: AppStatus.count()]
+			}
+			json 
+			{
+				render instanceList as JSON
+			}
+		}
     }
 
     def create() {
