@@ -11,7 +11,6 @@ class AppStatusControllerTests {
     def populateValidParams(params) 
 	{
         assert params != null
-		
         params["lastUpdate"] = new Date() 
 		params["runningOK"] = true;
 		params["message"] = "This is a test object"

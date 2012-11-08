@@ -26,6 +26,8 @@ class AppStatusController {
 				render instanceList as JSON
 			}
 		}
+		
+		
     }
 
     def create() {
@@ -33,12 +35,23 @@ class AppStatusController {
     }
 
     def save() {
-        def appStatusInstance = new AppStatus(params)
+		def appStatusInstance
+		withFormat
+		{
+			html
+			{
+				appStatusInstance = new AppStatus(params)
+			}
+			json
+			{
+				appStatusInstance = new AppStatus(request.JSON)
+			}
+		}
+		
         if (!appStatusInstance.save(flush: true)) {
             render(view: "create", model: [appStatusInstance: appStatusInstance])
             return
         }
-
         flash.message = message(code: 'default.created.message', args: [message(code: 'appStatus.label', default: 'AppStatus'), appStatusInstance.id])
         redirect(action: "show", id: appStatusInstance.id)
     }
@@ -51,7 +64,17 @@ class AppStatusController {
             return
         }
 
-        [appStatusInstance: appStatusInstance]
+		withFormat
+		{
+			html
+			{
+				[appStatusInstance: appStatusInstance]
+			}
+			json
+			{
+				render appStatusInstance as JSON
+			}
+		}
     }
 
     def edit(Long id) {
