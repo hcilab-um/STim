@@ -2,6 +2,7 @@
 package console
 
 import org.junit.*
+import grails.converters.JSON
 import grails.test.mixin.*
 
 @TestFor(AppStatusController)
@@ -13,9 +14,19 @@ class AppStatusControllerTests {
         assert params != null
         params["lastUpdate"] = new Date() 
 		params["runningOK"] = true;
-		params["message"] = "This is a test object"
+		params["message"] = "This is a html test object"
     }
-
+	def populateValidJSONRequest(params)
+	{
+		
+        assert params != null
+        params["lastUpdate"] = new Date() 
+		params["runningOK"] = true;
+		params["message"] = "This is a JSON test object"
+		
+		request.JSON = render (new AppStatus(params)) as JSON
+		assert params.request.format =="JSON"
+	}
     void testIndex() {
         controller.index()
         assert "/appStatus/list" == response.redirectedUrl
@@ -36,19 +47,30 @@ class AppStatusControllerTests {
     }
 
     void testSave() {
-        controller.save()
+		
+		//test saving a null instance
+		controller.save()
 
         assert model.appStatusInstance != null
         assert view == '/appStatus/create'
 
         response.reset()
-
-        populateValidParams(params)
+		
+		//test saving valid html request
+        /*populateValidParams(params)
         controller.save()
 
         assert response.redirectedUrl == '/appStatus/show/1'
         assert controller.flash.message != null
         assert AppStatus.count() == 1
+		*/
+		//test saving valid json request
+		populateValidJSONRequest(request)
+		controller.save()
+		
+		assert response.redirectedUrl == '/appStatus/show/1.json'
+		assert controller.flash.message != null
+		assert AppStatus.count() == 1
     }
 
     void testShow() {
