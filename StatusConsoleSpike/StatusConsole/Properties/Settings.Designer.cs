@@ -25,7 +25,7 @@ namespace StatusConsole.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://console-test.wag.cloudbees.net")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8080/console")]
         public string AppUriString {
             get {
                 return ((string)(this["AppUriString"]));

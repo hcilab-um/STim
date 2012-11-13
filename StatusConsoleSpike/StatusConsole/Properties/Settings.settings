@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="AppUriString" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://console-test.wag.cloudbees.net</Value>
+      <Value Profile="(Default)">http://localhost:8080/console</Value>
     </Setting>
   </Settings>
 </SettingsFile>
