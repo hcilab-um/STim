@@ -1,0 +1,187 @@
+﻿<UserControl x:Class="STimWPF.Controls.BoxMethodLayoutControl" x:Name="bmlControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:STimWPF.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+	<UserControl.Resources>
+
+		<converters:HighlightedOrSelectedKeyConverter x:Key="hskConverter" />
+		<converters:TimerLocationConverter x:Key="tlConverter"/>
+		<converters:MethodVisibilityConverter x:Key="mvConverter"/>
+
+		<DoubleAnimation x:Key="StartSelectionAnimationWidth" Storyboard.TargetProperty="Width" From="15" To="50" Duration="0:0:1"/>
+		<DoubleAnimation x:Key="StartSelectionAnimationHeight" Storyboard.TargetProperty="Height" From="15" To="50" Duration="0:0:1"/>
+		<DoubleAnimation x:Key="StartSelectionAnimationColor" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"/>
+		<DoubleAnimation x:Key="StopSelectionAnimationColor" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0" />
+
+		<DoubleAnimation x:Key="EnableLockAnimationColor" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"/>
+		<DoubleAnimation x:Key="DisableLockAnimationColor" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0" />
+
+		<Style x:Key="KeyStyle" TargetType="{x:Type Label}">
+			<Setter Property="FontSize" Value="20"/>
+			<Setter Property="Background">
+				<Setter.Value>
+					<MultiBinding Converter="{StaticResource ResourceKey=hskConverter}">
+						<Binding ElementName="bmlControl" Path="HighlightedKey"/>
+						<Binding ElementName="bmlControl" Path="SelectedKey"/>
+						<Binding RelativeSource="{RelativeSource Mode=Self}" Path="Tag"/>
+						<Binding ElementName="bmlControl" Path="TargetKey"/>
+						<!--<Binding RelativeSource="{RelativeSource Mode=Self}" Path="Background"/>-->
+					</MultiBinding>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Label}">
+						<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+							<Rectangle RadiusX="5" RadiusY="5" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                         Fill="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Label}, Path=Background}"></Rectangle>
+							<ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" />
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</UserControl.Resources>
+
+	<Grid>
+		<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+				<RowDefinition/>
+				<RowDefinition/>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="0" Grid.Row="0" Tag="A" Content="{Binding ElementName=bmlControl, Path=TargetKey}"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="1" Grid.Row="0" Tag="B"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="2" Grid.Row="0" Tag="C"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="3" Grid.Row="0" Tag="D"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="4" Grid.Row="0" Tag="E"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="5" Grid.Row="0" Tag="F"/>
+
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="0" Grid.Row="1" Tag="G"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="1" Grid.Row="1" Tag="H"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="2" Grid.Row="1" Tag="I"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="3" Grid.Row="1" Tag="J"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="4" Grid.Row="1" Tag="K"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="5" Grid.Row="1" Tag="L"/>
+
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="0" Grid.Row="2" Tag="M"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="1" Grid.Row="2" Tag="N"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="2" Grid.Row="2" Tag="O"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="3" Grid.Row="2" Tag="P"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="4" Grid.Row="2" Tag="Q"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="5" Grid.Row="2" Tag="R"/>
+
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="0" Grid.Row="3" Tag="S"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="1" Grid.Row="3" Tag="T"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="2" Grid.Row="3" Tag="U"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="3" Grid.Row="3" Tag="V"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="4" Grid.Row="3" Tag="W"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="5" Grid.Row="3" Tag="X"/>
+
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="0" Grid.Row="4" Tag="Y"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="1" Grid.Row="4" Tag="Z"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="2" Grid.Row="4" Tag="D0"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="3" Grid.Row="4" Tag="D1"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="4" Grid.Row="4" Tag="D2"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="5" Grid.Row="4" Tag="D3"/>
+
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="0" Grid.Row="5" Tag="D4"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="1" Grid.Row="5" Tag="D5"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="2" Grid.Row="5" Tag="D6"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="3" Grid.Row="5" Tag="D7"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="4" Grid.Row="5" Tag="D8"/>
+			<Label Style="{StaticResource ResourceKey=KeyStyle}" Grid.Column="5" Grid.Row="5" Tag="D9"/>
+		</Grid>
+
+		<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
+			<Ellipse x:Name="eCursor" Fill="Red" Width="15" Height="15" Opacity="0.7" Canvas.Left="10" Canvas.Top="100" />
+
+			<Ellipse x:Name="eCursorLock" Fill="Blue" Width="15" Height="15" Opacity="0.7" Canvas.Left="20" Canvas.Top="120">
+				<Ellipse.Style>
+					<Style>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding ElementName=bmlControl, Path=TimerState}" Value="Running">
+								<DataTrigger.EnterActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<StaticResource ResourceKey="EnableLockAnimationColor" />
+										</Storyboard>
+									</BeginStoryboard>
+								</DataTrigger.EnterActions>
+								<DataTrigger.ExitActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<StaticResource ResourceKey="DisableLockAnimationColor" />
+										</Storyboard>
+									</BeginStoryboard>
+								</DataTrigger.ExitActions>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Ellipse.Style>
+			</Ellipse>
+
+			<Ellipse x:Name="sSelectionTimer" Fill="Green" Width="50" Height="50" Opacity="0.7"
+               Visibility="{Binding ElementName=bmlControl, Path=ShowTimer, Converter={StaticResource ResourceKey=mvConverter}, ConverterParameter=Timer}">
+				<Canvas.Left>
+					<MultiBinding Converter="{StaticResource ResourceKey=tlConverter}" ConverterParameter="Left">
+						<Binding ElementName="eCursor" Path="ActualWidth"/>
+						<Binding ElementName="bmlControl" Path="ActualWidth"/>
+						<Binding ElementName="bmlControl" Path="CursorPosition"/>
+						<Binding ElementName="sSelectionTimer" Path="ActualWidth"/>
+					</MultiBinding>
+				</Canvas.Left>
+				<Canvas.Top>
+					<MultiBinding Converter="{StaticResource ResourceKey=tlConverter}" ConverterParameter="Top">
+						<Binding ElementName="eCursor" Path="ActualHeight"/>
+						<Binding ElementName="bmlControl" Path="ActualHeight"/>
+						<Binding ElementName="bmlControl" Path="CursorPosition"/>
+						<Binding ElementName="sSelectionTimer" Path="ActualHeight"/>
+					</MultiBinding>
+				</Canvas.Top>
+				<Ellipse.Style>
+					<Style>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding ElementName=bmlControl, Path=TimerState}" Value="Running">
+								<DataTrigger.EnterActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<ParallelTimeline>
+												<StaticResource ResourceKey="StartSelectionAnimationWidth" />
+												<StaticResource ResourceKey="StartSelectionAnimationHeight" />
+												<StaticResource ResourceKey="StartSelectionAnimationColor" />
+											</ParallelTimeline>
+										</Storyboard>
+									</BeginStoryboard>
+								</DataTrigger.EnterActions>
+								<DataTrigger.ExitActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<StaticResource ResourceKey="StopSelectionAnimationColor" />
+										</Storyboard>
+									</BeginStoryboard>
+								</DataTrigger.ExitActions>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Ellipse.Style>
+			</Ellipse>
+		</Canvas>
+	</Grid>
+</UserControl>
