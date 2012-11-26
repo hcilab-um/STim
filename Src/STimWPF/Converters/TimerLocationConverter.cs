@@ -6,7 +6,6 @@ using System.Windows.Data;
 using System.Windows;
 using System.Windows.Controls;
 using STimWPF.Util;
-using System.Windows.Media.Media3D;
 
 namespace STimWPF.Converters
 {

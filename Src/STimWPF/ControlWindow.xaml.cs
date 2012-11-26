@@ -17,7 +17,6 @@ using STimWPF.Properties;
 using System.IO;
 using Microsoft.Kinect;
 using System.Windows.Threading;
-using STimWPF.Pointing;
 using STimWPF.Interaction;
 
 namespace STimWPF
@@ -25,10 +24,10 @@ namespace STimWPF
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window, INotifyPropertyChanged
+	public partial class ControlWindow : Window, INotifyPropertyChanged
 	{
 
-		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(typeof(MainWindow));
+		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(typeof(ControlWindow));
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -53,7 +52,7 @@ namespace STimWPF
 			}
 		}
 
-		public MainWindow(App appInst)
+		public ControlWindow(App appInst)
 		{
 			InitializeComponent();
 			appInstance = appInst;
@@ -140,7 +139,6 @@ namespace STimWPF
 		private void bReset_Click(object sender, RoutedEventArgs e)
 		{
 			CoreInstance.SkeletonF.Reset();
-			CoreInstance.InteractionCtr.InteractionMethod.Reset();
 			appInstance.TextEntryW.Reset();
 			
 		}

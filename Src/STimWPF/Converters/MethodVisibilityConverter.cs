@@ -5,7 +5,6 @@ using System.Text;
 using System.Windows.Data;
 using System.Windows;
 using STimWPF.Interaction;
-using STimWPF.Pointing;
 
 namespace STimWPF.Converters
 {
@@ -15,8 +14,8 @@ namespace STimWPF.Converters
 		{
 			if ("Timer".Equals(parameter as String) && (bool)value)
 				return Visibility.Visible;
-			if ("Box".Equals(parameter as String) && (value is BoxInteractionMethod))
-				return Visibility.Visible;
+			//if ("Box".Equals(parameter as String) && (value is BoxInteractionMethod))
+			//  return Visibility.Visible;
 			return Visibility.Hidden;
 		}
 

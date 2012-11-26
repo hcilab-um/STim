@@ -9,14 +9,10 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System.Threading;
 using STimWPF.Interaction;
-using System.Windows.Media.Media3D;
 using STimWPF.Util;
-using STimWPF.Pointing;
 
 namespace STimWPF.Interaction
 {
-
-	public delegate void KeySelectedEventHandler(object sender, KeySelectedEventArgs e);
 
 	public class InteractionController : INotifyPropertyChanged
 	{
@@ -26,13 +22,19 @@ namespace STimWPF.Interaction
 
 		private Point3D cursorLocation;
 		private Point3D secCursorLocation;
-		private Key highlightedKey;
-		private Key selectedKey;
 		private SelectionMethod selectionMethod;
-
-		private InteractionMethod mainInteractionMethod;
-
 		private InteractionZone interactionZone;
+
+		private Point3D planeOrigin;
+		private double planeRadius;
+
+		//joints
+		public JointType Shoulder { get; set; }
+		public JointType Elbow { get; set; }
+		public JointType Wrist { get; set; }
+		public JointType Hand { get; set; }
+		public JointType Hip { get; set; }
+		public JointType Head { get; set; }
 
 		public GestureRecognizer Recognizer { get; set; }
 
@@ -46,30 +48,7 @@ namespace STimWPF.Interaction
 			}
 		}
 
-
-		public Key HighlightedKey
-		{
-			get { return highlightedKey; }
-			set
-			{
-				if (highlightedKey == value)
-					return;
-				highlightedKey = value;
-				OnPropertyChanged("HighlightedKey");
-			}
-		}
-
-		public Key SelectedKey
-		{
-			get { return selectedKey; }
-			set
-			{
-				if (selectedKey == value)
-					return;
-				selectedKey = value;
-				OnPropertyChanged("SelectedKey");
-			}
-		}
+		public Rect MouseBoundaries { get; set; }
 
 		public SelectionMethod SelectionMethod
 		{
@@ -78,16 +57,6 @@ namespace STimWPF.Interaction
 			{
 				selectionMethod = value;
 				OnPropertyChanged("SelectionMethod");
-			}
-		}
-
-		public InteractionMethod InteractionMethod
-		{
-			get { return mainInteractionMethod; }
-			set
-			{
-				mainInteractionMethod = value;
-				OnPropertyChanged("TypingMethod");
 			}
 		}
 
@@ -127,8 +96,7 @@ namespace STimWPF.Interaction
 
 		public InteractionController()
 		{
-			InteractionMethod = new BoxInteractionMethod();
-
+			planeRadius = -1;
 			Recognizer = new GestureRecognizer();
 			PropertyChanged += new PropertyChangedEventHandler(Recognizer.InteractionCtrngine_PropertyChanged);
 
@@ -141,12 +109,9 @@ namespace STimWPF.Interaction
 		{
 			if (skeleton == null)
 				return false;
-			if (InteractionMethod == null)
-				return false;
-
 			//++totalFrames;
 			//SkeletonCapture capture = new SkeletonCapture() { Delay = deltaMilliseconds, Skeleton = skeleton, FrameNro = totalFrames };
-			//Thread backgroundThread = new Thread(ProcessTypingData);
+			//Thread backgroundThread = new Thread(ProcessInteractionData);
 			//backgroundThread.Priority = ThreadPriority.AboveNormal;
 			//backgroundThread.Start(capture);
 			DoWork(skeleton, deltaMilliseconds, interactionZone);
@@ -154,45 +119,62 @@ namespace STimWPF.Interaction
 			return true;
 		}
 
-		public void ProcessTypingData(object data)
-		{
-			SkeletonCapture capture = (SkeletonCapture)data;
-			double deltaTimeMilliseconds = capture.Delay;
-			Skeleton skeleton = capture.Skeleton;
-			int threadFrame = capture.FrameNro;
-			int _currentFrame = 0;
-
-			do
-			{
-				processingWaitHandle.WaitOne();
-				lock (processingLock)
-					_currentFrame = currentFrame;
-				if (_currentFrame != threadFrame)
-					processingWaitHandle.Set();
-			} while (_currentFrame != threadFrame);
-
-			DoWork(skeleton, deltaTimeMilliseconds, InteractionZone);
-
-			lock (processingLock)
-				currentFrame++;
-			processingWaitHandle.Set();
-		}
-
 		private void DoWork(Skeleton skeleton, double deltaMilliseconds, InteractionZone interactionZone)
 		{
 			Size layoutSize = new Size(35, 35);
+			bool leftClick = false;
+			if (interactionZone == Interaction.InteractionZone.Interaction)
+			{
+				//1- find the position of the cursor on the layout plane
+				CursorLocation = FindCursorPosition(skeleton, MouseBoundaries, selectionMethod);
+				//3- Looks for gestures [pressed, released]
+				ICollection<InteractionGesture> gestures = Recognizer.ProcessGestures(skeleton, deltaMilliseconds, cursorLocation, secCursorLocation, selectionMethod, HasUserClicked);
+				if (gestures != null && gestures.Count > 0 && gestures.ElementAt(0).Type == GestureType.Tap)
+				{
+					leftClick = true;
+				}
+				MouseController.SendMouseInput((int)CursorLocation.X, (int)CursorLocation.Y, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, leftClick);
+			}
+		}
 
-			//1- find the position of the cursor on the layout plane
-			CursorLocation = InteractionMethod.FindCursorPosition(skeleton, layoutSize, selectionMethod, interactionZone);
+		private Point3D FindCursorPosition(Skeleton skeleton, Rect boundary, SelectionMethod selectionM)
+		{
+			Shoulder = JointType.ShoulderRight;
+			Elbow = JointType.ElbowRight;
+			Wrist = JointType.WristRight;
+			Hand = JointType.HandRight;
+			Hip = JointType.HipRight;
+			Head = JointType.Head;
+
+			Joint shoulder = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Shoulder);
+			Joint elbow = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Elbow);
+			Joint wrist = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Wrist);
+			Joint hand = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Hand);
+			Joint hip = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Hip);
+			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
 			
-			//3- Looks for gestures [pressed, released]
-			ICollection<InteractionGesture> gestures = Recognizer.ProcessGestures(skeleton, deltaMilliseconds, cursorLocation, secCursorLocation, selectionMethod, highlightedKey, HasUserClicked);
+			if (planeRadius == -1)
+			{
+				System.Windows.Media.Media3D.Vector3D elbowP = new System.Windows.Media.Media3D.Vector3D(elbow.Position.X, elbow.Position.Y, elbow.Position.Z);
+				System.Windows.Media.Media3D.Vector3D shoulderP = new System.Windows.Media.Media3D.Vector3D(shoulder.Position.X, shoulder.Position.Y, shoulder.Position.Z);
+				System.Windows.Media.Media3D.Vector3D wristP = new System.Windows.Media.Media3D.Vector3D(wrist.Position.X, wrist.Position.Y, wrist.Position.Z);
+				planeRadius = ToolBox.CalculateDisplacement(elbowP, shoulderP).Length + ToolBox.CalculateDisplacement(elbowP, wristP).Length/2;
+			}
+			planeOrigin.X = shoulder.Position.X - planeRadius;
+			planeOrigin.Y = shoulder.Position.Y + planeRadius;
+			Point3D cursorP = new Point3D(-1, -1, -1);
 
-			//4- Passes it on to the typing method itself
-			InteractionStatus status = InteractionMethod.ProcessNewFrame(CursorLocation, gestures, skeleton, deltaMilliseconds);
-			HighlightedKey = status.HighlightedKey;
-			SelectedKey = status.SelectedKey;
-
+			double pointerPosX = (hand.Position.X + wrist.Position.X) / 2;
+			double distX = pointerPosX - planeOrigin.X;
+			double pointerPosY = (hand.Position.Y + wrist.Position.Y) / 2;
+			double distY = planeOrigin.Y - pointerPosY;
+			if (distX < 0 || distY < 0)
+				return cursorP;
+			if (distX > 2 * planeRadius || distY > 2 * planeRadius)
+				return cursorP;
+			cursorP.X = distX / (2 * planeRadius) * boundary.Width + boundary.X;
+			cursorP.Y = distY / (2 * planeRadius) * boundary.Height + boundary.Y;
+			return cursorP;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

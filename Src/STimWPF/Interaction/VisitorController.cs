@@ -9,7 +9,7 @@ using STimWPF.Util;
 
 namespace STimWPF.Interaction
 {
-	public class UserController: INotifyPropertyChanged
+	public class VisitorController: INotifyPropertyChanged
 	{
 		//If there is a displacement of at least the value below of in the dimension of the push then the values
 		// on the two other dimensions are blocked.
@@ -28,18 +28,20 @@ namespace STimWPF.Interaction
 				OnPropertyChanged("InteractionZone");
 			}
 		}
+
 		public JointType Head { get; set; }
 
-		public UserController()
+		public VisitorController()
 		{
  
 		}
+
 		public void DetectUserPosition(Skeleton skeleton)
 		{
 			Head = JointType.Head;
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
-			Point3D kinectLocation = new Point3D();
-			Point3D headLocation = new Point3D(head.Position.X, head.Position.Y, head.Position.Z);
+			STimWPF.Util.Point3D kinectLocation = new STimWPF.Util.Point3D();
+			STimWPF.Util.Point3D headLocation = new STimWPF.Util.Point3D(head.Position.X, head.Position.Y, head.Position.Z);
 			double userDistance = ToolBox.CalculateDisplacement((System.Windows.Media.Media3D.Vector3D)headLocation, (System.Windows.Media.Media3D.Vector3D)kinectLocation).Length;
 			if (userDistance < CLOSE_CONSTRAIN)
 			{

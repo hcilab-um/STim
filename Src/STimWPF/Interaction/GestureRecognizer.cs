@@ -6,8 +6,8 @@ using Microsoft.Kinect;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using System.Windows.Media.Media3D;
 using STimWPF.Interaction;
+using STimWPF.Util;
 
 namespace STimWPF.Interaction
 {
@@ -16,8 +16,6 @@ namespace STimWPF.Interaction
 
 		//Lateral movement is given in percentage of the layout, from [0..1)
 		private const double LATERAL_THRESHOLD_TIMER = 0.01;
-		//Lateral movement in the second hand is a distance in meters from the hip
-		private const double LATERAL_THRESHOLD_SECOND_HAND = 0.2;
 
 		private Point3D lastPos = new Point3D(0, 0, 0);
 		private StringBuilder movementSequenceSB = new StringBuilder();
@@ -25,7 +23,7 @@ namespace STimWPF.Interaction
 
 		//Variables for the SelectionMethod.Timer selection
 		private static readonly String REGEX_START_TIMER = "(M|S){15}";
-		private static readonly String TAP_REGEX_TIMER = "(M|S){18}";
+		private static readonly String TAP_REGEX_TIMER = "(M|S){25}";
 		private Regex regexStartTimer = new Regex(REGEX_START_TIMER);
 		private Regex regexTapTimer = new Regex(TAP_REGEX_TIMER);
 
@@ -49,18 +47,18 @@ namespace STimWPF.Interaction
 		}
 
 		internal ICollection<InteractionGesture> ProcessGestures(Skeleton skeleton, double deltaTimeMilliseconds, Point3D cursor, Point3D secondaryCursor,
-			SelectionMethod selectionM, Key highlightedKey, bool userClicked)
+			SelectionMethod selectionM, bool userClicked)
 		{
 			List<InteractionGesture> gestures = null;
 
 			if (selectionM == SelectionMethod.Timer)
-				gestures = ProcessGesturesTimer(cursor, deltaTimeMilliseconds, highlightedKey);
+				gestures = ProcessGesturesTimer(cursor, deltaTimeMilliseconds);
 			else if (selectionM == SelectionMethod.Click)
 				gestures = ProcessGesturesClick(cursor, userClicked);
 			return gestures;
 		}
 
-		private List<InteractionGesture> ProcessGesturesTimer(Point3D cursor, double delta, Key highlightedKey)
+		private List<InteractionGesture> ProcessGesturesTimer(Point3D cursor, double delta)
 		{
 			if (cursor.X == -1 || cursor.Y == -1)
 				return null;
@@ -138,12 +136,6 @@ namespace STimWPF.Interaction
 		internal void InteractionCtrngine_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if ("SelectionMethod".Equals(e.PropertyName))
-			{
-				movementSequenceSB.Clear();
-				movementSequence.Clear();
-				TimerState = STimWPF.Interaction.TimerState.Nothing;
-			}
-			else if ("HighlightedKey".Equals(e.PropertyName))
 			{
 				movementSequenceSB.Clear();
 				movementSequence.Clear();

@@ -17,8 +17,8 @@ namespace STimWPF
 	public partial class App : Application
 	{
 
-		public MainWindow MainW { get; set; }
-		public TextEntryWindow TextEntryW { get; set; }
+		public ControlWindow MainW { get; set; }
+		public ContentWindow TextEntryW { get; set; }
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
@@ -27,8 +27,8 @@ namespace STimWPF
 			String destFolder = Settings.Default.DestFolder.Replace("{USERNAME}", Environment.UserName);
 			Core.Instance.Initialize(Dispatcher, Settings.Default.SkeletonBufferSize, destFolder, Settings.Default.PlayerBufferSize);
 
-			MainW = new MainWindow(this);
-			TextEntryW = new TextEntryWindow(this);
+			MainW = new ControlWindow(this);
+			TextEntryW = new ContentWindow(this);
 
 			MainW.Show();
 			TextEntryW.Show();

@@ -21,14 +21,11 @@ namespace STimWPF
 
 		public SkeletonFilter SkeletonF { get; set; }
 		public InteractionController InteractionCtr { get; set; }
-		public UserController UserCtr { get; set; }
+		public VisitorController VisitorCtr { get; set; }
 		public SkeletonRecorder Recorder { get; set; }
 		public SkeletonPlayer Player { get; set; }
 
 		private SkeletonDrawer skeletonDrawer;
-		private Point3D hand;
-		private Point3D shoulder;
-		private Point3D elbow;
 		public bool PlayBackFromFile { get; set; }
 		private long lastUpdate = -1;
 
@@ -62,10 +59,11 @@ namespace STimWPF
 			PlayBackFromFile = false;
 			SkeletonF = new SkeletonFilter(skeletonBufferSize);
 			Recorder = new SkeletonRecorder(destFolder);
-			InteractionCtr = new InteractionController();
-			UserCtr = new UserController();
 			Player = new SkeletonPlayer(playerBufferSize, uiDispatcher);
 			Player.SkeletonFrameReady += new EventHandler<PlayerSkeletonFrameReadyEventArgs>(Player_SkeletonFrameReady);
+
+			InteractionCtr = new InteractionController();
+			VisitorCtr = new VisitorController();
 
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
@@ -126,9 +124,10 @@ namespace STimWPF
 					deltaTime = 0;
 				lastUpdate = currentTimeMilliseconds;
 
-				UserCtr.DetectUserPosition(stableSkeleton);
-				//Process the new skeleton in the typing engine
-				InteractionCtr.ProcessNewSkeletonData(stableSkeleton, deltaTime, UserCtr.InteractionZone);
+				//Processes the skeleton to find what interaction zone the user is
+				VisitorCtr.DetectUserPosition(stableSkeleton);
+				//Process the skeleton in to control the mouse
+				InteractionCtr.ProcessNewSkeletonData(stableSkeleton, deltaTime, VisitorCtr.InteractionZone);
 				//Sends the new skeleton into the recorder
 				Recorder.ProcessNewSkeletonData(rawSkeleton, deltaTime);
 			}
@@ -147,9 +146,9 @@ namespace STimWPF
 		{
 			//We first stabilize it
 			Skeleton stableSkeleton = SkeletonF.ProcessNewSkeletonData(e.FrameSkeleton);
-
-			//Process the new skeleton in the typing engine
-			InteractionCtr.ProcessNewSkeletonData(stableSkeleton, e.Delay, UserCtr.InteractionZone);
+			VisitorCtr.DetectUserPosition(stableSkeleton);
+			//Process the new skeleton in the Interaction Controller
+			InteractionCtr.ProcessNewSkeletonData(stableSkeleton, e.Delay, VisitorCtr.InteractionZone);
 
 			//We paint the skeleton and send the image over to the UI
 			if (ColorImageReady != null)
