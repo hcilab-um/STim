@@ -1,12 +1,13 @@
-﻿// get past MouseData not being initialized warning...it needs to be there for p/invoke
-#pragma warning disable 0649
-
+﻿#pragma warning disable 0649
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace STimWPF.Interaction
 {
+	/// <summary>
+	/// http://kinectmouse.codeplex.com/
+	/// </summary>
 	internal struct MouseInput
 	{
 		public int X;

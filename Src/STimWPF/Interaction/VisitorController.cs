@@ -40,9 +40,9 @@ namespace STimWPF.Interaction
 		{
 			Head = JointType.Head;
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
-			STimWPF.Util.Point3D kinectLocation = new STimWPF.Util.Point3D();
-			STimWPF.Util.Point3D headLocation = new STimWPF.Util.Point3D(head.Position.X, head.Position.Y, head.Position.Z);
-			double userDistance = ToolBox.CalculateDisplacement((System.Windows.Media.Media3D.Vector3D)headLocation, (System.Windows.Media.Media3D.Vector3D)kinectLocation).Length;
+			Point3D kinectLocation = new Point3D();
+			Point3D headLocation = new Point3D(head.Position.X, head.Position.Y, head.Position.Z);
+			double userDistance = ToolBox.GetDisplacementVector((System.Windows.Media.Media3D.Vector3D)headLocation, (System.Windows.Media.Media3D.Vector3D)kinectLocation).Length;
 			if (userDistance < CLOSE_CONSTRAIN)
 			{
 				InteractionZone = InteractionZone.Close;

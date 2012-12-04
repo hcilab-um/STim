@@ -77,7 +77,6 @@
     </ApplicationDefinition>
     <Compile Include="CircularList.cs" />
     <Compile Include="Converters\AndConverter.cs" />
-    <Compile Include="Converters\HighlightedOrSelectedKeyConverter.cs" />
     <Compile Include="Converters\MethodVisibilityConverter.cs" />
     <Compile Include="Converters\NegateVisibilityConverter.cs" />
     <Compile Include="Converters\OrConverter.cs" />
@@ -85,9 +84,6 @@
     <Compile Include="Converters\TimerLocationConverter.cs" />
     <Compile Include="Interaction\MouseController.cs" />
     <Compile Include="Interaction\VisitorController.cs" />
-    <Compile Include="KeyConverter.cs" />
-    <Compile Include="Interaction\InteractionStatus.cs" />
-    <Compile Include="Interaction\KeySelectedEventArgs.cs" />
     <Compile Include="ContentWindow.xaml.cs">
       <DependentUpon>ContentWindow.xaml</DependentUpon>
     </Compile>
@@ -97,14 +93,13 @@
     <Compile Include="Interaction\InteractionZone.cs" />
     <Compile Include="Interaction\SelectionMethod.cs" />
     <Compile Include="Interaction\TimerState.cs" />
-    <Compile Include="Interaction\TypingGesture.cs" />
+    <Compile Include="Interaction\InteractionGesture.cs" />
     <Compile Include="Playback\PlayerSkeletonFrameReadyEventArgs.cs" />
     <Compile Include="SkeletonCapture.cs" />
     <Compile Include="SkeletonDrawer.cs" />
     <Compile Include="SkeletonFilter.cs" />
     <Compile Include="Playback\SkeletonRecorder.cs" />
     <Compile Include="Playback\SkeletonPlayer.cs" />
-    <Compile Include="Util\Point3D.cs" />
     <Compile Include="Util\ToolBox.cs" />
     <Page Include="ControlWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -143,7 +138,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="FixUsername.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

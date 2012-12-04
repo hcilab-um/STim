@@ -10,32 +10,37 @@ using System.Windows.Input;
 using System.Threading;
 using STimWPF.Interaction;
 using STimWPF.Util;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 namespace STimWPF.Interaction
 {
 
 	public class InteractionController : INotifyPropertyChanged
 	{
-		private int currentFrame = 1;// totalFrames = 0;
+		//private int currentFrame = 1;// totalFrames = 0;
 		private Object processingLock = new Object();
 		private EventWaitHandle processingWaitHandle = new EventWaitHandle(true, EventResetMode.AutoReset);
 
 		private Point3D cursorLocation;
-		private Point3D secCursorLocation;
 		private SelectionMethod selectionMethod;
 		private InteractionZone interactionZone;
 
-		private Point3D planeOrigin;
-		private double planeRadius;
+		private Vector3D planeOrigin;
+		private double planeRadius = -1;
+		private double planeWidth = -1;
+		private double planeHeight = -1;
+		private double boundaryCross = -1;
 
 		//joints
-		public JointType Shoulder { get; set; }
+		public JointType ShoulderRight { get; set; }
+		public JointType ShoulderLeft { get; set; }
 		public JointType Elbow { get; set; }
 		public JointType Wrist { get; set; }
 		public JointType Hand { get; set; }
 		public JointType Hip { get; set; }
 		public JointType Head { get; set; }
-
+		
 		public GestureRecognizer Recognizer { get; set; }
 
 		public Point3D CursorLocation
@@ -101,7 +106,6 @@ namespace STimWPF.Interaction
 			PropertyChanged += new PropertyChangedEventHandler(Recognizer.InteractionCtrngine_PropertyChanged);
 
 			CursorLocation = new Point3D(0, 0, 0);
-			secCursorLocation = new Point3D(0, 0, 0);
 			SelectionMethod = STimWPF.Interaction.SelectionMethod.Click;
 		}
 
@@ -128,7 +132,7 @@ namespace STimWPF.Interaction
 				//1- find the position of the cursor on the layout plane
 				CursorLocation = FindCursorPosition(skeleton, MouseBoundaries, selectionMethod);
 				//3- Looks for gestures [pressed, released]
-				ICollection<InteractionGesture> gestures = Recognizer.ProcessGestures(skeleton, deltaMilliseconds, cursorLocation, secCursorLocation, selectionMethod, HasUserClicked);
+				ICollection<InteractionGesture> gestures = Recognizer.ProcessGestures(skeleton, deltaMilliseconds, cursorLocation, selectionMethod, HasUserClicked);
 				if (gestures != null && gestures.Count > 0 && gestures.ElementAt(0).Type == GestureType.Tap)
 				{
 					leftClick = true;
@@ -139,42 +143,65 @@ namespace STimWPF.Interaction
 
 		private Point3D FindCursorPosition(Skeleton skeleton, Rect boundary, SelectionMethod selectionM)
 		{
-			Shoulder = JointType.ShoulderRight;
+			ShoulderRight = JointType.ShoulderRight;
+			ShoulderLeft = JointType.ShoulderLeft;
 			Elbow = JointType.ElbowRight;
 			Wrist = JointType.WristRight;
 			Hand = JointType.HandRight;
 			Hip = JointType.HipRight;
 			Head = JointType.Head;
-
-			Joint shoulder = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Shoulder);
+			Joint shoulderR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == ShoulderRight);
+			Joint shoulderL = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == ShoulderLeft);
 			Joint elbow = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Elbow);
 			Joint wrist = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Wrist);
 			Joint hand = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Hand);
-			Joint hip = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Hip);
-			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
+			Joint hipCenter = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Hip);
+
+			Vector3D shoulderRightP = new Vector3D(shoulderR.Position.X, shoulderR.Position.Y, shoulderR.Position.Z);
+			Vector3D shoulderLeftP = new Vector3D(shoulderL.Position.X, shoulderL.Position.Y, shoulderL.Position.Z);
+			Vector3D wristRightP = new Vector3D(wrist.Position.X, wrist.Position.Y, wrist.Position.Z);
+			Vector3D elbowRightP = new Vector3D(elbow.Position.X, elbow.Position.Y, elbow.Position.Z);
+			Vector3D handRightP = new Vector3D(hand.Position.X, hand.Position.Y, hand.Position.Z);
+			Vector3D hipP = new Vector3D(hipCenter.Position.X, hipCenter.Position.Y, hipCenter.Position.Z);
 			
 			if (planeRadius == -1)
 			{
-				System.Windows.Media.Media3D.Vector3D elbowP = new System.Windows.Media.Media3D.Vector3D(elbow.Position.X, elbow.Position.Y, elbow.Position.Z);
-				System.Windows.Media.Media3D.Vector3D shoulderP = new System.Windows.Media.Media3D.Vector3D(shoulder.Position.X, shoulder.Position.Y, shoulder.Position.Z);
-				System.Windows.Media.Media3D.Vector3D wristP = new System.Windows.Media.Media3D.Vector3D(wrist.Position.X, wrist.Position.Y, wrist.Position.Z);
-				planeRadius = ToolBox.CalculateDisplacement(elbowP, shoulderP).Length + ToolBox.CalculateDisplacement(elbowP, wristP).Length/2;
+				planeRadius = ToolBox.GetDisplacementVector(shoulderRightP, elbowRightP).Length + ToolBox.GetDisplacementVector(elbowRightP, wristRightP).Length;
+				boundaryCross = Math.Sqrt(Math.Pow(boundary.Width, 2) + Math.Pow(boundary.Height, 2));
+				planeWidth = boundary.Width / boundaryCross * planeRadius;
+				planeHeight = boundary.Height / boundaryCross * planeRadius;
 			}
-			planeOrigin.X = shoulder.Position.X - planeRadius;
-			planeOrigin.Y = shoulder.Position.Y + planeRadius;
-			Point3D cursorP = new Point3D(-1, -1, -1);
+			
+			//Build New coordinate system
+			//Set Middle of Visitor shoulder as origin
+			Vector3D coordinateOriginP = ToolBox.GetMiddleVector(shoulderRightP, shoulderLeftP);			
+			//get Relative X, Y, Z direction
+			Vector3D directionX = ToolBox.GetDisplacementVector(coordinateOriginP, shoulderRightP);
+			Vector3D directionY = ToolBox.GetDisplacementVector(hipP, coordinateOriginP);
+			Vector3D directionZ = Vector3D.CrossProduct(directionX, directionY);
+			//get coordinate unit vector 
+			directionX.Normalize();
+			directionY.Normalize();
+			directionZ.Normalize();
 
-			double pointerPosX = (hand.Position.X + wrist.Position.X) / 2;
-			double distX = pointerPosX - planeOrigin.X;
-			double pointerPosY = (hand.Position.Y + wrist.Position.Y) / 2;
-			double distY = planeOrigin.Y - pointerPosY;
-			if (distX < 0 || distY < 0)
-				return cursorP;
-			if (distX > 2 * planeRadius || distY > 2 * planeRadius)
-				return cursorP;
-			cursorP.X = distX / (2 * planeRadius) * boundary.Width + boundary.X;
-			cursorP.Y = distY / (2 * planeRadius) * boundary.Height + boundary.Y;
-			return cursorP;
+			Matrix3D transformMatrix = ToolBox.NewCoordinateMatrix(directionX, directionY, directionZ);
+			planeOrigin = ToolBox.GetDisplacementVector(coordinateOriginP, shoulderRightP);
+			planeOrigin *= transformMatrix;
+
+			Vector3D cursorP = ToolBox.GetMiddleVector(handRightP, wristRightP);
+			cursorP = ToolBox.GetDisplacementVector(coordinateOriginP, cursorP);
+			cursorP *= transformMatrix;
+			cursorP = ToolBox.GetDisplacementVector(planeOrigin, cursorP);
+			cursorP.Y = -cursorP.Y;
+
+			if (cursorP.X < 0 || cursorP.Y < 0)
+				return new Point3D(-1,-1,-1);
+			if (cursorP.X > planeWidth || cursorP.Y >planeHeight)
+				return new Point3D(-1, -1, -1);
+			
+			cursorP.X = cursorP.X / (planeWidth) * boundary.Width + boundary.X;
+			cursorP.Y = cursorP.Y / (planeHeight) * boundary.Height + boundary.Y;
+			return (Point3D)cursorP;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

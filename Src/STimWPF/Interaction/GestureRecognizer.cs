@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using STimWPF.Interaction;
 using STimWPF.Util;
+using System.Windows.Media.Media3D;
 
 namespace STimWPF.Interaction
 {
@@ -46,7 +47,7 @@ namespace STimWPF.Interaction
 			}
 		}
 
-		internal ICollection<InteractionGesture> ProcessGestures(Skeleton skeleton, double deltaTimeMilliseconds, Point3D cursor, Point3D secondaryCursor,
+		internal ICollection<InteractionGesture> ProcessGestures(Skeleton skeleton, double deltaTimeMilliseconds, Point3D cursor,
 			SelectionMethod selectionM, bool userClicked)
 		{
 			List<InteractionGesture> gestures = null;
