@@ -35,8 +35,12 @@ namespace STimWPF
 
 		void ContentWindow_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
+			if (this.WindowState == WindowState.Maximized)
+			{
+				Left = 0;
+				Top = 0;
+			}
 			CoreInstance.InteractionCtr.MouseBoundaries = new Rect(Left, Top, ActualWidth, ActualHeight);
-			
 		}
 
 		void ContentWindow_LocationChanged(object sender, EventArgs e)

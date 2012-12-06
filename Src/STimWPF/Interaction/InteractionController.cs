@@ -31,7 +31,6 @@ namespace STimWPF.Interaction
 		private double planeWidth = -1;
 		private double planeHeight = -1;
 		private double boundaryCross = -1;
-
 		//joints
 		public JointType ShoulderRight { get; set; }
 		public JointType ShoulderLeft { get; set; }
@@ -167,11 +166,10 @@ namespace STimWPF.Interaction
 			if (planeRadius == -1)
 			{
 				planeRadius = ToolBox.GetDisplacementVector(shoulderRightP, elbowRightP).Length + ToolBox.GetDisplacementVector(elbowRightP, wristRightP).Length;
-				boundaryCross = Math.Sqrt(Math.Pow(boundary.Width, 2) + Math.Pow(boundary.Height, 2));
-				planeWidth = boundary.Width / boundaryCross * planeRadius;
-				planeHeight = boundary.Height / boundaryCross * planeRadius;
 			}
-			
+			boundaryCross = Math.Sqrt(Math.Pow(boundary.Width, 2) + Math.Pow(boundary.Height, 2));
+			planeWidth = boundary.Width / boundaryCross * planeRadius;
+			planeHeight = boundary.Height / boundaryCross * planeRadius;
 			//Build New coordinate system
 			//Set Middle of Visitor shoulder as origin
 			Vector3D coordinateOriginP = ToolBox.GetMiddleVector(shoulderRightP, shoulderLeftP);			
@@ -198,7 +196,6 @@ namespace STimWPF.Interaction
 				return new Point3D(-1,-1,-1);
 			if (cursorP.X > planeWidth || cursorP.Y >planeHeight)
 				return new Point3D(-1, -1, -1);
-			
 			cursorP.X = cursorP.X / (planeWidth) * boundary.Width + boundary.X;
 			cursorP.Y = cursorP.Y / (planeHeight) * boundary.Height + boundary.Y;
 			return (Point3D)cursorP;
