@@ -239,6 +239,34 @@
          style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
          transform="matrix(-0.8,0,0,-0.8,-10,0)" />
     </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart-5"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4056-5"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.8,0,0,0.8,10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-1"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4059-7"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -247,9 +275,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="374.55144"
-     inkscape:cy="411.11449"
+     inkscape:zoom="5.6"
+     inkscape:cx="349.21476"
+     inkscape:cy="337.59271"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -304,8 +332,8 @@
        id="path4021"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.18003142px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 324.63755,513.63579 -0.34757,306.34438"
+       style="fill:none;stroke:#000000;stroke-width:0.83516049px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 324.63755,513.63579 324.28998,667.0843"
        id="path4023"
        inkscape:connector-curvature="0" />
     <path
@@ -652,5 +680,10 @@
          id="tspan4023"
          x="248.03572"
          y="858.96936">0.39m</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.92976755;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend)"
+       d="m 324.64618,668.80156 1.06478,148.74333"
+       id="path4051-1"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>
