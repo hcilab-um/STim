@@ -275,9 +275,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6"
-     inkscape:cx="349.21476"
-     inkscape:cy="337.59271"
+     inkscape:zoom="1.4"
+     inkscape:cx="474.59982"
+     inkscape:cy="491.76279"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -581,7 +581,7 @@
          sodipodi:role="line"
          id="tspan6005"
          x="680"
-         y="538.07648">3.83 m</tspan></text>
+         y="538.07648">3.65 m</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:22px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Times New Roman;-inkscape-font-specification:Times New Roman"
@@ -638,17 +638,6 @@
          id="tspan3097"
          x="402.85715"
          y="548.07648">1.05m</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:22px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Times New Roman;-inkscape-font-specification:Times New Roman"
-       x="211.12189"
-       y="672.5448"
-       id="text3981"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan3983"
-         x="211.12189"
-         y="672.5448">Hip Height</tspan></text>
     <path
        sodipodi:type="arc"
        style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
@@ -679,7 +668,7 @@
          sodipodi:role="line"
          id="tspan4023"
          x="248.03572"
-         y="858.96936">0.39m</tspan></text>
+         y="858.96936">0.49m</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:0.92976755;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend)"
        d="m 324.64618,668.80156 1.06478,148.74333"

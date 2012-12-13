@@ -13,10 +13,14 @@ namespace STimWPF.Interaction
 	{
 		//If there is a displacement of at least the value below of in the dimension of the push then the values
 		// on the two other dimensions are blocked.
-		private const double CLOSE_CONSTRAIN = 2.03;
-		private const double INTERACTION_CONSTRAIN = 3.15;
-		private const double NOTIFICATION = 4.28;
-		
+		private const double CLOSE_CONSTRAIN = 0.5;
+		private const double INTERACTION_CONSTRAIN = 1.0;
+		private const double NOTIFICATION = 2.0;
+		private readonly double STANDARD_ANGLE_R = ToolBox.AngleToRadian(90 - 29);
+		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0,0,1);
+		private static readonly Vector3D kinectLocation = new Vector3D(0,0,0);
+		private Vector3D headLocation;
+		private double userDistance;
 		private InteractionZone interactZone = InteractionZone.Ambient;
 		
 		public InteractionZone InteractionZone
@@ -31,18 +35,25 @@ namespace STimWPF.Interaction
 
 		public JointType Head { get; set; }
 
-		public VisitorController()
-		{
- 
-		}
+		public VisitorController() { }
 
 		public void DetectUserPosition(Skeleton skeleton)
 		{
 			Head = JointType.Head;
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
-			Point3D kinectLocation = new Point3D();
-			Point3D headLocation = new Point3D(head.Position.X, head.Position.Y, head.Position.Z);
-			double userDistance = ToolBox.GetDisplacementVector((System.Windows.Media.Media3D.Vector3D)headLocation, (System.Windows.Media.Media3D.Vector3D)kinectLocation).Length;
+			headLocation = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
+			double currentAngleR = ToolBox.AngleToRadian(Vector3D.AngleBetween(STANDARD_VECTOR, headLocation));
+			double headDistance = ToolBox.GetDisplacementVector((Vector3D)headLocation, (Vector3D)kinectLocation).Length;
+			
+			if (headLocation.Y < 0)
+			{
+				userDistance = Math.Sin(STANDARD_ANGLE_R - currentAngleR) * headDistance;
+			}
+			else
+			{
+				userDistance = Math.Sin(STANDARD_ANGLE_R + currentAngleR) * headDistance;
+			}
+
 			if (userDistance < CLOSE_CONSTRAIN)
 			{
 				InteractionZone = InteractionZone.Close;

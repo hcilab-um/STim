@@ -37,7 +37,6 @@ namespace STimWPF.Interaction
 		public JointType Elbow { get; set; }
 		public JointType Wrist { get; set; }
 		public JointType Hand { get; set; }
-		public JointType Hip { get; set; }
 		public JointType Head { get; set; }
 		
 		public GestureRecognizer Recognizer { get; set; }
@@ -147,26 +146,26 @@ namespace STimWPF.Interaction
 			Elbow = JointType.ElbowRight;
 			Wrist = JointType.WristRight;
 			Hand = JointType.HandRight;
-			Hip = JointType.HipRight;
 			Head = JointType.Head;
 			Joint shoulderR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == ShoulderRight);
 			Joint shoulderL = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == ShoulderLeft);
 			Joint elbow = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Elbow);
 			Joint wrist = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Wrist);
 			Joint hand = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Hand);
-			Joint hipCenter = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Hip);
+			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
 
 			Vector3D shoulderRightP = new Vector3D(shoulderR.Position.X, shoulderR.Position.Y, shoulderR.Position.Z);
 			Vector3D shoulderLeftP = new Vector3D(shoulderL.Position.X, shoulderL.Position.Y, shoulderL.Position.Z);
 			Vector3D wristRightP = new Vector3D(wrist.Position.X, wrist.Position.Y, wrist.Position.Z);
 			Vector3D elbowRightP = new Vector3D(elbow.Position.X, elbow.Position.Y, elbow.Position.Z);
 			Vector3D handRightP = new Vector3D(hand.Position.X, hand.Position.Y, hand.Position.Z);
-			Vector3D hipP = new Vector3D(hipCenter.Position.X, hipCenter.Position.Y, hipCenter.Position.Z);
-			
+			Vector3D headP = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
+
 			if (planeRadius == -1)
 			{
 				planeRadius = ToolBox.GetDisplacementVector(shoulderRightP, elbowRightP).Length + ToolBox.GetDisplacementVector(elbowRightP, wristRightP).Length;
 			}
+
 			boundaryCross = Math.Sqrt(Math.Pow(boundary.Width, 2) + Math.Pow(boundary.Height, 2));
 			planeWidth = boundary.Width / boundaryCross * planeRadius;
 			planeHeight = boundary.Height / boundaryCross * planeRadius;
@@ -175,7 +174,7 @@ namespace STimWPF.Interaction
 			Vector3D coordinateOriginP = ToolBox.GetMiddleVector(shoulderRightP, shoulderLeftP);			
 			//get Relative X, Y, Z direction
 			Vector3D directionX = ToolBox.GetDisplacementVector(coordinateOriginP, shoulderRightP);
-			Vector3D directionY = ToolBox.GetDisplacementVector(hipP, coordinateOriginP);
+			Vector3D directionY = ToolBox.GetDisplacementVector(headP, coordinateOriginP);
 			Vector3D directionZ = Vector3D.CrossProduct(directionX, directionY);
 			//get coordinate unit vector 
 			directionX.Normalize();
@@ -190,7 +189,6 @@ namespace STimWPF.Interaction
 			cursorP = ToolBox.GetDisplacementVector(coordinateOriginP, cursorP);
 			cursorP *= transformMatrix;
 			cursorP = ToolBox.GetDisplacementVector(planeOrigin, cursorP);
-			cursorP.Y = -cursorP.Y;
 
 			if (cursorP.X < 0 || cursorP.Y < 0)
 				return new Point3D(-1,-1,-1);

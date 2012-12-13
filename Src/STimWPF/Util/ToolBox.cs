@@ -45,5 +45,9 @@ namespace STimWPF.Util
 			matrix.M33 = vZ.Z;
 			return matrix;
 		}
+		internal static double AngleToRadian(double angle)
+		{
+			return angle * Math.PI / 180;
+		}
 	}
 }
