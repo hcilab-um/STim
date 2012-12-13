@@ -16,11 +16,12 @@ namespace STimWPF.Interaction
 		private const double CLOSE_CONSTRAIN = 0.5;
 		private const double INTERACTION_CONSTRAIN = 1.0;
 		private const double NOTIFICATION = 2.0;
+		private const double DISPLAY_DISTANCE = 0.81;
 		private readonly double STANDARD_ANGLE_R = ToolBox.AngleToRadian(90 - 29);
 		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0,0,1);
 		private static readonly Vector3D kinectLocation = new Vector3D(0,0,0);
 		private Vector3D headLocation;
-		private double userDistance;
+		private double userDisplayDistance;
 		private InteractionZone interactZone = InteractionZone.Ambient;
 		
 		public InteractionZone InteractionZone
@@ -47,26 +48,26 @@ namespace STimWPF.Interaction
 			
 			if (headLocation.Y < 0)
 			{
-				userDistance = Math.Sin(STANDARD_ANGLE_R - currentAngleR) * headDistance;
+				userDisplayDistance = Math.Sin(STANDARD_ANGLE_R - currentAngleR) * headDistance - DISPLAY_DISTANCE;
 			}
 			else
 			{
-				userDistance = Math.Sin(STANDARD_ANGLE_R + currentAngleR) * headDistance;
+				userDisplayDistance = Math.Sin(STANDARD_ANGLE_R + currentAngleR) * headDistance - DISPLAY_DISTANCE;
 			}
 
-			if (userDistance < CLOSE_CONSTRAIN)
+			if (userDisplayDistance < CLOSE_CONSTRAIN)
 			{
 				InteractionZone = InteractionZone.Close;
 			}
-			else if (userDistance >= CLOSE_CONSTRAIN && userDistance < INTERACTION_CONSTRAIN)
+			else if (userDisplayDistance >= CLOSE_CONSTRAIN && userDisplayDistance < INTERACTION_CONSTRAIN)
 			{
 				InteractionZone = InteractionZone.Interaction;
 			}
-			else if (userDistance >= INTERACTION_CONSTRAIN && userDistance < NOTIFICATION)
+			else if (userDisplayDistance >= INTERACTION_CONSTRAIN && userDisplayDistance < NOTIFICATION)
 			{
 				InteractionZone = InteractionZone.Notification;
 			}
-			else if (userDistance >= NOTIFICATION)
+			else if (userDisplayDistance >= NOTIFICATION)
 			{
 				InteractionZone = InteractionZone.Ambient;
 			}
