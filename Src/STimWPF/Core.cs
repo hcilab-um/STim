@@ -18,6 +18,7 @@ namespace STimWPF
 		private static KinectSensor kinectSensor;
 
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
+		public event EventHandler<DepthImageReadyArgs> DepthImageReady;
 
 		public SkeletonFilter SkeletonF { get; set; }
 		public InteractionController InteractionCtr { get; set; }
@@ -61,7 +62,6 @@ namespace STimWPF
 			Recorder = new SkeletonRecorder(destFolder);
 			Player = new SkeletonPlayer(playerBufferSize, uiDispatcher);
 			Player.SkeletonFrameReady += new EventHandler<PlayerSkeletonFrameReadyEventArgs>(Player_SkeletonFrameReady);
-
 			InteractionCtr = new InteractionController();
 			VisitorCtr = new VisitorController();
 
@@ -78,14 +78,16 @@ namespace STimWPF
 					IsKinectConnected = false;
 				else
 				{
+					kinectSensor.DepthStream.Enable();
 					kinectSensor.ColorStream.Enable();
 					kinectSensor.SkeletonStream.Enable();
-					kinectSensor.DepthStream.Enable();
 					kinectSensor.Start();
 					kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
+
 				}
 			}
 		}
+
 
 		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
@@ -132,6 +134,14 @@ namespace STimWPF
 				Recorder.ProcessNewSkeletonData(rawSkeleton, deltaTime);
 			}
 
+			using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
+			{
+				if (DepthImageReady != null && depthFrame != null)
+				{
+					DepthImageReady(this, new DepthImageReadyArgs() { Frame = DrawDepthImage(depthFrame, stableSkeleton) });
+				}
+			}
+
 			using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
 			{
 				if (ColorImageReady != null)
@@ -140,6 +150,67 @@ namespace STimWPF
 					ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
 				}
 			}
+		}
+
+		ImageSource DrawDepthImage(DepthImageFrame depthFrame, Skeleton stableSkeleton)
+		{
+			DepthImagePixel[] depthPixels;
+			byte[] colorPixels;
+			// Allocate space to put the depth pixels we'll receive
+			depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
+
+			// Allocate space to put the color pixels we'll create
+			colorPixels = new byte[kinectSensor.DepthStream.FramePixelDataLength * sizeof(int)];
+
+			// This is the bitmap we'll display on-screen
+			WriteableBitmap colorBitmap = new WriteableBitmap(kinectSensor.DepthStream.FrameWidth, kinectSensor.DepthStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
+			depthFrame.CopyDepthImagePixelDataTo(depthPixels);
+
+			// Get the min and max reliable depth for the current frame
+			int minDepth = depthFrame.MinDepth;
+			int maxDepth = depthFrame.MaxDepth;
+			if (stableSkeleton != null)
+			{
+				maxDepth = (int)(stableSkeleton.Joints.Max<Joint>(j => j.Position.Z) * 1000);
+				minDepth = (int)(stableSkeleton.Joints.Min<Joint>(j => j.Position.Z) * 1000);
+			}
+
+			// Convert the depth to RGB
+			int colorPixelIndex = 0;
+			
+			for (int i = 0; i < depthPixels.Length; ++i)
+			{
+				// Get the depth for this pixel
+				short depth = depthPixels[i].Depth;
+				// To convert to a byte, we're discarding the most-significant
+				// rather than least-significant bits.
+				// We're preserving detail, although the intensity will "wrap."
+				// Values outside the reliable depth range are mapped to 0 (black).
+
+				// Note: Using conditionals in this loop could degrade performance.
+				// Consider using a lookup table instead when writing production code.
+				// See the KinectDepthViewer class used by the KinectExplorer sample
+				// for a lookup table example.
+				byte intensity = (byte)(stableSkeleton != null && depth >= minDepth && depth <= maxDepth ? depth : 255);
+				// Write out blue byte
+				colorPixels[colorPixelIndex++] = intensity;
+				// Write out green byte
+				colorPixels[colorPixelIndex++] = intensity;
+
+				// Write out red byte                        
+				colorPixels[colorPixelIndex++] = intensity;
+
+				// We're outputting BGR, the last byte in the 32 bits is unused so skip it
+				// If we were outputting BGRA, we would write alpha here.
+				++colorPixelIndex;
+			}
+			// Write the pixel data into our bitmap
+			colorBitmap.WritePixels(
+					new Int32Rect(0, 0, colorBitmap.PixelWidth, colorBitmap.PixelHeight),
+					colorPixels,
+					colorBitmap.PixelWidth * sizeof(int),
+					0);
+			return colorBitmap;
 		}
 
 		void Player_SkeletonFrameReady(object sender, PlayerSkeletonFrameReadyEventArgs e)

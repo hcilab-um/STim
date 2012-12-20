@@ -9,6 +9,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.ComponentModel;
+using Microsoft.Kinect;
 
 namespace STimWPF
 {
@@ -17,6 +19,7 @@ namespace STimWPF
 	/// </summary>
 	public partial class ContentWindow : Window
 	{
+
 		public App AppInstance { get; set; }
 		
 		public Core CoreInstance
@@ -79,6 +82,16 @@ namespace STimWPF
 		private void bD_Click(object sender, RoutedEventArgs e)
 		{
 			tb_Result.Text = tb_Result.Text + "D";
+		}
+
+		private void ContentWindow_Loaded(object sender, RoutedEventArgs e)
+		{
+			CoreInstance.DepthImageReady += new EventHandler<DepthImageReadyArgs>(CoreInstance_DepthImageReady);
+		}
+
+		void CoreInstance_DepthImageReady(object sender, DepthImageReadyArgs e)
+		{
+			this.iKinectDepth.Source = e.Frame;
 		}
 	}
 }

@@ -151,7 +151,8 @@ namespace STimWPF
 			// We are not using depth directly, but we do want the points in our 640x480 output resolution.
 			DepthImagePoint depthPoint;
 			if (kinectSensor != null)
-				depthPoint = kinectSensor.MapSkeletonPointToDepth(skelpoint, DepthImageFormat.Resolution640x480Fps30);
+
+				depthPoint = kinectSensor.CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
 			else
 				depthPoint = MapSkeletonPointToDepth(skelpoint, DepthImageFormat.Resolution640x480Fps30);
 			return new Point(depthPoint.X, depthPoint.Y);

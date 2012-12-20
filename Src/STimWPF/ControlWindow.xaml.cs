@@ -115,12 +115,12 @@ namespace STimWPF
 				PropertyChanged(this, new PropertyChangedEventArgs(name));
 		}
 
-		private void mwObject_Loaded(object sender, RoutedEventArgs e)
+		private void ControlWindow_Loaded(object sender, RoutedEventArgs e)
 		{
 			CoreInstance.ColorImageReady += new EventHandler<ColorImageReadyArgs>(CoreInstance_ColorImageReady);
 		}
 
-		private void mwObject_Closed(object sender, EventArgs e)
+		private void ControlWindow_Closed(object sender, EventArgs e)
 		{
 			appInstance.CloseApp(this);
 		}

@@ -2,23 +2,26 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				xmlns:converters="clr-namespace:STimWPF.Converters"
-        Title="WAG - ContentWindow" Width="900" Height="900" Closed="textEntryW_Closed">
+        Title="WAG - ContentWindow" Width="900" Height="900" Closed="textEntryW_Closed" Loaded="ContentWindow_Loaded">
 	<Window.Resources>
 		<converters:SelectionMethodConverter x:Key="smConverter" />
 		<converters:MethodVisibilityConverter x:Key="vConverter" />
 		<converters:NegateVisibilityConverter x:Key="nvConverter" />
 	</Window.Resources>
-	<Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-		<StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-			<StackPanel Orientation="Horizontal">
-				<Button x:Name="bA" Click="bA_Click" Content="A" Width="200" Height="200"/>
-				<Button x:Name="bB" Click="bB_Click" Content="B" Width="200" Height="200" Margin="10,0,0,0"/>
+	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+		<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+			<StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<StackPanel Orientation="Horizontal">
+					<Button x:Name="bA" Click="bA_Click" Content="A" Width="200" Height="200"/>
+					<Button x:Name="bB" Click="bB_Click" Content="B" Width="200" Height="200" Margin="10,0,0,0"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+					<Button x:Name="bC" Click="bC_Click" Content="C" Width="200" Height="200"/>
+					<Button x:Name="bD" Click="bD_Click" Content="D" Width="200" Height="200" Margin="10,0,0,0"/>
+				</StackPanel>
+				<TextBlock FontSize="32" Name="tb_Result" Margin="20"/>
 			</StackPanel>
-			<StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-				<Button x:Name="bC" Click="bC_Click" Content="C" Width="200" Height="200"/>
-				<Button x:Name="bD" Click="bD_Click" Content="D" Width="200" Height="200" Margin="10,0,0,0"/>
-			</StackPanel>
-			<TextBlock FontSize="32" Name="tb_Result" Margin="20"/>
 		</StackPanel>
+		<Image Name="iKinectDepth" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Bottom" Height="144" Width="192"/>
 	</Grid>
 </Window>

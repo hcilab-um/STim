@@ -55,7 +55,7 @@
     <Reference Include="log4net">
       <HintPath>..\SharedLib\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Kinect, Version=1.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Kinect, Version=1.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -82,6 +82,7 @@
     <Compile Include="Converters\OrConverter.cs" />
     <Compile Include="Converters\SelectionMethodConverter.cs" />
     <Compile Include="Converters\TimerLocationConverter.cs" />
+    <Compile Include="DepthImageReadyArgs.cs" />
     <Compile Include="Interaction\MouseController.cs" />
     <Compile Include="Interaction\VisitorController.cs" />
     <Compile Include="ContentWindow.xaml.cs">
@@ -174,6 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fart.exe" />
+    <Resource Include="SamplesConfig.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
