@@ -175,7 +175,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fart.exe" />
-    <Resource Include="SamplesConfig.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -165,40 +165,19 @@ namespace STimWPF
 			// This is the bitmap we'll display on-screen
 			WriteableBitmap colorBitmap = new WriteableBitmap(kinectSensor.DepthStream.FrameWidth, kinectSensor.DepthStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
 			depthFrame.CopyDepthImagePixelDataTo(depthPixels);
-
-			// Get the min and max reliable depth for the current frame
-			int minDepth = depthFrame.MinDepth;
-			int maxDepth = depthFrame.MaxDepth;
-			if (stableSkeleton != null)
-			{
-				maxDepth = (int)(stableSkeleton.Joints.Max<Joint>(j => j.Position.Z) * 1000);
-				minDepth = (int)(stableSkeleton.Joints.Min<Joint>(j => j.Position.Z) * 1000);
-			}
-
 			// Convert the depth to RGB
 			int colorPixelIndex = 0;
-			
+			byte intensity = 255;
 			for (int i = 0; i < depthPixels.Length; ++i)
 			{
 				// Get the depth for this pixel
 				short depth = depthPixels[i].Depth;
-				// To convert to a byte, we're discarding the most-significant
-				// rather than least-significant bits.
-				// We're preserving detail, although the intensity will "wrap."
-				// Values outside the reliable depth range are mapped to 0 (black).
-
-				// Note: Using conditionals in this loop could degrade performance.
-				// Consider using a lookup table instead when writing production code.
-				// See the KinectDepthViewer class used by the KinectExplorer sample
-				// for a lookup table example.
-				byte intensity = (byte)(stableSkeleton != null && depth >= minDepth && depth <= maxDepth ? depth : 255);
 				// Write out blue byte
-				colorPixels[colorPixelIndex++] = intensity;
+				colorPixels[colorPixelIndex++] = (byte)(intensity >> depthPixels[i].PlayerIndex);
 				// Write out green byte
-				colorPixels[colorPixelIndex++] = intensity;
-
+				colorPixels[colorPixelIndex++] = (byte)(intensity >> depthPixels[i].PlayerIndex);
 				// Write out red byte                        
-				colorPixels[colorPixelIndex++] = intensity;
+				colorPixels[colorPixelIndex++] = (byte)(intensity >> depthPixels[i].PlayerIndex);
 
 				// We're outputting BGR, the last byte in the 32 bits is unused so skip it
 				// If we were outputting BGRA, we would write alpha here.
