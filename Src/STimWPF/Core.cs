@@ -16,7 +16,7 @@ namespace STimWPF
 	public class Core
 	{
 		private static KinectSensor kinectSensor;
-
+		const int VISITOR_SHIFT = 80;
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 		public event EventHandler<DepthImageReadyArgs> DepthImageReady;
 
@@ -138,7 +138,7 @@ namespace STimWPF
 			{
 				if (DepthImageReady != null && depthFrame != null)
 				{
-					DepthImageReady(this, new DepthImageReadyArgs() { Frame = DrawDepthImage(depthFrame, stableSkeleton) });
+					DepthImageReady(this, new DepthImageReadyArgs() { Frame = DrawDepthImage(depthFrame, stableSkeleton, VisitorCtr.InteractionZone) });
 				}
 			}
 
@@ -152,7 +152,7 @@ namespace STimWPF
 			}
 		}
 
-		ImageSource DrawDepthImage(DepthImageFrame depthFrame, Skeleton stableSkeleton)
+		ImageSource DrawDepthImage(DepthImageFrame depthFrame, Skeleton stableSkeleton, InteractionZone zone)
 		{
 			DepthImagePixel[] depthPixels;
 			byte[] colorPixels;
@@ -168,19 +168,36 @@ namespace STimWPF
 			// Convert the depth to RGB
 			int colorPixelIndex = 0;
 			byte intensity = 255;
+			short zoneShift =0;
+			if (zone == InteractionZone.Interaction)
+			{
+				zoneShift = 70;
+			}
+			else
+			{
+				zoneShift = 0;
+			}
 			for (int i = 0; i < depthPixels.Length; ++i)
 			{
-				// Get the depth for this pixel
-				short depth = depthPixels[i].Depth;
-				// Write out blue byte
-				colorPixels[colorPixelIndex++] = (byte)(intensity >> depthPixels[i].PlayerIndex);
-				// Write out green byte
-				colorPixels[colorPixelIndex++] = (byte)(intensity >> depthPixels[i].PlayerIndex);
-				// Write out red byte                        
-				colorPixels[colorPixelIndex++] = (byte)(intensity >> depthPixels[i].PlayerIndex);
+				if (depthPixels[i].PlayerIndex != 0)
+				{
+					// Write out blue byte
+					colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT);
+					// Write out green byte										 
+					colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT);
+					// Write out red byte                 		 
+					colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT + zoneShift);
+				}
+				else 
+				{
+					// Write out blue byte	
+					colorPixels[colorPixelIndex++] = intensity;
+					// Write out green byte					 
+					colorPixels[colorPixelIndex++] = intensity;
+					// Write out red byte                 
+					colorPixels[colorPixelIndex++] = intensity;
+				}
 
-				// We're outputting BGR, the last byte in the 32 bits is unused so skip it
-				// If we were outputting BGRA, we would write alpha here.
 				++colorPixelIndex;
 			}
 			// Write the pixel data into our bitmap
