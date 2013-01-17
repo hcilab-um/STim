@@ -51,7 +51,7 @@ namespace STimWPF
 			CoreInstance.InteractionCtr.MouseBoundaries = new Rect(Left, Top, ActualWidth, ActualHeight);
 		}
 
-		private void textEntryW_Closed(object sender, EventArgs e)
+		private void contentW_Closed(object sender, EventArgs e)
 		{
 			AppInstance.CloseApp(this);
 		}

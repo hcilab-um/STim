@@ -6,6 +6,7 @@ using System.ComponentModel;
 using Microsoft.Kinect;
 using System.Windows.Media.Media3D;
 using STimWPF.Util;
+using STimWPF.Properties;
 
 namespace STimWPF.Interaction
 {
@@ -13,17 +14,45 @@ namespace STimWPF.Interaction
 	{
 		//If there is a displacement of at least the value below of in the dimension of the push then the values
 		// on the two other dimensions are blocked.
-		private const double CLOSE_CONSTRAIN = 0.5;
-		private const double INTERACTION_CONSTRAIN = 1.0;
-		private const double NOTIFICATION = 2.0;
-		private const double DISPLAY_DISTANCE = 0.81;
-		private readonly double STANDARD_ANGLE_R = ToolBox.AngleToRadian(90 - 29);
 		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0,0,1);
 		private static readonly Vector3D kinectLocation = new Vector3D(0,0,0);
 		private Vector3D headLocation;
 		private double userDisplayDistance;
-		private InteractionZone interactZone = InteractionZone.Ambient;
+		private double standardAngleInRadian;
+		private InteractionZone interactZone;
+		private bool isSimulating;
 		
+		public bool IsSimulating
+		{
+			get { return isSimulating; }
+			set
+			{
+				isSimulating = value;
+				OnPropertyChanged("IsSimulating");
+			}
+		}
+
+		public double StandardAngleInRadian
+		{
+			get { return standardAngleInRadian; }
+			set 
+			{
+				standardAngleInRadian = value;
+				OnPropertyChanged("StandardAngleInRadian");
+			}
+		}
+
+		public double UserDisplayDistance
+		{
+			get { return userDisplayDistance; }
+			set 
+			{
+				userDisplayDistance = value;
+				DetectZone();
+				OnPropertyChanged("UserDisplayDistance");
+			}
+		}
+
 		public InteractionZone InteractionZone
 		{
 			get { return interactZone; }
@@ -36,10 +65,17 @@ namespace STimWPF.Interaction
 
 		public JointType Head { get; set; }
 
-		public VisitorController() { }
+		public VisitorController() 
+		{
+			standardAngleInRadian = ToolBox.AngleToRadian(90);
+			interactZone = InteractionZone.Ambient;
+			IsSimulating = false;
+		}
 
 		public void DetectUserPosition(Skeleton skeleton)
 		{
+			if (IsSimulating)
+				return;
 			Head = JointType.Head;
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
 			headLocation = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
@@ -48,31 +84,36 @@ namespace STimWPF.Interaction
 			
 			if (headLocation.Y < 0)
 			{
-				userDisplayDistance = Math.Sin(STANDARD_ANGLE_R - currentAngleR) * headDistance - DISPLAY_DISTANCE;
+				UserDisplayDistance = Math.Sin(StandardAngleInRadian - currentAngleR) * headDistance - Settings.Default.Kinect_DisplayDistance;
 			}
 			else
 			{
-				userDisplayDistance = Math.Sin(STANDARD_ANGLE_R + currentAngleR) * headDistance - DISPLAY_DISTANCE;
+				UserDisplayDistance = Math.Sin(StandardAngleInRadian + currentAngleR) * headDistance - Settings.Default.Kinect_DisplayDistance;
 			}
+		}
 
-			if (userDisplayDistance < CLOSE_CONSTRAIN)
+		private void DetectZone()
+		{
+			if (userDisplayDistance < Settings.Default.CloseZoneConstrain)
 			{
 				InteractionZone = InteractionZone.Close;
 			}
-			else if (userDisplayDistance >= CLOSE_CONSTRAIN && userDisplayDistance < INTERACTION_CONSTRAIN)
+			else if (userDisplayDistance >= Settings.Default.CloseZoneConstrain && userDisplayDistance < Settings.Default.InteractionZoneConstrain)
 			{
 				InteractionZone = InteractionZone.Interaction;
 			}
-			else if (userDisplayDistance >= INTERACTION_CONSTRAIN && userDisplayDistance < NOTIFICATION)
+			else if (userDisplayDistance >= Settings.Default.InteractionZoneConstrain && userDisplayDistance < Settings.Default.NotificationZoneConstrain)
 			{
 				InteractionZone = InteractionZone.Notification;
 			}
-			else if (userDisplayDistance >= NOTIFICATION)
+			else if (userDisplayDistance >= Settings.Default.NotificationZoneConstrain)
 			{
 				InteractionZone = InteractionZone.Ambient;
 			}
 		}
+		
 		public event PropertyChangedEventHandler PropertyChanged;
+		
 		private void OnPropertyChanged(String name)
 		{
 			if (PropertyChanged != null)

@@ -18,7 +18,7 @@ namespace STimWPF
 	{
 
 		public ControlWindow MainW { get; set; }
-		public ContentWindow TextEntryW { get; set; }
+		public ContentWindow contentW { get; set; }
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
@@ -28,10 +28,10 @@ namespace STimWPF
 			Core.Instance.Initialize(Dispatcher, Settings.Default.SkeletonBufferSize, destFolder, Settings.Default.PlayerBufferSize);
 
 			MainW = new ControlWindow(this);
-			TextEntryW = new ContentWindow(this);
+			contentW = new ContentWindow(this);
 
 			MainW.Show();
-			TextEntryW.Show();
+			contentW.Show();
 		}
 
 		protected override void OnExit(ExitEventArgs e)
@@ -44,8 +44,8 @@ namespace STimWPF
 		{
 			if (sender != MainW)
 				MainW.Close();
-			if (sender != TextEntryW)
-				TextEntryW.Close();
+			if (sender != contentW)
+				contentW.Close();
 		}
 
 	}

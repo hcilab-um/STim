@@ -10,6 +10,7 @@ using STimWPF.Playback;
 using STimWPF.Interaction;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using STimWPF.Util;
 
 namespace STimWPF
 {
@@ -36,7 +37,6 @@ namespace STimWPF
 		private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
 		private readonly Brush inferredJointBrush = Brushes.Yellow;
 		private const double JointThickness = 3;
-
 		private static Core instance = null;
 		public static Core Instance
 		{
@@ -64,7 +64,6 @@ namespace STimWPF
 			Player.SkeletonFrameReady += new EventHandler<PlayerSkeletonFrameReadyEventArgs>(Player_SkeletonFrameReady);
 			InteractionCtr = new InteractionController();
 			VisitorCtr = new VisitorController();
-
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
 				IsKinectConnected = false;
@@ -78,12 +77,14 @@ namespace STimWPF
 					IsKinectConnected = false;
 				else
 				{
+					//need to update the kinect gear angle to figure out user distance
+					
 					kinectSensor.DepthStream.Enable();
 					kinectSensor.ColorStream.Enable();
 					kinectSensor.SkeletonStream.Enable();
 					kinectSensor.Start();
 					kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
-
+					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - kinectSensor.ElevationAngle);
 				}
 			}
 		}

@@ -75,13 +75,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AnimationControls\AnimatedRectControl.xaml.cs">
+      <DependentUpon>AnimatedRectControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CircularList.cs" />
     <Compile Include="Converters\AndConverter.cs" />
+    <Compile Include="Converters\DistanceRectSizeConverter.cs" />
     <Compile Include="Converters\MethodVisibilityConverter.cs" />
     <Compile Include="Converters\NegateVisibilityConverter.cs" />
     <Compile Include="Converters\OrConverter.cs" />
     <Compile Include="Converters\SelectionMethodConverter.cs" />
     <Compile Include="Converters\TimerLocationConverter.cs" />
+    <Compile Include="Converters\ZoneVisibilityConverter.cs" />
     <Compile Include="DepthImageReadyArgs.cs" />
     <Compile Include="Interaction\MouseController.cs" />
     <Compile Include="Interaction\VisitorController.cs" />
@@ -102,6 +107,10 @@
     <Compile Include="Playback\SkeletonRecorder.cs" />
     <Compile Include="Playback\SkeletonPlayer.cs" />
     <Compile Include="Util\ToolBox.cs" />
+    <Page Include="AnimationControls\AnimatedRectControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -14,5 +14,17 @@
     <Setting Name="DecimalPrecision" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
+    <Setting Name="CloseZoneConstrain" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.5</Value>
+    </Setting>
+    <Setting Name="InteractionZoneConstrain" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="NotificationZoneConstrain" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="Kinect_DisplayDistance" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.81</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

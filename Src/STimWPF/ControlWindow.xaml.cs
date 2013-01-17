@@ -139,7 +139,7 @@ namespace STimWPF
 		private void bReset_Click(object sender, RoutedEventArgs e)
 		{
 			CoreInstance.SkeletonF.Reset();
-			appInstance.TextEntryW.Reset();
+			appInstance.contentW.Reset();
 			
 		}
 

@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				xmlns:converter="clr-namespace:STimWPF.Converters"
-        Title="WAG - ControlWindow" Height="497" Width="405" ResizeMode="NoResize" Loaded="ControlWindow_Loaded" Closed="ControlWindow_Closed">
+				xmlns:properties="clr-namespace:STimWPF.Properties"
+        Title="WAG - ControlWindow" Height="517" Width="405" ResizeMode="NoResize" Loaded="ControlWindow_Loaded" Closed="ControlWindow_Closed">
 	<Window.Resources>
 		<converter:AndConverter x:Key="AndConverter" />
 		<converter:OrConverter x:Key="OrConverter" />
@@ -56,6 +57,13 @@
 		</StackPanel>
 		<StackPanel>
 			<TextBlock Text="{Binding ElementName=mwObject, Path=CoreInstance.VisitorCtr.InteractionZone}" Height="23" />
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<CheckBox Content="Simulate Proximity" IsChecked="{Binding ElementName=mwObject, Path=CoreInstance.VisitorCtr.IsSimulating, FallbackValue=false}"/>
+			<Slider Margin="10,0" IsEnabled="{Binding ElementName=mwObject, Path=CoreInstance.VisitorCtr.IsSimulating, FallbackValue=false}" 
+							Minimum="0" Value="{Binding Mode=TwoWay, ElementName=mwObject, Path=CoreInstance.VisitorCtr.UserDisplayDistance}" 
+							Maximum="{Binding Source={x:Static properties:Settings.Default}, Path=NotificationZoneConstrain}" Width="250">
+			</Slider>
 		</StackPanel>
 	</StackPanel>
 </Window>
