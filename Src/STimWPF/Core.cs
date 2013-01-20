@@ -20,7 +20,7 @@ namespace STimWPF
 		const int VISITOR_SHIFT = 80;
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 		public event EventHandler<DepthImageReadyArgs> DepthImageReady;
-
+	
 		public SkeletonFilter SkeletonF { get; set; }
 		public InteractionController InteractionCtr { get; set; }
 		public VisitorController VisitorCtr { get; set; }
@@ -50,9 +50,7 @@ namespace STimWPF
 
 		public bool IsKinectConnected { get; set; }
 
-		private Core()
-		{
-		}
+		private Core(){}
 
 		public void Initialize(Dispatcher uiDispatcher, int skeletonBufferSize, String destFolder, int playerBufferSize)
 		{

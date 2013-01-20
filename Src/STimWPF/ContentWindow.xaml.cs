@@ -11,17 +11,28 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using Microsoft.Kinect;
+using STimWPF.Interaction;
 
 namespace STimWPF
 {
 	/// <summary>
 	/// Interaction logic for TextEntryWindow.xaml
 	/// </summary>
-	public partial class ContentWindow : Window
+	public partial class ContentWindow : Window, INotifyPropertyChanged
 	{
+		private ContentState contentState;
+		public ContentState ContentState
+		{
+			get { return contentState; }
+			set
+			{
+				contentState = value;
+				OnPropertyChanged("ContentState");
+			}
+		}
 
 		public App AppInstance { get; set; }
-		
+
 		public Core CoreInstance
 		{
 			get { return Core.Instance; }
@@ -30,6 +41,7 @@ namespace STimWPF
 		public ContentWindow(App appInst)
 		{
 			AppInstance = appInst;
+			ContentState = ContentState.Overview;
 			InitializeComponent();
 			CoreInstance.InteractionCtr.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(InteractionCtr_PropertyChanged);
 			LocationChanged += new EventHandler(ContentWindow_LocationChanged);
@@ -56,32 +68,10 @@ namespace STimWPF
 			AppInstance.CloseApp(this);
 		}
 
-		public void Reset()
-		{
-		}
+		public void Reset() { }
 
 		void InteractionCtr_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-		}
-
-		private void bA_Click(object sender, RoutedEventArgs e)
-		{
-			tb_Result.Text = tb_Result.Text + "A";
-		}
-
-		private void bB_Click(object sender, RoutedEventArgs e)
-		{
-			tb_Result.Text = tb_Result.Text + "B";
-		}
-
-		private void bC_Click(object sender, RoutedEventArgs e)
-		{
-			tb_Result.Text = tb_Result.Text + "C";
-		}
-
-		private void bD_Click(object sender, RoutedEventArgs e)
-		{
-			tb_Result.Text = tb_Result.Text + "D";
 		}
 
 		private void ContentWindow_Loaded(object sender, RoutedEventArgs e)
@@ -92,6 +82,28 @@ namespace STimWPF
 		void CoreInstance_DepthImageReady(object sender, DepthImageReadyArgs e)
 		{
 			this.iKinectDepth.Source = e.Frame;
+		}
+
+		void Overview_Clicked(object sender, EventArgs e)
+		{
+			ContentState = ContentState.Overview;
+		}
+
+		private void Descrption_Clicked(object sender, RoutedEventArgs e)
+		{
+			ContentState = ContentState.Description;
+		}
+
+		private void Detail_Clicked(object sender, RoutedEventArgs e)
+		{
+			ContentState = ContentState.Detail;
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		private void OnPropertyChanged(String name)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(name));
 		}
 	}
 }

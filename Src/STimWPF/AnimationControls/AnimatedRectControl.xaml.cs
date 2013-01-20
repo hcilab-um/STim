@@ -95,6 +95,7 @@ namespace STimWPF.AnimationControls
 			}
 			else
 			{
+				//trick from: http://joshsmithonwpf.wordpress.com/2008/08/21/removing-the-value-applied-by-an-animation/
 				animatedRect.BeginAnimation(Rectangle.WidthProperty, null);
 				animatedRect.BeginAnimation(Rectangle.HeightProperty, null);
 			}

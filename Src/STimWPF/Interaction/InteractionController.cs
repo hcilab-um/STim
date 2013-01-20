@@ -22,7 +22,8 @@ namespace STimWPF.Interaction
 		private Object processingLock = new Object();
 		private EventWaitHandle processingWaitHandle = new EventWaitHandle(true, EventResetMode.AutoReset);
 
-		private Point3D cursorLocation;
+		private Point3D absoluteCursorLocation;
+		private Point3D relativeCursorLocation;
 		private SelectionMethod selectionMethod;
 		private InteractionZone interactionZone;
 
@@ -41,16 +42,26 @@ namespace STimWPF.Interaction
 		
 		public GestureRecognizer Recognizer { get; set; }
 
-		public Point3D CursorLocation
+		public Point3D AbsoluteCursorLocation
 		{
-			get { return cursorLocation; }
+			get { return absoluteCursorLocation; }
 			set
 			{
-				cursorLocation = value;
-				OnPropertyChanged("CursorLocation");
+				absoluteCursorLocation = value;
+				OnPropertyChanged("AbsoluteCursorLocation");
 			}
 		}
 
+		public Point3D RelativeCursorLocation
+		{
+			get { return relativeCursorLocation; }
+			set
+			{
+				relativeCursorLocation = value;
+				OnPropertyChanged("RelativeCursorLocation");
+			}
+		}
+		
 		public Rect MouseBoundaries { get; set; }
 
 		public SelectionMethod SelectionMethod
@@ -102,8 +113,8 @@ namespace STimWPF.Interaction
 			planeRadius = -1;
 			Recognizer = new GestureRecognizer();
 			PropertyChanged += new PropertyChangedEventHandler(Recognizer.InteractionCtrngine_PropertyChanged);
-
-			CursorLocation = new Point3D(0, 0, 0);
+			RelativeCursorLocation = new Point3D(0, 0, 0);
+			AbsoluteCursorLocation = new Point3D(0, 0, 0);
 			SelectionMethod = STimWPF.Interaction.SelectionMethod.Click;
 		}
 
@@ -128,14 +139,15 @@ namespace STimWPF.Interaction
 			if (interactionZone == Interaction.InteractionZone.Interaction)
 			{
 				//1- find the position of the cursor on the layout plane
-				CursorLocation = FindCursorPosition(skeleton, MouseBoundaries, selectionMethod);
+				RelativeCursorLocation = FindCursorPosition(skeleton, MouseBoundaries, selectionMethod);
+				AbsoluteCursorLocation = ConvertToAbsoluteCursorLocation(RelativeCursorLocation, MouseBoundaries);
 				//3- Looks for gestures [pressed, released]
-				ICollection<InteractionGesture> gestures = Recognizer.ProcessGestures(skeleton, deltaMilliseconds, cursorLocation, selectionMethod, HasUserClicked);
+				ICollection<InteractionGesture> gestures = Recognizer.ProcessGestures(skeleton, deltaMilliseconds, absoluteCursorLocation, selectionMethod, HasUserClicked);
 				if (gestures != null && gestures.Count > 0 && gestures.ElementAt(0).Type == GestureType.Tap)
 				{
 					leftClick = true;
 				}
-				MouseController.SendMouseInput((int)CursorLocation.X, (int)CursorLocation.Y, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, leftClick);
+				MouseController.SendMouseInput((int)AbsoluteCursorLocation.X, (int)AbsoluteCursorLocation.Y, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, leftClick);
 			}
 		}
 
@@ -185,20 +197,23 @@ namespace STimWPF.Interaction
 			planeOrigin = ToolBox.GetDisplacementVector(coordinateOriginP, shoulderRightP);
 			planeOrigin *= transformMatrix;
 
-			Vector3D cursorP = ToolBox.GetMiddleVector(handRightP, wristRightP);
-			cursorP = ToolBox.GetDisplacementVector(coordinateOriginP, cursorP);
-			cursorP *= transformMatrix;
-			cursorP = ToolBox.GetDisplacementVector(planeOrigin, cursorP);
+			Vector3D relativePos = ToolBox.GetMiddleVector(handRightP, wristRightP);
+			relativePos = ToolBox.GetDisplacementVector(coordinateOriginP, relativePos);
+			relativePos *= transformMatrix;
+			relativePos = ToolBox.GetDisplacementVector(planeOrigin, relativePos);
 
-			if (cursorP.X < 0 || cursorP.Y < 0)
+			if (relativePos.X < 0 || relativePos.Y < 0)
 				return new Point3D(-1,-1,-1);
-			if (cursorP.X > planeWidth || cursorP.Y >planeHeight)
+			if (relativePos.X > planeWidth || relativePos.Y >planeHeight)
 				return new Point3D(-1, -1, -1);
-			cursorP.X = cursorP.X / (planeWidth) * boundary.Width + boundary.X;
-			cursorP.Y = cursorP.Y / (planeHeight) * boundary.Height + boundary.Y;
-			return (Point3D)cursorP;
+			relativePos.X = relativePos.X / (planeWidth) * boundary.Width;
+			relativePos.Y = relativePos.Y / (planeHeight) * boundary.Height;
+			return (Point3D)relativePos;
 		}
-
+		private Point3D ConvertToAbsoluteCursorLocation(Point3D relativePos, Rect windowRect)
+		{
+			return new Point3D(relativePos.X + windowRect.X, relativePos.Y + windowRect.Y, relativePos.Z);
+		}
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void OnPropertyChanged(String name, object value = null)
 		{
