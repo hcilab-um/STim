@@ -24,7 +24,45 @@ namespace STimWPF
 			this.kinectSensor = kinectSensor;
 		}
 
-		public void DrawSkeleton(Skeleton skeleton, DrawingContext drawingContext)
+		public void DrawRightArmSkeleton(Skeleton skeleton, DrawingContext drawingContext)
+		{
+			if (skeleton == null)
+				return;
+			// Right Arm
+			this.DrawBone(skeleton, drawingContext, JointType.ShoulderRight, JointType.ElbowRight);
+			this.DrawBone(skeleton, drawingContext, JointType.ElbowRight, JointType.WristRight);
+			this.DrawBone(skeleton, drawingContext, JointType.WristRight, JointType.HandRight);
+			
+			Joint shoulderR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.ShoulderRight);
+			Joint elbowR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.ElbowRight);
+			Joint wristR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.WristRight);
+			Joint handR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.HandRight);
+			
+			RenderAJoint(drawingContext, shoulderR);
+			RenderAJoint(drawingContext, elbowR);
+			RenderAJoint(drawingContext, wristR);
+			RenderAJoint(drawingContext, handR);
+		}
+
+		private void RenderAJoint(DrawingContext drawingContext, Joint joint)
+		{
+			Brush drawBrush = null;
+			if (joint.TrackingState == JointTrackingState.Tracked)
+			{
+				drawBrush = this.trackedJointBrush;
+			}
+			else if (joint.TrackingState == JointTrackingState.Inferred)
+			{
+				drawBrush = this.inferredJointBrush;
+			}
+
+			if (drawBrush != null)
+			{
+				drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(joint.Position), JointThickness, JointThickness);
+			}
+		}
+
+		public void DrawFullSkeleton(Skeleton skeleton, DrawingContext drawingContext)
 		{
 			if (skeleton == null)
 				return;
@@ -61,21 +99,7 @@ namespace STimWPF
 			// Render Joints
 			foreach (Joint joint in skeleton.Joints)
 			{
-				Brush drawBrush = null;
-
-				if (joint.TrackingState == JointTrackingState.Tracked)
-				{
-					drawBrush = this.trackedJointBrush;
-				}
-				else if (joint.TrackingState == JointTrackingState.Inferred)
-				{
-					drawBrush = this.inferredJointBrush;
-				}
-
-				if (drawBrush != null)
-				{
-					drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(joint.Position), JointThickness, JointThickness);
-				}
+				RenderAJoint(drawingContext, joint);
 			}
 		}
 

@@ -87,7 +87,6 @@ namespace STimWPF
 			}
 		}
 
-
 		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
 			if (PlayBackFromFile)
@@ -137,7 +136,8 @@ namespace STimWPF
 			{
 				if (DepthImageReady != null && depthFrame != null)
 				{
-					DepthImageReady(this, new DepthImageReadyArgs() { Frame = DrawDepthImage(depthFrame, stableSkeleton, VisitorCtr.InteractionZone) });
+					DrawingImage imageCanvas = DrawDepthImage(depthFrame, stableSkeleton);
+					DepthImageReady(this, new DepthImageReadyArgs() { Frame = imageCanvas });
 				}
 			}
 
@@ -145,67 +145,10 @@ namespace STimWPF
 			{
 				if (ColorImageReady != null)
 				{
-					DrawingImage imageCanvas = DrawImage(colorFrame, stableSkeleton);
+					DrawingImage imageCanvas = DrawColorImage(colorFrame, stableSkeleton);
 					ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
 				}
 			}
-		}
-
-		ImageSource DrawDepthImage(DepthImageFrame depthFrame, Skeleton stableSkeleton, InteractionZone zone)
-		{
-			DepthImagePixel[] depthPixels;
-			byte[] colorPixels;
-			// Allocate space to put the depth pixels we'll receive
-			depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
-
-			// Allocate space to put the color pixels we'll create
-			colorPixels = new byte[kinectSensor.DepthStream.FramePixelDataLength * sizeof(int)];
-
-			// This is the bitmap we'll display on-screen
-			WriteableBitmap colorBitmap = new WriteableBitmap(kinectSensor.DepthStream.FrameWidth, kinectSensor.DepthStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
-			depthFrame.CopyDepthImagePixelDataTo(depthPixels);
-			// Convert the depth to RGB
-			int colorPixelIndex = 0;
-			byte intensity = 255;
-			short zoneShift =0;
-			if (zone == InteractionZone.Interaction)
-			{
-				zoneShift = 70;
-			}
-			else
-			{
-				zoneShift = 0;
-			}
-			for (int i = 0; i < depthPixels.Length; ++i)
-			{
-				if (depthPixels[i].PlayerIndex != 0)
-				{
-					// Write out blue byte
-					colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT);
-					// Write out green byte										 
-					colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT);
-					// Write out red byte                 		 
-					colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT + zoneShift);
-				}
-				else 
-				{
-					// Write out blue byte	
-					colorPixels[colorPixelIndex++] = intensity;
-					// Write out green byte					 
-					colorPixels[colorPixelIndex++] = intensity;
-					// Write out red byte                 
-					colorPixels[colorPixelIndex++] = intensity;
-				}
-
-				++colorPixelIndex;
-			}
-			// Write the pixel data into our bitmap
-			colorBitmap.WritePixels(
-					new Int32Rect(0, 0, colorBitmap.PixelWidth, colorBitmap.PixelHeight),
-					colorPixels,
-					colorBitmap.PixelWidth * sizeof(int),
-					0);
-			return colorBitmap;
 		}
 
 		void Player_SkeletonFrameReady(object sender, PlayerSkeletonFrameReadyEventArgs e)
@@ -219,12 +162,75 @@ namespace STimWPF
 			//We paint the skeleton and send the image over to the UI
 			if (ColorImageReady != null)
 			{
-				DrawingImage imageCanvas = DrawImage(null, stableSkeleton);
+				DrawingImage imageCanvas = DrawColorImage(null, stableSkeleton);
 				ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
 			}
 		}
 
-		private static void InitializeDrawingImage(ColorImageFrame colorFrame, DrawingContext drawingContext)
+		void InitializeShadowImage(DepthImageFrame depthFrame, InteractionZone zone, DrawingContext drawingContext)
+		{
+			if (depthFrame != null)
+			{
+				DepthImagePixel[] depthPixels;
+				byte[] colorPixels;
+				// Allocate space to put the depth pixels we'll receive
+				depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
+
+				// Allocate space to put the color pixels we'll create
+				colorPixels = new byte[kinectSensor.DepthStream.FramePixelDataLength * sizeof(int)];
+
+				// This is the bitmap we'll display on-screen
+				WriteableBitmap colorBitmap = new WriteableBitmap(kinectSensor.DepthStream.FrameWidth, kinectSensor.DepthStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
+				depthFrame.CopyDepthImagePixelDataTo(depthPixels);
+				// Convert the depth to RGB
+				int colorPixelIndex = 0;
+				byte intensity = 255;
+				short zoneShift = 0;
+				if (zone == InteractionZone.Interaction)
+				{
+					zoneShift = 70;
+				}
+				else
+				{
+					zoneShift = 0;
+				}
+				for (int i = 0; i < depthPixels.Length; ++i)
+				{
+					if (depthPixels[i].PlayerIndex != 0)
+					{
+						
+						// Write out blue byte
+						colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT);
+						// Write out green byte										 
+						colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT);
+						// Write out red byte                 		 
+						colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT + zoneShift);
+					}
+					else
+					{
+						// Write out blue byte	
+						colorPixels[colorPixelIndex++] = intensity;
+						// Write out green byte					 
+						colorPixels[colorPixelIndex++] = intensity;
+						// Write out red byte                 
+						colorPixels[colorPixelIndex++] = intensity;
+					}
+
+					++colorPixelIndex;
+				}
+				// Write the pixel data into our bitmap
+				colorBitmap.WritePixels(
+						new Int32Rect(0, 0, colorBitmap.PixelWidth, colorBitmap.PixelHeight),
+						colorPixels,
+						colorBitmap.PixelWidth * sizeof(int),
+						0);
+				drawingContext.DrawImage(colorBitmap, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+			}
+			else
+				drawingContext.DrawRectangle(Brushes.Transparent, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+		}
+
+		private static void InitializeColorImage(ColorImageFrame colorFrame, DrawingContext drawingContext)
 		{
 			if (colorFrame != null)
 			{
@@ -242,16 +248,35 @@ namespace STimWPF
 			}
 		}
 
+		private DrawingImage DrawDepthImage(DepthImageFrame depthFrame, Skeleton skeleton)
+		{
+			DrawingGroup dgDepthImageAndSkeleton = new DrawingGroup();
+			DrawingImage drawingImage = new DrawingImage(dgDepthImageAndSkeleton);
+			skeletonDrawer = new SkeletonDrawer(kinectSensor);
+			using (DrawingContext drawingContext = dgDepthImageAndSkeleton.Open())
+			{
+				if(VisitorCtr.InteractionZone == InteractionZone.Interaction)
+				{
+					InitializeShadowImage(null, VisitorCtr.InteractionZone, drawingContext);
+					skeletonDrawer.DrawRightArmSkeleton(skeleton, drawingContext);
+				}
+				else
+					InitializeShadowImage(depthFrame, VisitorCtr.InteractionZone, drawingContext);
+			}
+			dgDepthImageAndSkeleton.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+			return drawingImage;
+		}
+
 		//drawing color image and skeleton
-		private DrawingImage DrawImage(ColorImageFrame colorFrame, Skeleton skeleton)
+		private DrawingImage DrawColorImage(ColorImageFrame colorFrame, Skeleton skeleton)
 		{
 			DrawingGroup dgColorImageAndSkeleton = new DrawingGroup();
 			DrawingImage drawingImage = new DrawingImage(dgColorImageAndSkeleton);
 			skeletonDrawer = new SkeletonDrawer(kinectSensor);
 			using (DrawingContext drawingContext = dgColorImageAndSkeleton.Open())
 			{
-				InitializeDrawingImage(colorFrame, drawingContext);
-				skeletonDrawer.DrawSkeleton(skeleton, drawingContext);
+				InitializeColorImage(colorFrame, drawingContext);
+				skeletonDrawer.DrawFullSkeleton(skeleton, drawingContext);
 			}
 
 			//Make sure the image remains within the defined width and height

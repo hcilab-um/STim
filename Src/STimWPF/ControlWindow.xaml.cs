@@ -139,13 +139,7 @@ namespace STimWPF
 		private void bReset_Click(object sender, RoutedEventArgs e)
 		{
 			CoreInstance.SkeletonF.Reset();
-			appInstance.contentW.Reset();
-			
 		}
 
-		private void btSelectionClick_Click(object sender, RoutedEventArgs e)
-		{
-			Core.Instance.InteractionCtr.HasUserClicked = true;
-		}
 	}
 }

@@ -83,7 +83,9 @@
     </Compile>
     <Compile Include="CircularList.cs" />
     <Compile Include="Converters\AndConverter.cs" />
+    <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\ContentStateVisibilityConverter.cs" />
+    <Compile Include="Converters\DetailContentStateVisibilityConverter.cs" />
     <Compile Include="Converters\DistanceRectSizeConverter.cs" />
     <Compile Include="Converters\LocationMarginConverter.cs" />
     <Compile Include="Converters\MethodVisibilityConverter.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="Converters\ZoneVisibilityConverter.cs" />
     <Compile Include="DepthImageReadyArgs.cs" />
     <Compile Include="Interaction\ContentState.cs" />
+    <Compile Include="Interaction\DetailContentState.cs" />
     <Compile Include="Interaction\MouseController.cs" />
     <Compile Include="Interaction\VisitorController.cs" />
     <Compile Include="ContentWindow.xaml.cs">
@@ -194,6 +197,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fart.exe" />
+    <Resource Include="image\man.png" />
+    <Resource Include="image\stick.png" />
+    <Resource Include="image\window.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

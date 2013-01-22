@@ -21,6 +21,8 @@ namespace STimWPF
 	public partial class ContentWindow : Window, INotifyPropertyChanged
 	{
 		private ContentState contentState;
+		private DetailContentState detailContentState;
+		
 		public ContentState ContentState
 		{
 			get { return contentState; }
@@ -28,6 +30,16 @@ namespace STimWPF
 			{
 				contentState = value;
 				OnPropertyChanged("ContentState");
+			}
+		}
+
+		public DetailContentState DetailContentState
+		{
+			get { return detailContentState; }
+			set
+			{
+				detailContentState = value;
+				OnPropertyChanged("DetailContentState");
 			}
 		}
 
@@ -68,8 +80,6 @@ namespace STimWPF
 			AppInstance.CloseApp(this);
 		}
 
-		public void Reset() { }
-
 		void InteractionCtr_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 		}
@@ -99,11 +109,27 @@ namespace STimWPF
 			ContentState = ContentState.Detail;
 		}
 
+		private void PartA_Click(object sender, RoutedEventArgs e)
+		{
+			DetailContentState = DetailContentState.PartA;
+		}
+
+		private void PartB_Click(object sender, RoutedEventArgs e)
+		{
+			DetailContentState = DetailContentState.PartB;
+		}
+
+		private void PartC_Click(object sender, RoutedEventArgs e)
+		{
+			DetailContentState = DetailContentState.PartC;
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void OnPropertyChanged(String name)
 		{
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(name));
 		}
+
 	}
 }

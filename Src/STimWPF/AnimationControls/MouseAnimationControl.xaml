@@ -13,7 +13,7 @@
 		<DoubleAnimation x:Key="StopSelectionAnimationColor" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0" />
 	</UserControl.Resources>
 	<Grid>
-		<Ellipse x:Name="sSelectionTimer" Fill="Green" Opacity="0.7">
+		<Ellipse x:Name="sSelectionTimer" Fill="Green" Stroke="Green" Opacity="0.7">
 			<Ellipse.Style>
 				<Style>
 					<Style.Triggers>

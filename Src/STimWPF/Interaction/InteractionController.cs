@@ -21,7 +21,7 @@ namespace STimWPF.Interaction
 		//private int currentFrame = 1;// totalFrames = 0;
 		private Object processingLock = new Object();
 		private EventWaitHandle processingWaitHandle = new EventWaitHandle(true, EventResetMode.AutoReset);
-
+		private bool leftClick = false;
 		private Point3D absoluteCursorLocation;
 		private Point3D relativeCursorLocation;
 		private SelectionMethod selectionMethod;
@@ -49,6 +49,16 @@ namespace STimWPF.Interaction
 			{
 				absoluteCursorLocation = value;
 				OnPropertyChanged("AbsoluteCursorLocation");
+			}
+		}
+
+		public bool LeftClick
+		{
+			get { return leftClick; }
+			set
+			{
+				leftClick = value;
+				OnPropertyChanged("LeftClick");
 			}
 		}
 
@@ -135,7 +145,7 @@ namespace STimWPF.Interaction
 		private void DoWork(Skeleton skeleton, double deltaMilliseconds, InteractionZone interactionZone)
 		{
 			Size layoutSize = new Size(35, 35);
-			bool leftClick = false;
+			LeftClick = false;
 			if (interactionZone == Interaction.InteractionZone.Interaction)
 			{
 				//1- find the position of the cursor on the layout plane
@@ -145,9 +155,12 @@ namespace STimWPF.Interaction
 				ICollection<InteractionGesture> gestures = Recognizer.ProcessGestures(skeleton, deltaMilliseconds, absoluteCursorLocation, selectionMethod, HasUserClicked);
 				if (gestures != null && gestures.Count > 0 && gestures.ElementAt(0).Type == GestureType.Tap)
 				{
-					leftClick = true;
+					LeftClick = true;
 				}
-				MouseController.SendMouseInput((int)AbsoluteCursorLocation.X, (int)AbsoluteCursorLocation.Y, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, leftClick);
+				if (SelectionMethod == Interaction.SelectionMethod.Timer)
+				{
+					MouseController.SendMouseInput((int)AbsoluteCursorLocation.X, (int)AbsoluteCursorLocation.Y, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, leftClick);
+				}
 			}
 		}
 
