@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				xmlns:converters="clr-namespace:STimWPF.Converters"
         xmlns:controls="clr-namespace:STimWPF.Controls"
+				WindowState="Maximized" ResizeMode="NoResize"
 				Title="WAG - ContentWindow" Width="900" Height="900" Closed="contentW_Closed" Loaded="ContentWindow_Loaded">
 	<Window.Resources>
 		<converters:SelectionMethodConverter x:Key="smConverter" />
