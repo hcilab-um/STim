@@ -16,9 +16,8 @@
 	</UserControl.Resources>
 	<Grid>
 		<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
-
 			<!-- User Shadow -->
-			<Grid HorizontalAlignment="Center" VerticalAlignment="Top">
+			<Grid HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Top">
 				<StackPanel Name="sp_Overview" Visibility="{Binding ElementName=interactionControl, Path=ContentState, Converter={StaticResource ResourceKey=cvConverter}, ConverterParameter=overview}" Margin="10">
 					<Label Content="Overview" FontFamily="Times New Roman" FontSize="30" FontWeight="Bold"/>
 					<StackPanel Margin="40,10">

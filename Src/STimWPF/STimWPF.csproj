@@ -212,6 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fart.exe" />
+    <Resource Include="image\artifect.png" />
     <Resource Include="image\man.png" />
     <Resource Include="image\stick.png" />
     <Resource Include="image\window.png" />
