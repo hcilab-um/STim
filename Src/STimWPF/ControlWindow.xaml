@@ -56,7 +56,7 @@
 			</Button>
 		</StackPanel>
 		<StackPanel>
-			<TextBlock Text="{Binding ElementName=mwObject, Path=CoreInstance.VisitorCtr.InteractionZone}" Height="23" />
+			<TextBlock Text="{Binding ElementName=mwObject, Path=CoreInstance.VisitorCtr.Zone}" Height="23" />
 		</StackPanel>
 		<StackPanel Orientation="Horizontal">
 			<CheckBox Content="Simulate Proximity" IsChecked="{Binding ElementName=mwObject, Path=CoreInstance.VisitorCtr.IsSimulating, FallbackValue=false}"/>

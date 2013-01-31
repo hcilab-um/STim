@@ -11,17 +11,21 @@ using STimWPF.Interaction;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using STimWPF.Util;
+using STimWPF.Properties;
 
 namespace STimWPF
 {
 	public class Core
 	{
+		const int VISITOR_COLOR_SHIFT = 80;
+		const byte MAX_INTENSITY = 255;	
+
 		private static KinectSensor kinectSensor;
-		const int VISITOR_SHIFT = 80;
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 		public event EventHandler<DepthImageReadyArgs> DepthImageReady;
-	
+
 		public SkeletonFilter SkeletonF { get; set; }
+		public DepthPercentFilter DepthPercentF { get; set; }
 		public InteractionController InteractionCtr { get; set; }
 		public VisitorController VisitorCtr { get; set; }
 		public SkeletonRecorder Recorder { get; set; }
@@ -50,13 +54,14 @@ namespace STimWPF
 
 		public bool IsKinectConnected { get; set; }
 
-		private Core(){}
+		private Core() { }
 
-		public void Initialize(Dispatcher uiDispatcher, int skeletonBufferSize, String destFolder, int playerBufferSize)
+		public void Initialize(Dispatcher uiDispatcher, int skeletonBufferSize, int depthPercentBufferSize, String destFolder, int playerBufferSize)
 		{
 			IsKinectConnected = false;
 			PlayBackFromFile = false;
 			SkeletonF = new SkeletonFilter(skeletonBufferSize);
+			DepthPercentF = new DepthPercentFilter(depthPercentBufferSize);
 			Recorder = new SkeletonRecorder(destFolder);
 			Player = new SkeletonPlayer(playerBufferSize, uiDispatcher);
 			Player.SkeletonFrameReady += new EventHandler<PlayerSkeletonFrameReadyEventArgs>(Player_SkeletonFrameReady);
@@ -71,12 +76,12 @@ namespace STimWPF
 			{
 				IsKinectConnected = true;
 				kinectSensor = KinectSensor.KinectSensors[0];
-				if (kinectSensor == null)
+				if (kinectSensor == null || kinectSensor.Status == KinectStatus.NotPowered)
 					IsKinectConnected = false;
 				else
 				{
 					//need to update the kinect gear angle to figure out user distance
-					
+
 					kinectSensor.DepthStream.Enable();
 					kinectSensor.ColorStream.Enable();
 					kinectSensor.SkeletonStream.Enable();
@@ -124,10 +129,8 @@ namespace STimWPF
 					deltaTime = 0;
 				lastUpdate = currentTimeMilliseconds;
 
-				//Processes the skeleton to find what interaction zone the user is
-				VisitorCtr.DetectUserPosition(stableSkeleton);
 				//Process the skeleton in to control the mouse
-				InteractionCtr.ProcessNewSkeletonData(stableSkeleton, deltaTime, VisitorCtr.InteractionZone);
+				InteractionCtr.ProcessNewSkeletonData(stableSkeleton, deltaTime, VisitorCtr.Zone);
 				//Sends the new skeleton into the recorder
 				Recorder.ProcessNewSkeletonData(rawSkeleton, deltaTime);
 			}
@@ -149,6 +152,9 @@ namespace STimWPF
 					ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
 				}
 			}
+
+			//Processes the skeleton to find what interaction zone the user is
+			VisitorCtr.DetectUserPosition(stableSkeleton);
 		}
 
 		void Player_SkeletonFrameReady(object sender, PlayerSkeletonFrameReadyEventArgs e)
@@ -157,7 +163,7 @@ namespace STimWPF
 			Skeleton stableSkeleton = SkeletonF.ProcessNewSkeletonData(e.FrameSkeleton);
 			VisitorCtr.DetectUserPosition(stableSkeleton);
 			//Process the new skeleton in the Interaction Controller
-			InteractionCtr.ProcessNewSkeletonData(stableSkeleton, e.Delay, VisitorCtr.InteractionZone);
+			InteractionCtr.ProcessNewSkeletonData(stableSkeleton, e.Delay, VisitorCtr.Zone);
 
 			//We paint the skeleton and send the image over to the UI
 			if (ColorImageReady != null)
@@ -167,67 +173,61 @@ namespace STimWPF
 			}
 		}
 
-		void InitializeShadowImage(DepthImageFrame depthFrame, InteractionZone zone, DrawingContext drawingContext)
+		int InitializeShadowImage(DepthImageFrame depthFrame, Zone zone, DrawingContext drawingContext)
 		{
-			if (depthFrame != null)
+			DepthImagePixel[] depthPixels;
+			byte[] colorPixels;
+
+			// Allocate space to put the depth pixels we'll receive
+			depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
+
+			// Allocate space to put the color pixels we'll create
+			colorPixels = new byte[kinectSensor.DepthStream.FramePixelDataLength * sizeof(int)];
+
+			// This is the bitmap we'll display on-screen
+			WriteableBitmap colorBitmap = new WriteableBitmap(kinectSensor.DepthStream.FrameWidth, kinectSensor.DepthStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
+			depthFrame.CopyDepthImagePixelDataTo(depthPixels);
+			// Convert the depth to RGB
+			int colorPixelIndex = 0;
+			byte intensity;
+			short zoneShift = 0;
+			int closePixel = 0;
+
+			if (zone == Zone.Interaction)
 			{
-				DepthImagePixel[] depthPixels;
-				byte[] colorPixels;
-				// Allocate space to put the depth pixels we'll receive
-				depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
-
-				// Allocate space to put the color pixels we'll create
-				colorPixels = new byte[kinectSensor.DepthStream.FramePixelDataLength * sizeof(int)];
-
-				// This is the bitmap we'll display on-screen
-				WriteableBitmap colorBitmap = new WriteableBitmap(kinectSensor.DepthStream.FrameWidth, kinectSensor.DepthStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
-				depthFrame.CopyDepthImagePixelDataTo(depthPixels);
-				// Convert the depth to RGB
-				int colorPixelIndex = 0;
-				byte intensity = 255;
-				short zoneShift = 0;
-				if (zone == InteractionZone.Interaction)
-				{
-					zoneShift = 70;
-				}
-				else
-				{
-					zoneShift = 0;
-				}
-				for (int i = 0; i < depthPixels.Length; ++i)
-				{
-					if (depthPixels[i].PlayerIndex != 0)
-					{
-						
-						// Write out blue byte
-						colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT);
-						// Write out green byte										 
-						colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT);
-						// Write out red byte                 		 
-						colorPixels[colorPixelIndex++] = (byte)(intensity - VISITOR_SHIFT + zoneShift);
-					}
-					else
-					{
-						// Write out blue byte	
-						colorPixels[colorPixelIndex++] = intensity;
-						// Write out green byte					 
-						colorPixels[colorPixelIndex++] = intensity;
-						// Write out red byte                 
-						colorPixels[colorPixelIndex++] = intensity;
-					}
-
-					++colorPixelIndex;
-				}
-				// Write the pixel data into our bitmap
-				colorBitmap.WritePixels(
-						new Int32Rect(0, 0, colorBitmap.PixelWidth, colorBitmap.PixelHeight),
-						colorPixels,
-						colorBitmap.PixelWidth * sizeof(int),
-						0);
-				drawingContext.DrawImage(colorBitmap, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+				zoneShift = 70;
 			}
 			else
-				drawingContext.DrawRectangle(Brushes.Transparent, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+			{
+				zoneShift = 0;
+			}
+			short constrain = (short)(Settings.Default.InteractionZoneConstrain * 1000);
+			for (int i = 0; i < depthPixels.Length; ++i)
+			{
+				closePixel += (depthPixels[i].Depth <= constrain ? 1 : 0);
+
+				intensity = (byte)(depthPixels[i].PlayerIndex != 0 ? MAX_INTENSITY - VISITOR_COLOR_SHIFT : MAX_INTENSITY);
+
+				// Write out blue byte	
+				colorPixels[colorPixelIndex++] = intensity;
+				// Write out green byte					 
+				colorPixels[colorPixelIndex++] = intensity;
+				// Write out red byte                 
+				colorPixels[colorPixelIndex++] = (byte)(depthPixels[i].PlayerIndex != 0 ? intensity + zoneShift : intensity);
+
+				++colorPixelIndex;
+			}
+
+			// Write the pixel data into our bitmap
+			colorBitmap.WritePixels(
+					new Int32Rect(0, 0, colorBitmap.PixelWidth, colorBitmap.PixelHeight),
+					colorPixels,
+					colorBitmap.PixelWidth * sizeof(int),
+					0);
+			drawingContext.DrawImage(colorBitmap, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+			int rawPercent = (int)((double)closePixel / depthPixels.Length * 100);
+			int stablePersent = DepthPercentF.ProcessNewPercentageData(rawPercent);
+			return stablePersent;
 		}
 
 		private static void InitializeColorImage(ColorImageFrame colorFrame, DrawingContext drawingContext)
@@ -255,14 +255,14 @@ namespace STimWPF
 			skeletonDrawer = new SkeletonDrawer(kinectSensor);
 			using (DrawingContext drawingContext = dgDepthImageAndSkeleton.Open())
 			{
-				if(VisitorCtr.InteractionZone == InteractionZone.Interaction)
+				VisitorCtr.ClosePercent = InitializeShadowImage(depthFrame, VisitorCtr.Zone, drawingContext);
+
+				if (VisitorCtr.Zone == Zone.Interaction)
 				{
-					InitializeShadowImage(null, VisitorCtr.InteractionZone, drawingContext);
 					skeletonDrawer.DrawRightArmSkeleton(skeleton, drawingContext);
 				}
-				else
-					InitializeShadowImage(depthFrame, VisitorCtr.InteractionZone, drawingContext);
 			}
+
 			dgDepthImageAndSkeleton.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
 			return drawingImage;
 		}

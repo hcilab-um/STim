@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using STimWPF.Interaction;
 
-namespace STimWPF.AnimationControls
+namespace STimWPF.Controls
 {
 	/// <summary>
 	/// Interaction logic for MouseAnimationControl.xaml

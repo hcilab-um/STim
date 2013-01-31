@@ -28,7 +28,7 @@ namespace STimWPF.Converters
 			if (values[1] == DependencyProperty.UnsetValue || values[2] == DependencyProperty.UnsetValue)
 				return size;
 
-			if ((Interaction.InteractionZone)values[1] == Interaction.InteractionZone.Notification)
+			if ((Interaction.Zone)values[1] == Interaction.Zone.Notification)
 			{
 				distance = (double)values[2] - Settings.Default.InteractionZoneConstrain;
 				if (distance < 0)
@@ -36,8 +36,8 @@ namespace STimWPF.Converters
 				range = Settings.Default.NotificationZoneConstrain - Settings.Default.InteractionZoneConstrain;
 				return size * distance / range;
 			}
-			else if ((Interaction.InteractionZone)values[1] == Interaction.InteractionZone.Interaction
-				|| (Interaction.InteractionZone)values[1] == Interaction.InteractionZone.Close)
+			else if ((Interaction.Zone)values[1] == Interaction.Zone.Interaction
+				|| (Interaction.Zone)values[1] == Interaction.Zone.Close)
 			{
 				return (double)0;
 			}

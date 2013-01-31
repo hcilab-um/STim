@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace STimWPF.AnimationControls
+namespace STimWPF.Controls
 {
 	/// <summary>
 	/// Interaction logic for AnimatedRectControl.xaml
@@ -22,14 +22,14 @@ namespace STimWPF.AnimationControls
 	{
 		public static readonly RoutedEvent TimerElapsedEvent = EventManager.RegisterRoutedEvent("TimerElapsed", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(AnimatedRectControl));
 
-		public static readonly DependencyProperty ZoneProperty = DependencyProperty.Register("Zone", typeof(Interaction.InteractionZone), typeof(AnimatedRectControl));
+		public static readonly DependencyProperty ZoneProperty = DependencyProperty.Register("Zone", typeof(Interaction.Zone), typeof(AnimatedRectControl));
 		public static readonly DependencyProperty NotificationDistanceProperty = DependencyProperty.Register("NotificationDistance", typeof(double), typeof(AnimatedRectControl));
 
 		private const int MAX_ELAPSED_TIME_TICK = 3000;
 
-		public Interaction.InteractionZone Zone
+		public Interaction.Zone Zone
 		{
-			get { return (Interaction.InteractionZone)GetValue(ZoneProperty); }
+			get { return (Interaction.Zone)GetValue(ZoneProperty); }
 			set { SetValue(ZoneProperty, value); }
 		}
 
@@ -69,7 +69,7 @@ namespace STimWPF.AnimationControls
 			timer.Stop();
 			Dispatcher.Invoke(DispatcherPriority.Render, (Action)delegate()
 			{
-				if (Zone != Interaction.InteractionZone.Ambient)
+				if (Zone != Interaction.Zone.Ambient)
 					return;
 
 				animatedRect.RaiseEvent(new RoutedEventArgs(AnimatedRectControl.TimerElapsedEvent, this));
@@ -88,7 +88,7 @@ namespace STimWPF.AnimationControls
 			if (e.Property != AnimatedRectControl.ZoneProperty)
 				return;
 
-			if (Zone == Interaction.InteractionZone.Ambient)
+			if (Zone == Interaction.Zone.Ambient)
 			{
 				timer.Interval = rGenerator.Next() % MAX_ELAPSED_TIME_TICK + 1;
 				timer.Start();

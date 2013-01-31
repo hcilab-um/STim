@@ -75,10 +75,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AnimationControls\AnimatedRectControl.xaml.cs">
+    <Compile Include="Controls\AnimatedRectControl.xaml.cs">
       <DependentUpon>AnimatedRectControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AnimationControls\MouseAnimationControl.xaml.cs">
+    <Compile Include="Controls\AnimationControl.xaml.cs">
+      <DependentUpon>AnimationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\InteractionControl.xaml.cs">
+      <DependentUpon>InteractionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MouseAnimationControl.xaml.cs">
       <DependentUpon>MouseAnimationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="CircularList.cs" />
@@ -95,6 +101,7 @@
     <Compile Include="Converters\TimerLocationConverter.cs" />
     <Compile Include="Converters\ZoneVisibilityConverter.cs" />
     <Compile Include="DepthImageReadyArgs.cs" />
+    <Compile Include="DepthPercentFilter.cs" />
     <Compile Include="Interaction\ContentState.cs" />
     <Compile Include="Interaction\DetailContentState.cs" />
     <Compile Include="Interaction\MouseController.cs" />
@@ -116,11 +123,19 @@
     <Compile Include="Playback\SkeletonRecorder.cs" />
     <Compile Include="Playback\SkeletonPlayer.cs" />
     <Compile Include="Util\ToolBox.cs" />
-    <Page Include="AnimationControls\AnimatedRectControl.xaml">
+    <Page Include="Controls\AnimatedRectControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="AnimationControls\MouseAnimationControl.xaml">
+    <Page Include="Controls\AnimationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\InteractionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MouseAnimationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

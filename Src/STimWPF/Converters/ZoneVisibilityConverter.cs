@@ -12,22 +12,25 @@ namespace STimWPF.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			InteractionZone zone = (InteractionZone)value;
+			Zone zone = (Zone)value;
 			string param = (String)parameter;
-			if (!param.Equals("Interaction"))
+			
+			if (param.Equals("Window") && zone != Zone.Close)
 			{
-				if (zone == InteractionZone.Interaction || zone == InteractionZone.Close)
-					return Visibility.Hidden;
-				else
-					return Visibility.Visible;
+				return Visibility.Visible;
 			}
-			else
+
+			if (param.Equals("Interaction") && zone == Zone.Interaction)
 			{
-				if (zone == InteractionZone.Close)
-					return Visibility.Hidden;
-				else
-					return Visibility.Visible;
+				return Visibility.Visible;
 			}
+
+			if (param.Equals("Animation") && zone >= Zone.Notification)
+			{
+				return Visibility.Visible;
+			}
+
+			return Visibility.Hidden;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

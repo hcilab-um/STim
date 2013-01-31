@@ -25,7 +25,7 @@ namespace STimWPF.Interaction
 		private Point3D absoluteCursorLocation;
 		private Point3D relativeCursorLocation;
 		private SelectionMethod selectionMethod;
-		private InteractionZone interactionZone;
+		private Zone zone;
 
 		private Vector3D planeOrigin;
 		private double planeRadius = -1;
@@ -84,13 +84,13 @@ namespace STimWPF.Interaction
 			}
 		}
 
-		public InteractionZone InteractionZone
+		public Zone Zone
 		{
-			get { return interactionZone; }
+			get { return zone; }
 			set
 			{
-				interactionZone = value;
-				OnPropertyChanged("InteractionZone", interactionZone);
+				zone = value;
+				OnPropertyChanged("Zone", zone);
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace STimWPF.Interaction
 			SelectionMethod = STimWPF.Interaction.SelectionMethod.Click;
 		}
 
-		public bool ProcessNewSkeletonData(Skeleton skeleton, double deltaMilliseconds, InteractionZone interactionZone)
+		public bool ProcessNewSkeletonData(Skeleton skeleton, double deltaMilliseconds, Zone Zone)
 		{
 			if (skeleton == null)
 				return false;
@@ -137,16 +137,16 @@ namespace STimWPF.Interaction
 			//Thread backgroundThread = new Thread(ProcessInteractionData);
 			//backgroundThread.Priority = ThreadPriority.AboveNormal;
 			//backgroundThread.Start(capture);
-			DoWork(skeleton, deltaMilliseconds, interactionZone);
+			DoWork(skeleton, deltaMilliseconds, Zone);
 
 			return true;
 		}
 
-		private void DoWork(Skeleton skeleton, double deltaMilliseconds, InteractionZone interactionZone)
+		private void DoWork(Skeleton skeleton, double deltaMilliseconds, Zone Zone)
 		{
 			Size layoutSize = new Size(35, 35);
 			LeftClick = false;
-			if (interactionZone == Interaction.InteractionZone.Interaction)
+			if (Zone == Interaction.Zone.Interaction)
 			{
 				//1- find the position of the cursor on the layout plane
 				RelativeCursorLocation = FindCursorPosition(skeleton, MouseBoundaries, selectionMethod);

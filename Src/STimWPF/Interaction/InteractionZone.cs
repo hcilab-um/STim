@@ -5,11 +5,11 @@ using System.Text;
 
 namespace STimWPF.Interaction
 {
-	public enum InteractionZone
+	public enum Zone
 	{
-		Ambient, 
-		Notification, 
-		Interaction, 
-		Close
+		Close,
+		Interaction,
+		Notification,
+		Ambient
 	}
 }

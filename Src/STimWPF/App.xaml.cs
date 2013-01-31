@@ -25,7 +25,7 @@ namespace STimWPF
 			base.OnStartup(e);
 			log4net.Config.XmlConfigurator.Configure();
 			String destFolder = Settings.Default.DestFolder.Replace("{USERNAME}", Environment.UserName);
-			Core.Instance.Initialize(Dispatcher, Settings.Default.SkeletonBufferSize, destFolder, Settings.Default.PlayerBufferSize);
+			Core.Instance.Initialize(Dispatcher, Settings.Default.SkeletonBufferSize, Settings.Default.BlockPercentBufferSize, destFolder, Settings.Default.PlayerBufferSize);
 
 			MainW = new ControlWindow(this);
 			contentW = new ContentWindow(this);

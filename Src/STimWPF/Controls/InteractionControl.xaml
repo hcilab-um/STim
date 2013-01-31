@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="STimWPF.Controls.InteractionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+						 xmlns:converters="clr-namespace:STimWPF.Converters"
+						 xmlns:controls="clr-namespace:STimWPF.Controls"
+						 x:Name="interactionControl"
+             d:DesignHeight="900" d:DesignWidth="900">
+	<UserControl.Resources>
+		<converters:LocationMarginConverter x:Key="lmConverter" />
+		<converters:ContentStateVisibilityConverter x:Key="cvConverter" />
+		<converters:DetailContentStateVisibilityConverter x:Key="dvConverter"/>
+		<converters:BoolVisibilityConverter x:Key="bvConverter"/>
+	</UserControl.Resources>
+	<Grid>
+		<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+
+			<!-- User Shadow -->
+			<Grid HorizontalAlignment="Center" VerticalAlignment="Top">
+				<StackPanel Name="sp_Overview" Visibility="{Binding ElementName=interactionControl, Path=ContentState, Converter={StaticResource ResourceKey=cvConverter}, ConverterParameter=overview}" Margin="10">
+					<Label Content="Overview" FontFamily="Times New Roman" FontSize="30" FontWeight="Bold"/>
+					<StackPanel Margin="40,10">
+						<StackPanel Name="sp_Author" HorizontalAlignment="Left" Margin="0,0,0,10" Orientation="Horizontal">
+							<TextBlock Width="150" FontSize="20">
+								Author:
+							</TextBlock>
+							<TextBlock VerticalAlignment="Bottom" FontSize="15">
+								Author Name
+							</TextBlock>
+						</StackPanel>
+						<StackPanel Name="sp_Size" HorizontalAlignment="Stretch" Margin="0,0,0,10" Orientation="Horizontal">
+							<TextBlock Width="150" FontSize="20">
+							Size:
+							</TextBlock>
+							<TextBlock VerticalAlignment="Bottom" FontSize="15">
+							30 x 30
+							</TextBlock>
+						</StackPanel>
+						<StackPanel Margin="0,0,0,10" Orientation="Horizontal">
+							<TextBlock Width="150" FontSize="20">
+							Date Created:
+							</TextBlock>
+							<TextBlock FontSize="15" VerticalAlignment="Bottom">
+							Jan 10, 2012
+							</TextBlock>
+						</StackPanel>
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Name="sp_Description" Margin="10" Visibility="{Binding ElementName=interactionControl, Path=ContentState, Converter={StaticResource ResourceKey=cvConverter}, ConverterParameter=description}">
+					<Label Content="Description" FontFamily="Times New Roman" FontSize="30" FontWeight="Bold"/>
+					<TextBlock Margin="40,10" HorizontalAlignment="Left" FontSize="15">
+					This is the text for description
+					</TextBlock>
+				</StackPanel>
+				<StackPanel Name="sp_Detail" Margin="10" Visibility="{Binding ElementName=interactionControl, Path=ContentState, Converter={StaticResource ResourceKey=cvConverter}, ConverterParameter=detail}">
+					<Label Content="Detail" FontFamily="Times New Roman" FontSize="30" FontWeight="Bold"/>
+					<StackPanel Orientation="Horizontal">
+						<StackPanel Margin="40,60" Width="200">
+							<Button Content="PartA" FontSize="20" Height="50" Margin="0,0" Click="PartA_Click" />
+							<Button Content="PartB" FontSize="20" Height="50" Margin="0,10,0,0" Click="PartB_Click"/>
+							<Button Content="PartC" FontSize="20" Height="50" Margin="0,10,0,0" Click="PartC_Click" />
+						</StackPanel>
+						<Grid Margin="100,0">
+							<StackPanel Name="sp_partA" Height="200" Orientation="Horizontal" Visibility="{Binding ElementName=interactionControl, Path=DetailContentState, 
+																																							Converter={StaticResource ResourceKey=dvConverter}, ConverterParameter=A}">
+								<Image Width="200" Source="/STimWPF;component/image/man.png" />
+								<StackPanel>
+									<Label Content="Part A" FontSize="30"/>
+									<TextBlock FontSize="15">
+									This is the detail description about partA.
+									</TextBlock>
+								</StackPanel>
+							</StackPanel>
+							<StackPanel Name="sp_partB" Height="200" Orientation="Horizontal" Visibility="{Binding ElementName=interactionControl, Path=DetailContentState, 
+																																							Converter={StaticResource ResourceKey=dvConverter}, ConverterParameter=B}">
+								<Image Width="200" Source="/STimWPF;component/image/stick.png" />
+								<StackPanel>
+									<Label Content="Part B" FontSize="30"/>
+									<TextBlock FontSize="15">
+									This is the detail description about partB.
+									</TextBlock>
+								</StackPanel>
+							</StackPanel>
+							<StackPanel Name="sp_partC" Height="200" Orientation="Horizontal" Visibility="{Binding ElementName=interactionControl, Path=DetailContentState, 
+																																							Converter={StaticResource ResourceKey=dvConverter}, ConverterParameter=C}">
+								<Image Width="200" Source="/STimWPF;component/image/window.png" />
+								<StackPanel>
+									<Label Content="Part C" FontSize="30"/>
+									<TextBlock FontSize="15">
+									This is the detail description about partC.
+									</TextBlock>
+								</StackPanel>
+							</StackPanel>
+						</Grid>
+					</StackPanel>
+				</StackPanel>
+			</Grid>
+			<StackPanel Orientation="Vertical" HorizontalAlignment="Right" Width="200" VerticalAlignment="Center" Margin="0,0,60,0">
+				<Button Margin="10" FontSize="20" Height="50" Click="Overview_Clicked">Overview</Button>
+				<Button Margin="10" FontSize="20" Height="50" Click="Descrption_Clicked">Description</Button>
+				<Button Margin="10" FontSize="20" Height="50" Click="Detail_Clicked">Detail</Button>
+			</StackPanel>
+			<controls:MouseAnimationControl Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top"
+																		Visibility="{Binding ElementName=interactionControl, Path=LeftClick, Converter={StaticResource ResourceKey=bvConverter}}"
+																		Margin="{Binding ElementName=interactionControl, Path=RelativeCursorLocation, Converter={StaticResource ResourceKey=lmConverter}}"
+																		TimerState="{Binding ElementName=interactionControl, Path=TimerState}" />
+		</Grid>
+	</Grid>
+</UserControl>

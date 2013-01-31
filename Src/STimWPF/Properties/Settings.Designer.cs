@@ -109,5 +109,17 @@ namespace STimWPF.Properties {
                 this["Kinect_DisplayDistance"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int BlockPercentBufferSize {
+            get {
+                return ((int)(this["BlockPercentBufferSize"]));
+            }
+            set {
+                this["BlockPercentBufferSize"] = value;
+            }
+        }
     }
 }
