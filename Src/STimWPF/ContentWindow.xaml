@@ -3,26 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				xmlns:converters="clr-namespace:STimWPF.Converters"
         xmlns:controls="clr-namespace:STimWPF.Controls"
-				WindowState="Maximized" ResizeMode="NoResize"
+				WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
 				Title="WAG - ContentWindow" Width="900" Height="900" Closed="contentW_Closed" Loaded="ContentWindow_Loaded">
 	<Window.Resources>
-		<converters:SelectionMethodConverter x:Key="smConverter" />
-		<converters:MethodVisibilityConverter x:Key="vConverter" />
-		<converters:NegateVisibilityConverter x:Key="nvConverter" />
+		<converters:SelectionMethodConverter x:Key="smConverter"/>
+		<converters:MethodVisibilityConverter x:Key="vConverter"/>
+		<converters:NegateVisibilityConverter x:Key="nvConverter"/>
 		<converters:BoolVisibilityConverter x:Key="bvConverter"/>
-		<converters:ZoneVisibilityConverter x:Key="zvConverter" />
+		<converters:ZoneVisibilityConverter x:Key="zvConverter"/>
 	</Window.Resources>
 	<Grid>
 		<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="{Binding ElementName=contentW, 
 	    	Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Window}">
 			<Image Name="iKinectDepth" HorizontalAlignment="Stretch" Margin="10" VerticalAlignment="Center"/>
-        </Grid>
-        <controls:InteractionControl Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}"
+			<controls:InteractionControl Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}"
 																 RelativeCursorLocation="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.RelativeCursorLocation}"
 																 LeftClick="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.LeftClick}"
 																 TimerState="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.Recognizer.TimerState}"/>
-        <Image Name="iArtifact" VerticalAlignment="Bottom" HorizontalAlignment="Center" Height="600" Source="/STimWPF;component/image/artifact.png" />
-		<controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"
+			<controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"
 															 Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Animation}"  															 UserDisplayDistance="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.UserDisplayDistance}"/>
+		</Grid>
 	</Grid>
 </Window>
