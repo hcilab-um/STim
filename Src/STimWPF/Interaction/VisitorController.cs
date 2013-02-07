@@ -81,6 +81,7 @@ namespace STimWPF.Interaction
 		public VisitorController() 
 		{
 			standardAngleInRadian = ToolBox.AngleToRadian(90);
+			UserDisplayDistance = Settings.Default.NotificationZoneConstrain;
 			interactZone = Zone.Ambient;
 			IsSimulating = false;
 		}

@@ -12,16 +12,18 @@
 		<converters:BoolVisibilityConverter x:Key="bvConverter"/>
 		<converters:ZoneVisibilityConverter x:Key="zvConverter"/>
 	</Window.Resources>
-	<Grid>
-		<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="{Binding ElementName=contentW, 
+	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="{Binding ElementName=contentW, 
 	    	Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Window}">
-			<Image Name="iKinectDepth" HorizontalAlignment="Stretch" Margin="10" VerticalAlignment="Center"/>
-			<controls:InteractionControl Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}"
-																 RelativeCursorLocation="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.RelativeCursorLocation}"
-																 LeftClick="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.LeftClick}"
-																 TimerState="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.Recognizer.TimerState}"/>
-			<controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"
-															 Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Animation}"  															 UserDisplayDistance="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.UserDisplayDistance}"/>
-		</Grid>
+		<Image Name="iKinectDepth" HorizontalAlignment="Stretch" Margin="10" VerticalAlignment="Center" 
+					 Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Shadow}" />
+		
+		<controls:InteractionControl Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}"
+							RelativeCursorLocation="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.RelativeCursorLocation}"
+							LeftClick="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.LeftClick}"
+							TimerState="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.Recognizer.TimerState}"/>
+		
+		<controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"
+							Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Animation}" 
+							UserDisplayDistance="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.UserDisplayDistance}"/>
 	</Grid>
 </Window>

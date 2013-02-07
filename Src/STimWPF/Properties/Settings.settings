@@ -27,7 +27,7 @@
       <Value Profile="(Default)">0.81</Value>
     </Setting>
     <Setting Name="BlockPercentBufferSize" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">20</Value>
     </Setting>
   </Settings>
 </SettingsFile>

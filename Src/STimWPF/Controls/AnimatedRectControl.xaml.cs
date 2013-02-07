@@ -51,7 +51,7 @@ namespace STimWPF.Controls
 
 		public AnimatedRectControl()
 		{
-			rGenerator = new Random((int)DateTime.Now.Ticks % 1000);
+			rGenerator = new Random((int)DateTime.Now.Ticks % 3000);
 			timer = new System.Timers.Timer();
 			timer.Elapsed += new System.Timers.ElapsedEventHandler(Timer_Elapsed);
 			InitializeComponent();

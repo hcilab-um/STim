@@ -17,10 +17,21 @@ namespace STimWPF
 {
 	public class Core
 	{
-		const int VISITOR_COLOR_SHIFT = 80;
-		const byte MAX_INTENSITY = 255;	
+		private const int VISITOR_COLOR_SHIFT = 80;
+		private const byte MAX_INTENSITY = 255;
+		private const float RenderWidth = 640.0f;
+		private const float RenderHeight = 480.0f;
+		private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
+		private readonly Brush inferredJointBrush = Brushes.Yellow;
+		private const double JointThickness = 3;
 
 		private static KinectSensor kinectSensor;
+		private static Core instance = null;
+
+		private SkeletonDrawer skeletonDrawer;
+		private long lastUpdate = -1;
+		private int playerIndex = -1;
+
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 		public event EventHandler<DepthImageReadyArgs> DepthImageReady;
 
@@ -30,18 +41,8 @@ namespace STimWPF
 		public VisitorController VisitorCtr { get; set; }
 		public SkeletonRecorder Recorder { get; set; }
 		public SkeletonPlayer Player { get; set; }
-
-		private SkeletonDrawer skeletonDrawer;
 		public bool PlayBackFromFile { get; set; }
-		private long lastUpdate = -1;
 
-		private const float RenderWidth = 640.0f;
-		private const float RenderHeight = 480.0f;
-
-		private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
-		private readonly Brush inferredJointBrush = Brushes.Yellow;
-		private const double JointThickness = 3;
-		private static Core instance = null;
 		public static Core Instance
 		{
 			get
@@ -109,15 +110,29 @@ namespace STimWPF
 					skeletonFrame.CopySkeletonDataTo(skeletons);
 					currentTimeMilliseconds = skeletonFrame.Timestamp;
 
-					foreach (Skeleton skeleton in skeletons)
+					//find closest skeleton
+					for (int i = 0; i < skeletons.Length; i++)
 					{
-						if (skeleton.TrackingState != SkeletonTrackingState.Tracked)
-							//skip the rest below continue
-							continue;
-						rawSkeleton = skeleton;
-						stableSkeleton = SkeletonF.ProcessNewSkeletonData(rawSkeleton);
-						break;
+						if (skeletons[i].TrackingState != SkeletonTrackingState.NotTracked)
+						{
+							if (rawSkeleton == null)
+							{
+								rawSkeleton = skeletons[i];
+								playerIndex = i + 1;
+							}
+							else if(rawSkeleton.Position.Z > skeletons[i].Position.Z)
+							{
+								rawSkeleton = skeletons[i];
+								playerIndex = i + 1;
+							}
+						}
 					}
+
+					if (rawSkeleton != null)
+					{
+						stableSkeleton = SkeletonF.ProcessNewSkeletonData(rawSkeleton);
+					}
+
 				}
 			}
 
@@ -129,7 +144,7 @@ namespace STimWPF
 					deltaTime = 0;
 				lastUpdate = currentTimeMilliseconds;
 
-				//Process the skeleton in to control the mouse
+				//Process the skeleton to control the mouse
 				InteractionCtr.ProcessNewSkeletonData(stableSkeleton, deltaTime, VisitorCtr.Zone);
 				//Sends the new skeleton into the recorder
 				Recorder.ProcessNewSkeletonData(rawSkeleton, deltaTime);
@@ -201,19 +216,21 @@ namespace STimWPF
 			{
 				zoneShift = 0;
 			}
+
 			short constrain = (short)(Settings.Default.InteractionZoneConstrain * 1000);
+
 			for (int i = 0; i < depthPixels.Length; ++i)
 			{
 				closePixel += (depthPixels[i].Depth <= constrain ? 1 : 0);
 
-				intensity = (byte)(depthPixels[i].PlayerIndex != 0 ? MAX_INTENSITY - VISITOR_COLOR_SHIFT : MAX_INTENSITY);
+				intensity = (byte)(depthPixels[i].PlayerIndex == playerIndex ? MAX_INTENSITY - VISITOR_COLOR_SHIFT : MAX_INTENSITY);
 
 				// Write out blue byte	
 				colorPixels[colorPixelIndex++] = intensity;
 				// Write out green byte					 
 				colorPixels[colorPixelIndex++] = intensity;
 				// Write out red byte                 
-				colorPixels[colorPixelIndex++] = (byte)(depthPixels[i].PlayerIndex != 0 ? intensity + zoneShift : intensity);
+				colorPixels[colorPixelIndex++] = (byte)(depthPixels[i].PlayerIndex == playerIndex ? intensity + zoneShift : intensity);
 
 				++colorPixelIndex;
 			}

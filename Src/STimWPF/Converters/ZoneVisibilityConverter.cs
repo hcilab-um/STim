@@ -16,20 +16,13 @@ namespace STimWPF.Converters
 			string param = (String)parameter;
 			
 			if (param.Equals("Window") && zone != Zone.Close)
-			{
 				return Visibility.Visible;
-			}
-
 			if (param.Equals("Interaction") && zone == Zone.Interaction)
-			{
 				return Visibility.Visible;
-			}
-
 			if (param.Equals("Animation") && zone >= Zone.Notification)
-			{
 				return Visibility.Visible;
-			}
-
+			if (param.Equals("Shadow") && zone <= Zone.Notification && zone > Zone.Close)
+				return Visibility.Visible;
 			return Visibility.Hidden;
 		}
 
@@ -37,5 +30,6 @@ namespace STimWPF.Converters
 		{
 			throw new NotImplementedException();
 		}
+
 	}
 }
