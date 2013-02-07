@@ -110,7 +110,7 @@ namespace STimWPF
 					skeletonFrame.CopySkeletonDataTo(skeletons);
 					currentTimeMilliseconds = skeletonFrame.Timestamp;
 
-					//find closest skeleton
+					//find closest skeleton and playerIndex. Idea from: http://stackoverflow.com/questions/13847046/getuserpixels-alternative-in-official-kinect-sdk/13849204#13849204
 					for (int i = 0; i < skeletons.Length; i++)
 					{
 						if (skeletons[i].TrackingState != SkeletonTrackingState.NotTracked)
