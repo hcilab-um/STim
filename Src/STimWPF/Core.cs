@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using STimWPF.Util;
 using STimWPF.Properties;
+using System.ComponentModel;
+using STimWPF.Status;
 
 namespace STimWPF
 {
@@ -31,13 +33,14 @@ namespace STimWPF
 		private SkeletonDrawer skeletonDrawer;
 		private long lastUpdate = -1;
 		private int playerIndex = -1;
-
+		private List<VisitStatus> visitStatus = new List<VisitStatus>();
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 		public event EventHandler<DepthImageReadyArgs> DepthImageReady;
 
 		public SkeletonFilter SkeletonF { get; set; }
 		public DepthPercentFilter DepthPercentF { get; set; }
 		public InteractionController InteractionCtr { get; set; }
+		public StatusController StatusCtr { get; set; }
 		public VisitorController VisitorCtr { get; set; }
 		public SkeletonRecorder Recorder { get; set; }
 		public SkeletonPlayer Player { get; set; }
@@ -57,7 +60,7 @@ namespace STimWPF
 
 		private Core() { }
 
-		public void Initialize(Dispatcher uiDispatcher, int skeletonBufferSize, int depthPercentBufferSize, String destFolder, int playerBufferSize)
+		public void Initialize(Dispatcher uiDispatcher, int skeletonBufferSize, int depthPercentBufferSize, String destFolder, int playerBufferSize, int uploadPeriod)
 		{
 			IsKinectConnected = false;
 			PlayBackFromFile = false;
@@ -68,6 +71,7 @@ namespace STimWPF
 			Player.SkeletonFrameReady += new EventHandler<PlayerSkeletonFrameReadyEventArgs>(Player_SkeletonFrameReady);
 			InteractionCtr = new InteractionController();
 			VisitorCtr = new VisitorController();
+			StatusCtr = new StatusController(uploadPeriod);
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
 				IsKinectConnected = false;
@@ -110,7 +114,8 @@ namespace STimWPF
 					skeletonFrame.CopySkeletonDataTo(skeletons);
 					currentTimeMilliseconds = skeletonFrame.Timestamp;
 
-					//find closest skeleton and playerIndex. Idea from: http://stackoverflow.com/questions/13847046/getuserpixels-alternative-in-official-kinect-sdk/13849204#13849204
+					//find closest skeleton and playerIndex. 
+					//Idea from: http://stackoverflow.com/questions/13847046/getuserpixels-alternative-in-official-kinect-sdk/13849204#13849204
 					for (int i = 0; i < skeletons.Length; i++)
 					{
 						if (skeletons[i].TrackingState != SkeletonTrackingState.NotTracked)
@@ -146,14 +151,20 @@ namespace STimWPF
 
 				//Process the skeleton to control the mouse
 				InteractionCtr.ProcessNewSkeletonData(stableSkeleton, deltaTime, VisitorCtr.Zone);
+
+				StatusCtr.LoadNewSkeletonData(skeletons, deltaTime, stableSkeleton.TrackingId);
+
 				//Sends the new skeleton into the recorder
 				Recorder.ProcessNewSkeletonData(rawSkeleton, deltaTime);
 			}
 
+			//Processes the skeleton to find what interaction zone the user is
+			VisitorCtr.DetectZone(stableSkeleton);
+
 			using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
 			{
 				if (DepthImageReady != null && depthFrame != null)
-				{
+				{ 
 					DrawingImage imageCanvas = DrawDepthImage(depthFrame, stableSkeleton);
 					DepthImageReady(this, new DepthImageReadyArgs() { Frame = imageCanvas });
 				}
@@ -168,15 +179,13 @@ namespace STimWPF
 				}
 			}
 
-			//Processes the skeleton to find what interaction zone the user is
-			VisitorCtr.DetectUserPosition(stableSkeleton);
 		}
 
 		void Player_SkeletonFrameReady(object sender, PlayerSkeletonFrameReadyEventArgs e)
 		{
 			//We first stabilize it
 			Skeleton stableSkeleton = SkeletonF.ProcessNewSkeletonData(e.FrameSkeleton);
-			VisitorCtr.DetectUserPosition(stableSkeleton);
+			VisitorCtr.DetectZone(stableSkeleton);
 			//Process the new skeleton in the Interaction Controller
 			InteractionCtr.ProcessNewSkeletonData(stableSkeleton, e.Delay, VisitorCtr.Zone);
 

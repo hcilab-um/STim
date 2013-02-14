@@ -10,14 +10,14 @@ using STimWPF.Properties;
 
 namespace STimWPF.Interaction
 {
-	public class VisitorController: INotifyPropertyChanged
+	public class VisitorController : INotifyPropertyChanged
 	{
 		//If there is a displacement of at least the value below of in the dimension of the push then the values
 		// on the two other dimensions are blocked.
 		const int CLOSE_PERCENT_CONSTRAIN = 30;
 
-		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0,0,1);
-		private static readonly Vector3D kinectLocation = new Vector3D(0,0,0);
+		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0, 0, 1);
+		private static readonly Vector3D kinectLocation = new Vector3D(0, 0, 0);
 		private Vector3D headLocation;
 		private double userDisplayDistance;
 		private double standardAngleInRadian;
@@ -48,7 +48,7 @@ namespace STimWPF.Interaction
 		public double StandardAngleInRadian
 		{
 			get { return standardAngleInRadian; }
-			set 
+			set
 			{
 				standardAngleInRadian = value;
 				OnPropertyChanged("StandardAngleInRadian");
@@ -58,10 +58,9 @@ namespace STimWPF.Interaction
 		public double UserDisplayDistance
 		{
 			get { return userDisplayDistance; }
-			set 
+			set
 			{
 				userDisplayDistance = value;
-				DetectZone();
 				OnPropertyChanged("UserDisplayDistance");
 			}
 		}
@@ -69,7 +68,7 @@ namespace STimWPF.Interaction
 		public Zone Zone
 		{
 			get { return interactZone; }
-			set 
+			set
 			{
 				interactZone = value;
 				OnPropertyChanged("Zone");
@@ -78,7 +77,7 @@ namespace STimWPF.Interaction
 
 		public JointType Head { get; set; }
 
-		public VisitorController() 
+		public VisitorController()
 		{
 			standardAngleInRadian = ToolBox.AngleToRadian(90);
 			UserDisplayDistance = Settings.Default.NotificationZoneConstrain;
@@ -86,60 +85,73 @@ namespace STimWPF.Interaction
 			IsSimulating = false;
 		}
 
-		public void DetectUserPosition(Skeleton skeleton)
+		public double DetectSkeletonDistance(Skeleton skeleton)
 		{
-			if (IsSimulating)
-				return;
+			if (skeleton == null)
+				throw new Exception("in DetectSkeletonDistance, skeleton can not be null.");
 
+			Head = JointType.Head;
+			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
+			headLocation = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
+			double currentAngleR = ToolBox.AngleToRadian(Vector3D.AngleBetween(STANDARD_VECTOR, headLocation));
+			double headDistance = ToolBox.GetDisplacementVector((Vector3D)headLocation, (Vector3D)kinectLocation).Length;
+
+			if (headLocation.Y < 0)
+				return Math.Sin(StandardAngleInRadian - currentAngleR) * headDistance - Settings.Default.Kinect_DisplayDistance;
+
+			return Math.Sin(StandardAngleInRadian + currentAngleR) * headDistance - Settings.Default.Kinect_DisplayDistance;
+		}
+
+		private double DetectUserPosition(Skeleton skeleton)
+		{
 			if (ClosePercent > CLOSE_PERCENT_CONSTRAIN)
 			{
-				UserDisplayDistance = Settings.Default.CloseZoneConstrain / 2;
-				return;
+				return Settings.Default.CloseZoneConstrain / 2;
 			}
 
 			if (skeleton != null)
 			{
-				Head = JointType.Head;
-				Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
-				headLocation = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
-				double currentAngleR = ToolBox.AngleToRadian(Vector3D.AngleBetween(STANDARD_VECTOR, headLocation));
-				double headDistance = ToolBox.GetDisplacementVector((Vector3D)headLocation, (Vector3D)kinectLocation).Length;
-
-				if (headLocation.Y < 0)
-				{
-					UserDisplayDistance = Math.Sin(StandardAngleInRadian - currentAngleR) * headDistance - Settings.Default.Kinect_DisplayDistance;
-				}
-				else
-				{
-					UserDisplayDistance = Math.Sin(StandardAngleInRadian + currentAngleR) * headDistance - Settings.Default.Kinect_DisplayDistance;
-				}
+				return DetectSkeletonDistance(skeleton);
 			}
-			else
-				UserDisplayDistance = Settings.Default.NotificationZoneConstrain;
+
+			return Settings.Default.NotificationZoneConstrain;
 		}
 
-		private void DetectZone()
+		public void DetectZone(Skeleton skeleton)
 		{
+			if (!IsSimulating)
+			{
+				UserDisplayDistance = DetectUserPosition(skeleton);
+			}
+
 			if (userDisplayDistance < Settings.Default.CloseZoneConstrain)
 			{
 				Zone = Zone.Close;
+				return;
 			}
-			else if (userDisplayDistance >= Settings.Default.CloseZoneConstrain && userDisplayDistance < Settings.Default.InteractionZoneConstrain)
+
+			if (userDisplayDistance >= Settings.Default.CloseZoneConstrain && userDisplayDistance < Settings.Default.InteractionZoneConstrain)
 			{
 				Zone = Zone.Interaction;
+				return;
 			}
-			else if (userDisplayDistance >= Settings.Default.InteractionZoneConstrain && userDisplayDistance < Settings.Default.NotificationZoneConstrain)
+
+			if (userDisplayDistance >= Settings.Default.InteractionZoneConstrain && userDisplayDistance < Settings.Default.NotificationZoneConstrain)
 			{
 				Zone = Zone.Notification;
+				return;
 			}
-			else if (userDisplayDistance >= Settings.Default.NotificationZoneConstrain)
+
+			if (userDisplayDistance >= Settings.Default.NotificationZoneConstrain)
 			{
 				Zone = Zone.Ambient;
+				return;
 			}
+
 		}
-		
+
 		public event PropertyChangedEventHandler PropertyChanged;
-		
+
 		private void OnPropertyChanged(String name)
 		{
 			if (PropertyChanged != null)

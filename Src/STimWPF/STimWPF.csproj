@@ -52,6 +52,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Jayrock.Json">
+      <HintPath>..\SharedLib\Jayrock.Json.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\SharedLib\log4net.dll</HintPath>
     </Reference>
@@ -109,10 +112,12 @@
     <Compile Include="ContentWindow.xaml.cs">
       <DependentUpon>ContentWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Status\GrailsDateTimeExporter.cs" />
+    <Compile Include="Status\StatusController.cs" />
     <Compile Include="Util\ExtendedPropertyChangedEventArgs.cs" />
     <Compile Include="Interaction\GestureRecognizer.cs" />
     <Compile Include="Interaction\InteractionController.cs" />
-    <Compile Include="Interaction\InteractionZone.cs" />
+    <Compile Include="Interaction\Zone.cs" />
     <Compile Include="Interaction\SelectionMethod.cs" />
     <Compile Include="Interaction\TimerState.cs" />
     <Compile Include="Interaction\InteractionGesture.cs" />
@@ -123,6 +128,7 @@
     <Compile Include="Playback\SkeletonRecorder.cs" />
     <Compile Include="Playback\SkeletonPlayer.cs" />
     <Compile Include="Util\ToolBox.cs" />
+    <Compile Include="Status\VisitStatus.cs" />
     <Page Include="Controls\AnimatedRectControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -179,9 +185,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="FixUsername.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -211,7 +214,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fart.exe" />
     <Resource Include="image\artifact.png" />
     <Resource Include="image\man.png" />
     <Resource Include="image\stick.png" />
@@ -220,7 +222,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(TargetDir)\FixUsername.bat</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

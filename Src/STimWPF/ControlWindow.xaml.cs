@@ -27,8 +27,6 @@ namespace STimWPF
 	public partial class ControlWindow : Window, INotifyPropertyChanged
 	{
 
-		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(typeof(ControlWindow));
-
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private App appInstance = null;

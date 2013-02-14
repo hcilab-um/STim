@@ -25,7 +25,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\{USERNAME}\\Desktop\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Xiang\\Desktop\\")]
         public string DestFolder {
             get {
                 return ((string)(this["DestFolder"]));
@@ -119,6 +119,30 @@ namespace STimWPF.Properties {
             }
             set {
                 this["BlockPercentBufferSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int UploadPeriod {
+            get {
+                return ((int)(this["UploadPeriod"]));
+            }
+            set {
+                this["UploadPeriod"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8080/console/visitStatus/save.json")]
+        public string StatusUriString {
+            get {
+                return ((string)(this["StatusUriString"]));
+            }
+            set {
+                this["StatusUriString"] = value;
             }
         }
     }

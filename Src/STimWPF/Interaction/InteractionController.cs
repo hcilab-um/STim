@@ -32,6 +32,7 @@ namespace STimWPF.Interaction
 		private double planeWidth = -1;
 		private double planeHeight = -1;
 		private double boundaryCross = -1;
+		
 		//joints
 		public JointType ShoulderRight { get; set; }
 		public JointType ShoulderLeft { get; set; }
