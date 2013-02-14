@@ -9,8 +9,8 @@ using System.Windows;
 using STimWPF.Properties;
 using System.Net;
 using System.IO;
-using Jayrock.Json.Conversion;
-using Jayrock.Json;
+using System.Windows.Media.Media3D;
+using STimWPF.Util;
 
 namespace STimWPF.Status
 {
@@ -25,6 +25,11 @@ namespace STimWPF.Status
 		List<Skeleton> currentSkeletons = null;
 		List<Skeleton> previousSkeletons = null;
 
+		//joints
+		public JointType ShoulderRight { get; set; }
+		public JointType ShoulderLeft { get; set; }
+		public JointType Head { get; set; }
+
 		private Timer Trigger { get; set; }
 		private VisitorController VisitorContr { get; set; }
 		private int lastUserId;
@@ -34,8 +39,8 @@ namespace STimWPF.Status
 		bool wasControlling;
 		string page = "";
 		VisitStatus status;
-		Point viewDirection;
-		Point movementDirection;
+		Vector3D viewDirection;
+		Vector3D movementDirection;
 
 		public StatusController(int period)
 		{
@@ -121,10 +126,10 @@ namespace STimWPF.Status
 					else
 						wasControlling = false;
 
-					page = getPage(VisitorContr.Zone);
+					page = GetPage(VisitorContr.Zone);
 
-					movementDirection = getMovementDirection(skeleton);
-					viewDirection = new Point(-1, -1);
+					movementDirection = GetMovementDirection(skeleton);
+					viewDirection = GetViewDirection(skeleton);
 
 					status = new VisitStatus()
 					{
@@ -144,7 +149,27 @@ namespace STimWPF.Status
 			}
 		}
 
-		private string getPage(Zone zone)
+		private Vector3D GetViewDirection(Skeleton skeleton)
+		{
+			ShoulderRight = JointType.ShoulderRight;
+			ShoulderLeft = JointType.ShoulderLeft;
+			Head = JointType.Head;
+			Joint shoulderR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == ShoulderRight);
+			Joint shoulderL = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == ShoulderLeft);
+			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
+
+			Vector3D shoulderRightP = new Vector3D(shoulderR.Position.X, shoulderR.Position.Y, shoulderR.Position.Z);
+			Vector3D shoulderLeftP = new Vector3D(shoulderL.Position.X, shoulderL.Position.Y, shoulderL.Position.Z);
+			Vector3D headP = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
+
+			Vector3D coordinateOriginP = ToolBox.GetMiddleVector(shoulderLeftP, shoulderRightP);
+			//get Relative X, Y, Z direction
+			Vector3D directionX = ToolBox.GetDisplacementVector(coordinateOriginP, shoulderRightP);
+			Vector3D directionY = ToolBox.GetDisplacementVector(headP, coordinateOriginP);
+			return Vector3D.CrossProduct(directionX, directionY);
+		}
+
+		private string GetPage(Zone zone)
 		{
 			switch (zone)
 			{
@@ -155,16 +180,16 @@ namespace STimWPF.Status
 			}
 		}
 
-		private Point getMovementDirection(Skeleton currentSkeleton)
+		private Vector3D GetMovementDirection(Skeleton currentSkeleton)
 		{
 			Skeleton lastSkeleton = null;
 			if (previousSkeletons != null)
 				lastSkeleton = previousSkeletons.SingleOrDefault(tmp => tmp.TrackingId == currentSkeleton.TrackingId);
 			if (lastSkeleton != null)
 			{
-				return new Point(currentSkeleton.Position.X - lastSkeleton.Position.X, currentSkeleton.Position.Z - lastSkeleton.Position.Z);
+				return new Vector3D(currentSkeleton.Position.X - lastSkeleton.Position.X, currentSkeleton.Position.Y - lastSkeleton.Position.Y, currentSkeleton.Position.Z - lastSkeleton.Position.Z);
 			}
-			return new Point(0, 0);
+			return new Vector3D(0, 0, 0);
 		}
 	}
 

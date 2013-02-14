@@ -112,7 +112,6 @@
     <Compile Include="ContentWindow.xaml.cs">
       <DependentUpon>ContentWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Status\GrailsDateTimeExporter.cs" />
     <Compile Include="Status\StatusController.cs" />
     <Compile Include="Util\ExtendedPropertyChangedEventArgs.cs" />
     <Compile Include="Interaction\GestureRecognizer.cs" />

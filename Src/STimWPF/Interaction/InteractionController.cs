@@ -27,10 +27,10 @@ namespace STimWPF.Interaction
 		private SelectionMethod selectionMethod;
 		private Zone zone;
 
-		private Vector3D planeOrigin;
-		private double planeRadius = -1;
-		private double planeWidth = -1;
-		private double planeHeight = -1;
+		private Vector3D interactPlaneOrigin;
+		private double armPlaneRadius = -1;
+		private double armPlaneWidth = -1;
+		private double armPlaneHeight = -1;
 		private double boundaryCross = -1;
 		
 		//joints
@@ -121,7 +121,7 @@ namespace STimWPF.Interaction
 
 		public InteractionController()
 		{
-			planeRadius = -1;
+			armPlaneRadius = -1;
 			Recognizer = new GestureRecognizer();
 			PropertyChanged += new PropertyChangedEventHandler(Recognizer.InteractionCtrngine_PropertyChanged);
 			RelativeCursorLocation = new Point3D(0, 0, 0);
@@ -165,7 +165,7 @@ namespace STimWPF.Interaction
 			}
 		}
 
-		private Point3D FindCursorPosition(Skeleton skeleton, Rect boundary, SelectionMethod selectionM)
+		private Point3D FindCursorPosition(Skeleton skeleton, Rect displayBoundary, SelectionMethod selectionM)
 		{
 			ShoulderRight = JointType.ShoulderRight;
 			ShoulderLeft = JointType.ShoulderLeft;
@@ -187,48 +187,62 @@ namespace STimWPF.Interaction
 			Vector3D handRightP = new Vector3D(hand.Position.X, hand.Position.Y, hand.Position.Z);
 			Vector3D headP = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
 
-			if (planeRadius == -1)
+			if (armPlaneRadius == -1)
 			{
-				planeRadius = ToolBox.GetDisplacementVector(shoulderRightP, elbowRightP).Length + ToolBox.GetDisplacementVector(elbowRightP, wristRightP).Length;
+				armPlaneRadius = ToolBox.GetDisplacementVector(shoulderRightP, elbowRightP).Length + ToolBox.GetDisplacementVector(elbowRightP, wristRightP).Length;
 			}
 
-			boundaryCross = Math.Sqrt(Math.Pow(boundary.Width, 2) + Math.Pow(boundary.Height, 2));
-			planeWidth = boundary.Width / boundaryCross * planeRadius;
-			planeHeight = boundary.Height / boundaryCross * planeRadius;
+			boundaryCross = Math.Sqrt(Math.Pow(displayBoundary.Width, 2) + Math.Pow(displayBoundary.Height, 2));
+			armPlaneWidth = displayBoundary.Width / boundaryCross * armPlaneRadius;
+			armPlaneHeight = displayBoundary.Height / boundaryCross * armPlaneRadius;
+
+			Vector3D coordinateOriginP = ToolBox.GetMiddleVector(shoulderLeftP, shoulderRightP);
+			
+			Matrix3D transformMatrix = GetCoordinateTransformMatrix(shoulderLeftP, shoulderRightP, headP);
+			
+			interactPlaneOrigin = TransformVector(transformMatrix, coordinateOriginP, shoulderRightP);
+
+			Vector3D relativePos = ToolBox.GetMiddleVector(handRightP, wristRightP);
+			relativePos = TransformVector(transformMatrix, coordinateOriginP, relativePos);
+			relativePos = ToolBox.GetDisplacementVector(interactPlaneOrigin, relativePos);
+
+			if (relativePos.X < 0 || relativePos.Y < 0)
+				return new Point3D(-1,-1,-1);
+			if (relativePos.X > armPlaneWidth || relativePos.Y >armPlaneHeight)
+				return new Point3D(-1, -1, -1);
+			relativePos.X = relativePos.X / (armPlaneWidth) * displayBoundary.Width;
+			relativePos.Y = relativePos.Y / (armPlaneHeight) * displayBoundary.Height;
+			return (Point3D)relativePos;
+		}
+
+		private Vector3D TransformVector(Matrix3D transformMatrix, Vector3D origin, Vector3D rawVector)
+		{
+			return ToolBox.GetDisplacementVector(origin, rawVector) * transformMatrix;
+		}
+
+		private Matrix3D GetCoordinateTransformMatrix(Vector3D left, Vector3D right, Vector3D top)
+		{
 			//Build New coordinate system
 			//Set Middle of Visitor shoulder as origin
-			Vector3D coordinateOriginP = ToolBox.GetMiddleVector(shoulderRightP, shoulderLeftP);			
+			Vector3D coordinateOriginP = ToolBox.GetMiddleVector(left, right);
 			//get Relative X, Y, Z direction
-			Vector3D directionX = ToolBox.GetDisplacementVector(coordinateOriginP, shoulderRightP);
-			Vector3D directionY = ToolBox.GetDisplacementVector(headP, coordinateOriginP);
+			Vector3D directionX = ToolBox.GetDisplacementVector(coordinateOriginP, right);
+			Vector3D directionY = ToolBox.GetDisplacementVector(top, coordinateOriginP);
 			Vector3D directionZ = Vector3D.CrossProduct(directionX, directionY);
 			//get coordinate unit vector 
 			directionX.Normalize();
 			directionY.Normalize();
 			directionZ.Normalize();
-
-			Matrix3D transformMatrix = ToolBox.NewCoordinateMatrix(directionX, directionY, directionZ);
-			planeOrigin = ToolBox.GetDisplacementVector(coordinateOriginP, shoulderRightP);
-			planeOrigin *= transformMatrix;
-
-			Vector3D relativePos = ToolBox.GetMiddleVector(handRightP, wristRightP);
-			relativePos = ToolBox.GetDisplacementVector(coordinateOriginP, relativePos);
-			relativePos *= transformMatrix;
-			relativePos = ToolBox.GetDisplacementVector(planeOrigin, relativePos);
-
-			if (relativePos.X < 0 || relativePos.Y < 0)
-				return new Point3D(-1,-1,-1);
-			if (relativePos.X > planeWidth || relativePos.Y >planeHeight)
-				return new Point3D(-1, -1, -1);
-			relativePos.X = relativePos.X / (planeWidth) * boundary.Width;
-			relativePos.Y = relativePos.Y / (planeHeight) * boundary.Height;
-			return (Point3D)relativePos;
+			return ToolBox.NewCoordinateMatrix(directionX, directionY, directionZ);
 		}
+
 		private Point3D ConvertToAbsoluteCursorLocation(Point3D relativePos, Rect windowRect)
 		{
 			return new Point3D(relativePos.X + windowRect.X, relativePos.Y + windowRect.Y, relativePos.Z);
 		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
+		
 		private void OnPropertyChanged(String name, object value = null)
 		{
 			if (PropertyChanged != null)
