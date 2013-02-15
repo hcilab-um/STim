@@ -35,5 +35,8 @@
     <Setting Name="StatusUriString" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://localhost:8080/console/visitStatus/save.json</Value>
     </Setting>
+    <Setting Name="ImageFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Users\Xiang\Dropbox\STimStatusLog\</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

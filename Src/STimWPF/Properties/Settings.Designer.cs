@@ -145,5 +145,17 @@ namespace STimWPF.Properties {
                 this["StatusUriString"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Xiang\\Dropbox\\STimStatusLog\\")]
+        public string ImageFolder {
+            get {
+                return ((string)(this["ImageFolder"]));
+            }
+            set {
+                this["ImageFolder"] = value;
+            }
+        }
     }
 }

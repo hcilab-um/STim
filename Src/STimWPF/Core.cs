@@ -19,7 +19,8 @@ namespace STimWPF
 {
 	public class Core
 	{
-		private const int VISITOR_COLOR_SHIFT = 80;
+		private const int VISITOR_COLOR_SHIFT = 50;
+		private const int USER_COLOR_SHIFT = 40;
 		private const byte MAX_INTENSITY = 255;
 		private const float RenderWidth = 640.0f;
 		private const float RenderHeight = 480.0f;
@@ -106,6 +107,7 @@ namespace STimWPF
 			Skeleton[] skeletons = null;
 			Skeleton rawSkeleton = null;
 			Skeleton stableSkeleton = null;
+			DrawingImage depthImageCanvas = null;
 			using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
 			{
 				if (skeletonFrame != null)
@@ -152,8 +154,6 @@ namespace STimWPF
 				//Process the skeleton to control the mouse
 				InteractionCtr.ProcessNewSkeletonData(stableSkeleton, deltaTime, VisitorCtr.Zone);
 
-				StatusCtr.LoadNewSkeletonData(skeletons, deltaTime, stableSkeleton.TrackingId);
-
 				//Sends the new skeleton into the recorder
 				Recorder.ProcessNewSkeletonData(rawSkeleton, deltaTime);
 			}
@@ -164,9 +164,9 @@ namespace STimWPF
 			using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
 			{
 				if (DepthImageReady != null && depthFrame != null)
-				{ 
-					DrawingImage imageCanvas = DrawDepthImage(depthFrame, stableSkeleton);
-					DepthImageReady(this, new DepthImageReadyArgs() { Frame = imageCanvas });
+				{
+					depthImageCanvas = DrawDepthImage(depthFrame, stableSkeleton);
+					DepthImageReady(this, new DepthImageReadyArgs() { Frame = depthImageCanvas });
 				}
 			}
 
@@ -179,6 +179,7 @@ namespace STimWPF
 				}
 			}
 
+			StatusCtr.LoadNewSkeletonData(skeletons, stableSkeleton, depthImageCanvas);
 		}
 
 		void Player_SkeletonFrameReady(object sender, PlayerSkeletonFrameReadyEventArgs e)
@@ -219,7 +220,7 @@ namespace STimWPF
 
 			if (zone == Zone.Interaction)
 			{
-				zoneShift = 70;
+				zoneShift = USER_COLOR_SHIFT;
 			}
 			else
 			{
@@ -232,7 +233,7 @@ namespace STimWPF
 			{
 				closePixel += (depthPixels[i].Depth <= constrain ? 1 : 0);
 
-				intensity = (byte)(depthPixels[i].PlayerIndex == playerIndex ? MAX_INTENSITY - VISITOR_COLOR_SHIFT : MAX_INTENSITY);
+				intensity = (byte)(depthPixels[i].PlayerIndex != 0 ? MAX_INTENSITY - VISITOR_COLOR_SHIFT : MAX_INTENSITY);
 
 				// Write out blue byte	
 				colorPixels[colorPixelIndex++] = intensity;

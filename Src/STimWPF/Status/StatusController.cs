@@ -11,6 +11,8 @@ using System.Net;
 using System.IO;
 using System.Windows.Media.Media3D;
 using STimWPF.Util;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace STimWPF.Status
 {
@@ -45,8 +47,10 @@ namespace STimWPF.Status
 		public StatusController(int period)
 		{
 			lastUserId = -1;
+			
 			Trigger = new Timer(new TimerCallback(TimerCallback), null, 0, period);
 			VisitorContr = new VisitorController();
+
 		}
 
 		/// <summary>
@@ -57,30 +61,47 @@ namespace STimWPF.Status
 		{
 			lock (monitor)
 			{
-				//compare lastVisit with currentVisit
+				Object[] logObjects = null;
+
 				currentVisits = new List<VisitStatus>();
 				GenerateVisitStatus();
 
-				foreach (VisitStatus status in currentVisits)
+				if (currentVisits.Count == 0)
 				{
-					Object[] logObjects = new Object[]
+					logObjects = new Object[]
 					{
-						status.VisitInit,
-						status.SkeletonId,
-						status.Zone,
-						status.IsControlling,
-						status.WasControlling,
-						status.MovementDirection,
-						status.ViewDirection,
-						status.Page
+						DateTime.Now,
+						currentVisits.Count,
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-"
 					};
-					int count = 0;
-					StringBuilder formatSt = new StringBuilder();
-					foreach (Object obj in logObjects)
-						formatSt.Append("{" + (count++) + "};");
-					String statusLog = String.Format(formatSt.ToString(), logObjects);
-					logger.Info(statusLog);
 				}
+				else
+				{
+					foreach (VisitStatus status in currentVisits)
+					{
+						logObjects = new Object[]
+						{
+							status.VisitInit,
+							currentVisits.Count,
+							status.SkeletonId,
+							status.Zone,
+							status.IsControlling,
+							status.WasControlling,
+							status.MovementDirection,
+							status.ViewDirection,
+							status.Page
+						};
+
+					}
+				}
+				
+				LogVisitStatus(logObjects);
 
 				lastUserId = currentUserId;
 				lastVisits = currentVisits;
@@ -88,64 +109,79 @@ namespace STimWPF.Status
 			}
 		}
 
+		private void LogVisitStatus(Object[] logObjects)
+		{
+			int count = 0;
+			StringBuilder formatSt = new StringBuilder();
+			foreach (Object obj in logObjects)
+				formatSt.Append("{" + (count++) + "};");
+
+			String statusLog = String.Format(formatSt.ToString(), logObjects);
+			logger.Info(statusLog);
+		}
+
 		/// <summary>
 		/// Every new frame this gets called
 		/// </summary>
 		/// <param name="skeleton"></param>
 		/// <param name="deltaMilliseconds"></param>
-		public void LoadNewSkeletonData(Skeleton[] skeletons, double deltaMilliseconds, int userId)
+		public void LoadNewSkeletonData(Skeleton[] skeletons, Skeleton userSkeleton, DrawingImage depthImageSource)
 		{
 			lock (monitor)
 			{
-				if (skeletons != null && skeletons.Length != 0)
+				if (skeletons == null || skeletons.Length == 0 || userSkeleton == null)
 				{
-					currentSkeletons = new List<Skeleton>(skeletons);
-					currentUserId = userId;
+					currentSkeletons = null;
+					currentUserId = -1;
+					return;
 				}
+
+				currentSkeletons = new List<Skeleton>(skeletons);
+				currentUserId = userSkeleton.TrackingId;
 			}
 		}
 
 		private void GenerateVisitStatus()
 		{
 
-			if (currentSkeletons != null && currentSkeletons.Count != 0)
+			if (currentSkeletons == null || currentSkeletons.Count == 0)
+				return;
+			foreach (Skeleton skeleton in currentSkeletons)
 			{
-				foreach (Skeleton skeleton in currentSkeletons)
+				if (skeleton.TrackingState != SkeletonTrackingState.Tracked)
+					continue;
+
+				VisitorContr.DetectZone(skeleton);
+
+				if (currentUserId == skeleton.TrackingId)
+					isControlling = true;
+				else
+					isControlling = false;
+
+				if (lastUserId == skeleton.TrackingId)
+					wasControlling = true;
+				else
+					wasControlling = false;
+
+				page = GetPage(VisitorContr.Zone);
+
+				movementDirection = GetMovementDirection(skeleton);
+
+				viewDirection = GetViewDirection(skeleton);
+
+				status = new VisitStatus()
 				{
-					if (skeleton.TrackingState != SkeletonTrackingState.Tracked)
-						continue;
-					VisitorContr.DetectZone(skeleton);
+					SkeletonId = skeleton.TrackingId,
+					VisitInit = DateTime.Now,
+					Zone = VisitorContr.Zone,
+					ViewDirection = viewDirection,
+					MovementDirection = movementDirection,
+					IsControlling = isControlling,
+					WasControlling = wasControlling,
+					Page = page
+				};
 
-					if (currentUserId == skeleton.TrackingId)
-						isControlling = true;
-					else
-						isControlling = false;
-
-					if (lastUserId == skeleton.TrackingId)
-						wasControlling = true;
-					else
-						wasControlling = false;
-
-					page = GetPage(VisitorContr.Zone);
-
-					movementDirection = GetMovementDirection(skeleton);
-					viewDirection = GetViewDirection(skeleton);
-
-					status = new VisitStatus()
-					{
-						SkeletonId = skeleton.TrackingId,
-						VisitInit = DateTime.Now,
-						Zone = VisitorContr.Zone,
-						ViewDirection = viewDirection,
-						MovementDirection = movementDirection,
-						IsControlling = isControlling,
-						WasControlling = wasControlling,
-						Page = page
-					};
-
-					currentVisits.Add(status);
-
-				}
+				currentVisits.Add(status);
 			}
 		}
 
