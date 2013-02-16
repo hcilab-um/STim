@@ -14,10 +14,11 @@ using STimWPF.Util;
 using STimWPF.Properties;
 using System.ComponentModel;
 using STimWPF.Status;
+using System.IO;
 
 namespace STimWPF
 {
-	public class Core
+	public class Core: INotifyPropertyChanged
 	{
 		private const int VISITOR_COLOR_SHIFT = 50;
 		private const int USER_COLOR_SHIFT = 40;
@@ -46,7 +47,29 @@ namespace STimWPF
 		public SkeletonRecorder Recorder { get; set; }
 		public SkeletonPlayer Player { get; set; }
 		public bool PlayBackFromFile { get; set; }
+		private ContentState contentState;
+		private DetailContentState detailContentState;
+		
+		public ContentState ContentState 
+		{
+			get { return contentState; }
+			set 
+			{ 
+				contentState = value;
+				OnPropertyChanged("ContentState");
+			}
+		}
 
+		public DetailContentState DetailContentState 
+		{
+			get { return detailContentState; }
+			set
+			{
+				detailContentState = value;
+				OnPropertyChanged("DetailContentState");
+			}
+		}
+		
 		public static Core Instance
 		{
 			get
@@ -63,6 +86,9 @@ namespace STimWPF
 
 		public void Initialize(Dispatcher uiDispatcher, int skeletonBufferSize, int depthPercentBufferSize, String destFolder, int playerBufferSize, int uploadPeriod)
 		{
+
+			ContentState = ContentState.Overview;
+			DetailContentState = DetailContentState.PartA;
 			IsKinectConnected = false;
 			PlayBackFromFile = false;
 			SkeletonF = new SkeletonFilter(skeletonBufferSize);
@@ -335,6 +361,14 @@ namespace STimWPF
 				kinectSensor.Dispose();
 			}
 			Recorder.Stop(false, true);
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private void OnPropertyChanged(String name)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(name));
 		}
 	}
 }

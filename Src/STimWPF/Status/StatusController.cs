@@ -19,6 +19,9 @@ namespace STimWPF.Status
 	public class StatusController
 	{
 		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger("statusLogger");
+		
+		private const float RenderWidth = 640.0f;
+		private const float RenderHeight = 480.0f;
 
 		Object monitor = new Object();
 
@@ -26,7 +29,9 @@ namespace STimWPF.Status
 		List<VisitStatus> currentVisits = null;
 		List<Skeleton> currentSkeletons = null;
 		List<Skeleton> previousSkeletons = null;
-
+		
+		DrawingImage depthImageSource;
+		
 		//joints
 		public JointType ShoulderRight { get; set; }
 		public JointType ShoulderLeft { get; set; }
@@ -34,6 +39,7 @@ namespace STimWPF.Status
 
 		private Timer Trigger { get; set; }
 		private VisitorController VisitorContr { get; set; }
+		private Core Core { get; set; }
 		private int lastUserId;
 		private int currentUserId;
 
@@ -65,7 +71,9 @@ namespace STimWPF.Status
 
 				currentVisits = new List<VisitStatus>();
 				GenerateVisitStatus();
-
+				if(depthImageSource != null)
+					SaveDrawingImage(depthImageSource);
+				
 				if (currentVisits.Count == 0)
 				{
 					logObjects = new Object[]
@@ -136,9 +144,30 @@ namespace STimWPF.Status
 					return;
 				}
 
+				this.depthImageSource = depthImageSource;
 				currentSkeletons = new List<Skeleton>(skeletons);
 				currentUserId = userSkeleton.TrackingId;
 			}
+		}
+
+		private void SaveDrawingImage(DrawingImage drawingImage)
+		{
+			DrawingVisual drawingVisual = new DrawingVisual();
+			DrawingContext drawingContext = drawingVisual.RenderOpen();
+			drawingContext.DrawImage(drawingImage, new Rect(0, 0, RenderWidth, RenderHeight));
+
+			RenderTargetBitmap bmp = new RenderTargetBitmap((int)RenderWidth, (int)RenderHeight, 96, 96, PixelFormats.Pbgra32);
+			bmp.Render(drawingVisual);
+
+			PngBitmapEncoder encoder = new PngBitmapEncoder();
+			encoder.Frames.Add(BitmapFrame.Create(bmp));
+			String qualifiedName = String.Format("{0}.png", DateTime.Now.ToString("MMddyy-HHmmss"));
+
+			using (var stream = new FileStream(Settings.Default.ImageFolder+qualifiedName, FileMode.Create))
+			{
+				encoder.Save(stream);
+			}
+
 		}
 
 		private void GenerateVisitStatus()
@@ -210,7 +239,9 @@ namespace STimWPF.Status
 			switch (zone)
 			{
 				case Zone.Interaction:
-					return "Content";
+					if (Core.Instance.ContentState != ContentState.Detail)
+						return Core.Instance.ContentState.ToString();
+					return Core.Instance.ContentState+"-"+Core.Instance.DetailContentState;
 				default:
 					return "None";
 			}

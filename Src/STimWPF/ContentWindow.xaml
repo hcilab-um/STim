@@ -20,7 +20,10 @@
 		<controls:InteractionControl Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}"
 							RelativeCursorLocation="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.RelativeCursorLocation}"
 							LeftClick="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.LeftClick}"
-							TimerState="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.Recognizer.TimerState}"/>
+							TimerState="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.Recognizer.TimerState}"
+							DetailContentState="{Binding ElementName=contentW, Path=CoreInstance.DetailContentState}"
+							ContentState="{Binding ElementName=contentW, Path=CoreInstance.ContentState}"
+							/>
 		
 		<controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"
 							Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Animation}" 
