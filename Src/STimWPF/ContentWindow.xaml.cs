@@ -63,7 +63,8 @@ namespace STimWPF
 
 		void CoreInstance_DepthImageReady(object sender, DepthImageReadyArgs e)
 		{
-			this.iKinectDepth.Source = e.Frame;
+			this.iKinectDepthBig.Source = e.Frame;
+			this.iKinectDepthSmall.Source = e.Frame;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

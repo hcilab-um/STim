@@ -30,7 +30,7 @@ namespace STimWPF.Status
 		List<Skeleton> currentSkeletons = null;
 		List<Skeleton> previousSkeletons = null;
 		
-		DrawingImage depthImageSource;
+		MemoryStream depthImageSourceMS;
 		
 		//joints
 		public JointType ShoulderRight { get; set; }
@@ -71,8 +71,8 @@ namespace STimWPF.Status
 
 				currentVisits = new List<VisitStatus>();
 				GenerateVisitStatus();
-				if(depthImageSource != null)
-					SaveDrawingImage(depthImageSource);
+				if(depthImageSourceMS != null)
+					SaveDrawingImage(depthImageSourceMS);
 				
 				if (currentVisits.Count == 0)
 				{
@@ -133,7 +133,7 @@ namespace STimWPF.Status
 		/// </summary>
 		/// <param name="skeleton"></param>
 		/// <param name="deltaMilliseconds"></param>
-		public void LoadNewSkeletonData(Skeleton[] skeletons, Skeleton userSkeleton, DrawingImage depthImageSource)
+		public void LoadNewSkeletonData(Skeleton[] skeletons, Skeleton userSkeleton, DrawingImage dIS)
 		{
 			lock (monitor)
 			{
@@ -144,30 +144,60 @@ namespace STimWPF.Status
 					return;
 				}
 
-				this.depthImageSource = depthImageSource;
+				this.depthImageSourceMS = SaveDrawingImage(dIS);
 				currentSkeletons = new List<Skeleton>(skeletons);
 				currentUserId = userSkeleton.TrackingId;
 			}
 		}
 
-		private void SaveDrawingImage(DrawingImage drawingImage)
+		private MemoryStream SaveDrawingImage(DrawingImage drawingImage)
 		{
-			DrawingVisual drawingVisual = new DrawingVisual();
-			DrawingContext drawingContext = drawingVisual.RenderOpen();
-			drawingContext.DrawImage(drawingImage, new Rect(0, 0, RenderWidth, RenderHeight));
+			if (drawingImage == null)
+				return null;
 
-			RenderTargetBitmap bmp = new RenderTargetBitmap((int)RenderWidth, (int)RenderHeight, 96, 96, PixelFormats.Pbgra32);
-			bmp.Render(drawingVisual);
-
-			PngBitmapEncoder encoder = new PngBitmapEncoder();
-			encoder.Frames.Add(BitmapFrame.Create(bmp));
-			String qualifiedName = String.Format("{0}.png", DateTime.Now.ToString("MMddyy-HHmmss"));
-
-			using (var stream = new FileStream(Settings.Default.ImageFolder+qualifiedName, FileMode.Create))
+			try
 			{
-				encoder.Save(stream);
-			}
+				DrawingVisual drawingVisual = new DrawingVisual();
+				DrawingContext drawingContext = drawingVisual.RenderOpen();
+				drawingContext.DrawImage(drawingImage, new Rect(0, 0, RenderWidth, RenderHeight));
+				drawingContext.Close();
 
+				RenderTargetBitmap bmp = new RenderTargetBitmap((int)RenderWidth, (int)RenderHeight, 96, 96, PixelFormats.Pbgra32);
+				bmp.Render(drawingVisual);
+
+				BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+				encoder.Frames.Add(BitmapFrame.Create(bmp));
+
+				MemoryStream diMS = new MemoryStream();
+				encoder.Save(diMS);
+				return diMS;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
+			return null;
+		}
+
+		private void SaveDrawingImage(MemoryStream imageMS)
+		{
+			try
+			{
+				imageMS.Seek(0, SeekOrigin.Begin);
+				BitmapFrame bitmap = BitmapFrame.Create(imageMS);
+				String qualifiedName = String.Format("{0}.png", DateTime.Now.ToString("MMddyy-HHmmss"));
+
+				PngBitmapEncoder encoder = new PngBitmapEncoder();
+				encoder.Frames.Add(bitmap);
+				using (var stream = new FileStream(Settings.Default.ImageFolder + qualifiedName, FileMode.Create))
+				{
+					encoder.Save(stream);
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
 		}
 
 		private void GenerateVisitStatus()

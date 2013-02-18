@@ -14,15 +14,15 @@ namespace STimWPF.Converters
 		{
 			Zone zone = (Zone)value;
 			string param = (String)parameter;
+
+			String[] zones = param.Split('-');
 			
-			if (param.Equals("Window") && zone != Zone.Close)
-				return Visibility.Visible;
-			if (param.Equals("Interaction") && zone == Zone.Interaction)
-				return Visibility.Visible;
-			if (param.Equals("Animation") && zone >= Zone.Notification)
-				return Visibility.Visible;
-			if (param.Equals("Shadow") && zone <= Zone.Notification && zone > Zone.Close)
-				return Visibility.Visible;
+			foreach (String zoneParam in zones)
+			{
+				if (zoneParam.Equals(zone.ToString()))
+					return Visibility.Visible;
+			}
+
 			return Visibility.Hidden;
 		}
 
