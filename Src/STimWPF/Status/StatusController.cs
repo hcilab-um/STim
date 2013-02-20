@@ -47,13 +47,19 @@ namespace STimWPF.Status
 		bool wasControlling;
 		string page = "";
 		VisitStatus status;
+		
 		Vector3D viewDirection;
 		Vector3D movementDirection;
+		Vector3D location;
+
+		double movementDistance;
+
+		DateTime currentDateTime;
 
 		public StatusController(int period)
 		{
 			lastUserId = -1;
-			
+			currentDateTime = DateTime.Now;
 			Trigger = new Timer(new TimerCallback(TimerCallback), null, 0, period);
 			VisitorContr = new VisitorController();
 
@@ -86,8 +92,16 @@ namespace STimWPF.Status
 						"-",
 						"-",
 						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
 						"-"
 					};
+					LogVisitStatus(logObjects);
 				}
 				else
 				{
@@ -101,15 +115,21 @@ namespace STimWPF.Status
 							status.Zone,
 							status.IsControlling,
 							status.WasControlling,
-							status.MovementDirection,
-							status.ViewDirection,
+							status.Location.X,
+							status.Location.Y,
+							status.Location.Z,
+							status.MovementDirection.X,
+							status.MovementDirection.Y,
+							status.MovementDirection.Z,
+							status.MovementDistance,
+							status.ViewDirection.X,
+							status.ViewDirection.Y,
+							status.ViewDirection.Z,
 							status.Page
 						};
-
+						LogVisitStatus(logObjects);
 					}
 				}
-				
-				LogVisitStatus(logObjects);
 
 				lastUserId = currentUserId;
 				lastVisits = currentVisits;
@@ -147,6 +167,7 @@ namespace STimWPF.Status
 				this.depthImageSourceMS = SaveDrawingImage(dIS);
 				currentSkeletons = new List<Skeleton>(skeletons);
 				currentUserId = userSkeleton.TrackingId;
+				currentDateTime = DateTime.Now;
 			}
 		}
 
@@ -154,7 +175,6 @@ namespace STimWPF.Status
 		{
 			if (drawingImage == null)
 				return null;
-
 			try
 			{
 				DrawingVisual drawingVisual = new DrawingVisual();
@@ -202,11 +222,11 @@ namespace STimWPF.Status
 
 		private void GenerateVisitStatus()
 		{
-
 			if (currentSkeletons == null || currentSkeletons.Count == 0)
 				return;
-			foreach (Skeleton skeleton in currentSkeletons)
+			for(int i=0; i<currentSkeletons.Count; i++)
 			{
+				Skeleton skeleton = currentSkeletons[i];
 				if (skeleton.TrackingState != SkeletonTrackingState.Tracked)
 					continue;
 
@@ -224,17 +244,23 @@ namespace STimWPF.Status
 
 				page = GetPage(VisitorContr.Zone);
 
+				location = new Vector3D(skeleton.Position.X, skeleton.Position.Y, skeleton.Position.Z);
+
 				movementDirection = GetMovementDirection(skeleton);
 
+				movementDistance = movementDirection.Length;
+				
 				viewDirection = GetViewDirection(skeleton);
 
 				status = new VisitStatus()
 				{
 					SkeletonId = skeleton.TrackingId,
-					VisitInit = DateTime.Now,
+					VisitInit = currentDateTime,
 					Zone = VisitorContr.Zone,
+					Location = location,
 					ViewDirection = viewDirection,
 					MovementDirection = movementDirection,
+					MovementDistance = movementDistance,
 					IsControlling = isControlling,
 					WasControlling = wasControlling,
 					Page = page
@@ -288,6 +314,7 @@ namespace STimWPF.Status
 			}
 			return new Vector3D(0, 0, 0);
 		}
+
 	}
 
 }

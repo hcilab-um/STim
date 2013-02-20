@@ -148,7 +148,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Xiang\\Dropbox\\STimStatusLog\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\xiang\\Dropbox\\STimStatus\\Image\\")]
         public string ImageFolder {
             get {
                 return ((string)(this["ImageFolder"]));

@@ -36,7 +36,7 @@
       <Value Profile="(Default)">http://localhost:8080/console/visitStatus/save.json</Value>
     </Setting>
     <Setting Name="ImageFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Users\Xiang\Dropbox\STimStatusLog\</Value>
+      <Value Profile="(Default)">C:\Users\xiang\Dropbox\STimStatus\Image\</Value>
     </Setting>
   </Settings>
 </SettingsFile>
