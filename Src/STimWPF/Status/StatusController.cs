@@ -19,19 +19,20 @@ namespace STimWPF.Status
 	public class StatusController
 	{
 		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger("statusLogger");
-		
+
 		private const float RenderWidth = 640.0f;
 		private const float RenderHeight = 480.0f;
 
 		Object monitor = new Object();
 
+		private int visitCounter = 0;
 		List<VisitStatus> lastVisits = null;
 		List<VisitStatus> currentVisits = null;
 		List<Skeleton> currentSkeletons = null;
-		List<Skeleton> previousSkeletons = null;
-		
+		List<Skeleton> lastSkeletons = null;
+
 		MemoryStream depthImageSourceMS;
-		
+
 		//joints
 		public JointType ShoulderRight { get; set; }
 		public JointType ShoulderLeft { get; set; }
@@ -40,14 +41,14 @@ namespace STimWPF.Status
 		private Timer Trigger { get; set; }
 		private VisitorController VisitorContr { get; set; }
 		private Core Core { get; set; }
-		private int lastUserId;
-		private int currentUserId;
+		private int lastUserSkeletonId;
+		private int currentUserSkeletonId;
 
 		bool isControlling;
 		bool wasControlling;
 		string page = "";
 		VisitStatus status;
-		
+
 		Vector3D viewDirection;
 		Vector3D movementDirection;
 		Vector3D location;
@@ -58,7 +59,7 @@ namespace STimWPF.Status
 
 		public StatusController(int period)
 		{
-			lastUserId = -1;
+			lastUserSkeletonId = -1;
 			currentDateTime = DateTime.Now;
 			Trigger = new Timer(new TimerCallback(TimerCallback), null, 0, period);
 			VisitorContr = new VisitorController();
@@ -74,17 +75,16 @@ namespace STimWPF.Status
 			lock (monitor)
 			{
 				Object[] logObjects = null;
-
 				currentVisits = new List<VisitStatus>();
 				GenerateVisitStatus();
-				if(depthImageSourceMS != null)
+				if (depthImageSourceMS != null)
 					SaveDrawingImage(depthImageSourceMS);
-				
+
 				if (currentVisits.Count == 0)
 				{
 					logObjects = new Object[]
 					{
-						DateTime.Now,
+						DateTime.Now.ToString(Settings.Default.DateTimeLogFormat),
 						currentVisits.Count,
 						"-",
 						"-",
@@ -105,13 +105,24 @@ namespace STimWPF.Status
 				}
 				else
 				{
+
 					foreach (VisitStatus status in currentVisits)
 					{
+						bool existedBefore = false;
+
+						if (lastVisits != null)
+							existedBefore = lastVisits.Exists(tmp => tmp.SkeletonId == status.SkeletonId);
+						
+						if (!existedBefore)
+							status.VisitId = ++visitCounter;
+						else
+							status.VisitId = lastVisits.Single(tmp => tmp.SkeletonId == status.SkeletonId).VisitId;
+
 						logObjects = new Object[]
 						{
-							status.VisitInit,
+							status.VisitInit.ToString(Settings.Default.DateTimeLogFormat),
 							currentVisits.Count,
-							status.SkeletonId,
+							status.VisitId,
 							status.Zone,
 							status.IsControlling,
 							status.WasControlling,
@@ -131,9 +142,9 @@ namespace STimWPF.Status
 					}
 				}
 
-				lastUserId = currentUserId;
+				lastUserSkeletonId = currentUserSkeletonId;
 				lastVisits = currentVisits;
-				previousSkeletons = currentSkeletons;
+				lastSkeletons = currentSkeletons;
 			}
 		}
 
@@ -160,13 +171,13 @@ namespace STimWPF.Status
 				if (skeletons == null || skeletons.Length == 0 || userSkeleton == null)
 				{
 					currentSkeletons = null;
-					currentUserId = -1;
+					currentUserSkeletonId = -1;
 					return;
 				}
 
 				this.depthImageSourceMS = SaveDrawingImage(dIS);
-				currentSkeletons = new List<Skeleton>(skeletons);
-				currentUserId = userSkeleton.TrackingId;
+				currentSkeletons = skeletons.Where(temp => temp.TrackingState == SkeletonTrackingState.Tracked).ToList();
+				currentUserSkeletonId = userSkeleton.TrackingId;
 				currentDateTime = DateTime.Now;
 			}
 		}
@@ -205,7 +216,7 @@ namespace STimWPF.Status
 			{
 				imageMS.Seek(0, SeekOrigin.Begin);
 				BitmapFrame bitmap = BitmapFrame.Create(imageMS);
-				String qualifiedName = String.Format("{0}.png", DateTime.Now.ToString("MMddyy-HHmmss"));
+				String qualifiedName = String.Format("{0}.png", DateTime.Now.ToString(Settings.Default.DateTimeFileNameFormat));
 
 				PngBitmapEncoder encoder = new PngBitmapEncoder();
 				encoder.Frames.Add(bitmap);
@@ -224,34 +235,30 @@ namespace STimWPF.Status
 		{
 			if (currentSkeletons == null || currentSkeletons.Count == 0)
 				return;
-			for(int i=0; i<currentSkeletons.Count; i++)
-			{
-				Skeleton skeleton = currentSkeletons[i];
-				if (skeleton.TrackingState != SkeletonTrackingState.Tracked)
-					continue;
 
+			foreach (Skeleton skeleton in currentSkeletons)
+			{
 				VisitorContr.DetectZone(skeleton);
 
-				if (currentUserId == skeleton.TrackingId)
+				if (currentUserSkeletonId == skeleton.TrackingId)
 					isControlling = true;
 				else
 					isControlling = false;
 
-				if (lastUserId == skeleton.TrackingId)
+				if (lastUserSkeletonId == skeleton.TrackingId)
 					wasControlling = true;
 				else
 					wasControlling = false;
 
 				page = GetPage(VisitorContr.Zone);
 
-				location = new Vector3D(skeleton.Position.X, skeleton.Position.Y, skeleton.Position.Z);
+				location = new Vector3D(skeleton.Position.X, skeleton.Position.Y, skeleton.Position.Z - Settings.Default.Kinect_DisplayDistance);
 
 				movementDirection = GetMovementDirection(skeleton);
 
 				movementDistance = movementDirection.Length;
-				
-				viewDirection = GetViewDirection(skeleton);
 
+				viewDirection = GetViewDirection(skeleton);
 				status = new VisitStatus()
 				{
 					SkeletonId = skeleton.TrackingId,
@@ -265,7 +272,6 @@ namespace STimWPF.Status
 					WasControlling = wasControlling,
 					Page = page
 				};
-
 				currentVisits.Add(status);
 			}
 		}
@@ -297,7 +303,7 @@ namespace STimWPF.Status
 				case Zone.Interaction:
 					if (Core.Instance.ContentState != ContentState.Detail)
 						return Core.Instance.ContentState.ToString();
-					return Core.Instance.ContentState+"-"+Core.Instance.DetailContentState;
+					return Core.Instance.ContentState + "-" + Core.Instance.DetailContentState;
 				default:
 					return "None";
 			}
@@ -306,8 +312,8 @@ namespace STimWPF.Status
 		private Vector3D GetMovementDirection(Skeleton currentSkeleton)
 		{
 			Skeleton lastSkeleton = null;
-			if (previousSkeletons != null)
-				lastSkeleton = previousSkeletons.SingleOrDefault(tmp => tmp.TrackingId == currentSkeleton.TrackingId);
+			if (lastSkeletons != null)
+				lastSkeleton = lastSkeletons.SingleOrDefault(tmp => tmp.TrackingId == currentSkeleton.TrackingId);
 			if (lastSkeleton != null)
 			{
 				return new Vector3D(currentSkeleton.Position.X - lastSkeleton.Position.X, currentSkeleton.Position.Y - lastSkeleton.Position.Y, currentSkeleton.Position.Z - lastSkeleton.Position.Z);

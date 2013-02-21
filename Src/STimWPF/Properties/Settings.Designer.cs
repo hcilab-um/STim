@@ -157,5 +157,29 @@ namespace STimWPF.Properties {
                 this["ImageFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyMMdd-HHmmss")]
+        public string DateTimeFileNameFormat {
+            get {
+                return ((string)(this["DateTimeFileNameFormat"]));
+            }
+            set {
+                this["DateTimeFileNameFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyMMdd-HH:mm:ss")]
+        public string DateTimeLogFormat {
+            get {
+                return ((string)(this["DateTimeLogFormat"]));
+            }
+            set {
+                this["DateTimeLogFormat"] = value;
+            }
+        }
     }
 }

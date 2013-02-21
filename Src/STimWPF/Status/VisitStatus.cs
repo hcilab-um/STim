@@ -5,11 +5,13 @@ using System.Text;
 using STimWPF.Interaction;
 using System.Windows;
 using System.Windows.Media.Media3D;
+using Microsoft.Kinect;
 
 namespace STimWPF.Status
 {
 	public class VisitStatus
 	{
+		public int VisitId { get; set; }
 		public int SkeletonId { get; set; }
 		public DateTime VisitInit { get; set; }
 		public Zone Zone { get; set; }

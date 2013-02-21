@@ -93,13 +93,13 @@ namespace STimWPF.Interaction
 			Head = JointType.Head;
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
 			headLocation = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
-			double currentAngleR = ToolBox.AngleToRadian(Vector3D.AngleBetween(STANDARD_VECTOR, headLocation));
+			double currentAngleRadian = ToolBox.AngleToRadian(Vector3D.AngleBetween(STANDARD_VECTOR, headLocation));
 			double headDistance = ToolBox.GetDisplacementVector((Vector3D)headLocation, (Vector3D)kinectLocation).Length;
 
 			if (headLocation.Y < 0)
-				return Math.Sin(StandardAngleInRadian - currentAngleR) * headDistance - Settings.Default.Kinect_DisplayDistance;
+				return Math.Sin(StandardAngleInRadian - currentAngleRadian) * headDistance - Settings.Default.Kinect_DisplayDistance;
 
-			return Math.Sin(StandardAngleInRadian + currentAngleR) * headDistance - Settings.Default.Kinect_DisplayDistance;
+			return Math.Sin(StandardAngleInRadian + currentAngleRadian) * headDistance - Settings.Default.Kinect_DisplayDistance;
 		}
 
 		private double DetectUserPosition(Skeleton skeleton)
