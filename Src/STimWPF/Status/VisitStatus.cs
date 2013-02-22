@@ -19,6 +19,7 @@ namespace STimWPF.Status
 		public Vector3D MovementDirection { get; set; }
 		public double MovementDistance { get; set; }
 		public Vector3D ViewDirection { get; set; }
+		public double ViewAngle { get; set; }
 		public bool IsControlling { get; set; }
 		public bool WasControlling { get; set; }
 		public string Page { get; set; }

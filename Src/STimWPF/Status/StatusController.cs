@@ -56,6 +56,7 @@ namespace STimWPF.Status
 
 		double movementDistance;
 		double adjustAngleInRadian;
+		double viewAngle;
 		DateTime currentDateTime;
 
 		public StatusController(int period, double kinectAngleInRadian)
@@ -91,6 +92,7 @@ namespace STimWPF.Status
 					{
 						DateTime.Now.ToString(Settings.Default.DateTimeLogFormat),
 						currentVisits.Count,
+						"-",
 						"-",
 						"-",
 						"-",
@@ -141,6 +143,7 @@ namespace STimWPF.Status
 							status.ViewDirection.X,
 							status.ViewDirection.Y,
 							status.ViewDirection.Z,
+							status.ViewAngle,
 							status.Page
 						};
 						LogVisitStatus(logObjects);
@@ -278,6 +281,7 @@ namespace STimWPF.Status
 				movementDistance = movementDirection.Length;
 
 				viewDirection = GetViewDirection(shoulderRV, shoulderLV, headV);
+				viewAngle = Vector.AngleBetween(new Vector(0, -1), new Vector(viewDirection.X, viewDirection.Z));
 
 				status = new VisitStatus()
 				{
@@ -286,6 +290,7 @@ namespace STimWPF.Status
 					Zone = VisitorContr.Zone,
 					Location = location,
 					ViewDirection = viewDirection,
+					ViewAngle = viewAngle,
 					MovementDirection = movementDirection,
 					MovementDistance = movementDistance,
 					IsControlling = isControlling,
@@ -318,8 +323,8 @@ namespace STimWPF.Status
 			Vector3D bodyCenterP = ToolBox.GetMiddleVector(shoulderLeftVector, shoulderRightVector);
 			//get Relative X, Y, Z direction
 			Vector3D bodyDirectionX = ToolBox.GetDisplacementVector(bodyCenterP, shoulderRightVector);
-			Vector3D bodyDirectionY = ToolBox.GetDisplacementVector(headVector, bodyCenterP);
-			return Vector3D.CrossProduct(bodyDirectionX, bodyDirectionY);
+			Vector3D bodyDirectionY = ToolBox.GetDisplacementVector(bodyCenterP, headVector);
+			return Vector3D.CrossProduct(bodyDirectionY, bodyDirectionX);
 		}
 
 		private string GetPage(Zone zone)
