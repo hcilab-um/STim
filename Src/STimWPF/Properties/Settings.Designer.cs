@@ -181,5 +181,17 @@ namespace STimWPF.Properties {
                 this["DateTimeLogFormat"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3.65")]
+        public double KinectDeviceHeight {
+            get {
+                return ((double)(this["KinectDeviceHeight"]));
+            }
+            set {
+                this["KinectDeviceHeight"] = value;
+            }
+        }
     }
 }

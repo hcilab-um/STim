@@ -98,7 +98,7 @@ namespace STimWPF
 			Player.SkeletonFrameReady += new EventHandler<PlayerSkeletonFrameReadyEventArgs>(Player_SkeletonFrameReady);
 			InteractionCtr = new InteractionController();
 			VisitorCtr = new VisitorController();
-			StatusCtr = new StatusController(uploadPeriod);
+
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
 				IsKinectConnected = false;
@@ -120,6 +120,7 @@ namespace STimWPF
 					kinectSensor.Start();
 					kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - kinectSensor.ElevationAngle);
+					StatusCtr = new StatusController(uploadPeriod, ToolBox.AngleToRadian(kinectSensor.ElevationAngle));
 				}
 			}
 		}

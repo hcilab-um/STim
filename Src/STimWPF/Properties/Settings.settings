@@ -44,5 +44,8 @@
     <Setting Name="DateTimeLogFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">yyMMdd-HH:mm:ss</Value>
     </Setting>
+    <Setting Name="KinectDeviceHeight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">3.65</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

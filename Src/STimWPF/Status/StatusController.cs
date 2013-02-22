@@ -33,10 +33,11 @@ namespace STimWPF.Status
 
 		MemoryStream depthImageSourceMS;
 
-		//joints
-		public JointType ShoulderRight { get; set; }
-		public JointType ShoulderLeft { get; set; }
-		public JointType Head { get; set; }
+		static readonly JointType	ShoulderRight = JointType.ShoulderRight;
+		static readonly JointType ShoulderLeft = JointType.ShoulderLeft;
+		static readonly JointType Head = JointType.Head;
+
+		private Matrix3D transformMatrix;
 
 		private Timer Trigger { get; set; }
 		private VisitorController VisitorContr { get; set; }
@@ -54,16 +55,20 @@ namespace STimWPF.Status
 		Vector3D location;
 
 		double movementDistance;
-
+		double adjustAngleInRadian;
 		DateTime currentDateTime;
 
-		public StatusController(int period)
+		public StatusController(int period, double kinectAngleInRadian)
 		{
 			lastUserSkeletonId = -1;
 			currentDateTime = DateTime.Now;
 			Trigger = new Timer(new TimerCallback(TimerCallback), null, 0, period);
 			VisitorContr = new VisitorController();
-
+			adjustAngleInRadian = Math.Abs(kinectAngleInRadian);
+			Vector3D vX = new Vector3D(1, 0, 0);
+			Vector3D vY = new Vector3D(0, Math.Cos(adjustAngleInRadian), -Math.Sin(adjustAngleInRadian));
+			Vector3D vZ = new Vector3D(0, Math.Sin(adjustAngleInRadian), Math.Cos(adjustAngleInRadian));
+			transformMatrix = ToolBox.NewCoordinateMatrix(vX, vY, vZ);
 		}
 
 		/// <summary>
@@ -238,6 +243,11 @@ namespace STimWPF.Status
 
 			foreach (Skeleton skeleton in currentSkeletons)
 			{
+
+				Vector3D headV = RetrieveJointVector(skeleton, Head, transformMatrix);
+				Vector3D shoulderRV = RetrieveJointVector(skeleton, ShoulderRight, transformMatrix);
+				Vector3D shoulderLV = RetrieveJointVector(skeleton, ShoulderLeft, transformMatrix);
+
 				VisitorContr.DetectZone(skeleton);
 
 				if (currentUserSkeletonId == skeleton.TrackingId)
@@ -252,13 +262,23 @@ namespace STimWPF.Status
 
 				page = GetPage(VisitorContr.Zone);
 
-				location = new Vector3D(skeleton.Position.X, skeleton.Position.Y, skeleton.Position.Z - Settings.Default.Kinect_DisplayDistance);
+				location = new Vector3D(headV.X, headV.Y, headV.Z);
 
-				movementDirection = GetMovementDirection(skeleton);
-
+				//get movement direction
+				Skeleton lastSkeleton = null;
+				if (lastSkeletons != null)
+					lastSkeleton = lastSkeletons.SingleOrDefault(tmp => tmp.TrackingId == skeleton.TrackingId);
+				if (lastSkeleton != null)
+				{
+					Vector3D lastHeadV = RetrieveJointVector(lastSkeleton, Head, transformMatrix);
+					movementDirection = ToolBox.GetDisplacementVector(lastHeadV, headV);
+				}
+				else
+					movementDirection = new Vector3D();
 				movementDistance = movementDirection.Length;
 
-				viewDirection = GetViewDirection(skeleton);
+				viewDirection = GetViewDirection(shoulderRV, shoulderLV, headV);
+
 				status = new VisitStatus()
 				{
 					SkeletonId = skeleton.TrackingId,
@@ -276,24 +296,30 @@ namespace STimWPF.Status
 			}
 		}
 
-		private Vector3D GetViewDirection(Skeleton skeleton)
+		/// <summary>
+		/// Retrieve joint from skeleton, transform it into vector in correct coordinate
+		/// </summary>
+		/// <param name="skeleton"></param>
+		/// <param name="type"></param>
+		/// <param name="transformMatrix"></param>
+		/// <returns></returns>
+		private Vector3D RetrieveJointVector(Skeleton skeleton, JointType type, Matrix3D transformMatrix)
 		{
-			ShoulderRight = JointType.ShoulderRight;
-			ShoulderLeft = JointType.ShoulderLeft;
-			Head = JointType.Head;
-			Joint shoulderR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == ShoulderRight);
-			Joint shoulderL = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == ShoulderLeft);
-			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
+			Joint joint = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == type);
+			Vector3D vector = new Vector3D(joint.Position.X, joint.Position.Y, joint.Position.Z);
+			vector *= transformMatrix;
+			vector.Y += Settings.Default.KinectDeviceHeight;
+			vector.Z -= Settings.Default.Kinect_DisplayDistance;
+			return vector;
+		}
 
-			Vector3D shoulderRightP = new Vector3D(shoulderR.Position.X, shoulderR.Position.Y, shoulderR.Position.Z);
-			Vector3D shoulderLeftP = new Vector3D(shoulderL.Position.X, shoulderL.Position.Y, shoulderL.Position.Z);
-			Vector3D headP = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
-
-			Vector3D coordinateOriginP = ToolBox.GetMiddleVector(shoulderLeftP, shoulderRightP);
+		private Vector3D GetViewDirection(Vector3D shoulderRightVector, Vector3D shoulderLeftVector, Vector3D headVector)
+		{
+			Vector3D bodyCenterP = ToolBox.GetMiddleVector(shoulderLeftVector, shoulderRightVector);
 			//get Relative X, Y, Z direction
-			Vector3D directionX = ToolBox.GetDisplacementVector(coordinateOriginP, shoulderRightP);
-			Vector3D directionY = ToolBox.GetDisplacementVector(headP, coordinateOriginP);
-			return Vector3D.CrossProduct(directionX, directionY);
+			Vector3D bodyDirectionX = ToolBox.GetDisplacementVector(bodyCenterP, shoulderRightVector);
+			Vector3D bodyDirectionY = ToolBox.GetDisplacementVector(headVector, bodyCenterP);
+			return Vector3D.CrossProduct(bodyDirectionX, bodyDirectionY);
 		}
 
 		private string GetPage(Zone zone)
@@ -307,18 +333,6 @@ namespace STimWPF.Status
 				default:
 					return "None";
 			}
-		}
-
-		private Vector3D GetMovementDirection(Skeleton currentSkeleton)
-		{
-			Skeleton lastSkeleton = null;
-			if (lastSkeletons != null)
-				lastSkeleton = lastSkeletons.SingleOrDefault(tmp => tmp.TrackingId == currentSkeleton.TrackingId);
-			if (lastSkeleton != null)
-			{
-				return new Vector3D(currentSkeleton.Position.X - lastSkeleton.Position.X, currentSkeleton.Position.Y - lastSkeleton.Position.Y, currentSkeleton.Position.Z - lastSkeleton.Position.Z);
-			}
-			return new Vector3D(0, 0, 0);
 		}
 
 	}
