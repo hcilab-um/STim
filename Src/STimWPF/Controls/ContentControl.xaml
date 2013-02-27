@@ -122,7 +122,7 @@
 									IBM PC, Windows, a standardized graphical interface for word processing, dial-up modems, a standardized
 									tool for communication, and a global phone network.
 								</TextBlock>
-                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFNetscape" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Netscape}">
@@ -131,7 +131,7 @@
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Netscape went public at the price of $28. Netscape and the Web broadened the audience for the Internet from its roots as a communications medium used primarily by "early adopters and geeks" to something that made the Internet accessible to everyone from five-year-olds to ninety-five-year-olds. The digitization that took place meant that everyday occurrences such as words, files, films, music, and pictures could be accessed and manipulated on a computer screen by all people across the world.
 								</TextBlock>
-                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFWorkflow" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Workflow}">
@@ -140,7 +140,7 @@
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman's catch-all for the standards and technologies that allowed work to flow. The ability of machines to talk to other machines with no humans involved, as stated by Friedman. Friedman believes these first three forces have become a "crude foundation of a whole new global platform for collaboration." There was an emergence of software protocols (SMTP – simple mail transfer protocol; HTML – the language that enabled anyone to design and publish documents that could be transmitted to and read on any computer anywhere) Standards on Standards. This is what Friedman called the "Genesis moment of the flat world." The net result "is that people can work with other people on more stuff than ever before." This created a global platform for multiple forms of collaboration. The next six flatteners sprung from this platform.
 								</TextBlock>
-                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFUploading" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Uploading}">
@@ -149,7 +149,7 @@
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Communities uploading and collaborating on online projects. Examples include open source software, blogs, and Wikipedia. Friedman considers the phenomenon "the most disruptive force of all."
 								</TextBlock>
-                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFOutsourcing" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																		Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Outsourcing}">
@@ -158,7 +158,7 @@
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman argues that outsourcing has allowed companies to split service and manufacturing activities into components which can be subcontracted and performed in the most efficient, cost-effective way. This process became easier with the mass distribution of fiber optic cables during the introduction of the World Wide Web.
 								</TextBlock>
-                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFInsourcing" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Insourcing}">
@@ -167,7 +167,7 @@
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman uses UPS as a prime example for insourcing, in which the company's employees perform services – beyond shipping – for another company. For example, UPS repairs Toshiba computers on behalf of Toshiba. The work is done at the UPS hub, by UPS employees.
 								</TextBlock>
-                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFOffshoring" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																    Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Offshoring}">
@@ -176,7 +176,7 @@
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									The internal relocation of a company's manufacturing or other processes to a foreign land to take advantage of less costly operations there. China's entrance in the WTO (World Trade Organization) allowed for greater competition in the playing field. Now countries such as Malaysia, Mexico, Brazil must compete against China and each other to have businesses offshore to them.
 								</TextBlock>
-                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFSupplyChain" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																		Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=SupplyChain}">
@@ -185,7 +185,7 @@
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman compares the modern retail supply chain to a river, and points to Wal-Mart as the best example of a company using technology to streamline item sales, distribution, and shipping.
 								</TextBlock>
-                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFInforming" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																		Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Informing}">
@@ -194,7 +194,7 @@
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Google and other search engines are the prime example. "Never before in the history of the planet have so many people – on their own – had the ability to find so much information about so many things and about so many other people," writes Friedman. The growth of search engines is tremendous; for example take Google, in which Friedman states that it is "now processing roughly one billion searches per day, up from 150 million just three years ago."
 								</TextBlock>
-                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
+								<Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFSterois" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Sterois}">
@@ -203,7 +203,7 @@
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Wireless, Voice over Internet, and file sharing. Personal digital devices like mobile phones, iPods, personal digital assistants, instant messaging, and voice over Internet Protocol (VoIP). Digital, Mobile, Personal and Virtual – all analog content and processes (from entertainment to photography to word processing) can be digitized and therefore shaped, manipulated and transmitted; virtual – these processes can be done at high speed with total ease; mobile – can be done anywhere, anytime by anyone; and personal – can be done by you.
 								</TextBlock>
-                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 						</Grid>
 					</Grid>

@@ -60,9 +60,8 @@ namespace STimWPF.Status
 		double viewAngle;
 		DateTime currentDateTime;
 
-		public StatusController(int period, double kinectAngleInRadian, Controls.ContentControl contentCtrl)
+		public StatusController(int period, double kinectAngleInRadian)
 		{
-			ContentCtrl = contentCtrl;
 			lastUserSkeletonId = -1;
 			currentDateTime = DateTime.Now;
 			Trigger = new Timer(new TimerCallback(TimerCallback), null, 0, period);
@@ -174,7 +173,7 @@ namespace STimWPF.Status
 		/// </summary>
 		/// <param name="skeleton"></param>
 		/// <param name="deltaMilliseconds"></param>
-		public void LoadNewSkeletonData(Skeleton[] skeletons, Skeleton userSkeleton, DrawingImage dIS)
+		public void LoadNewSkeletonData(Skeleton[] skeletons, Skeleton userSkeleton, DrawingImage dIS, Controls.ContentControl contentControl)
 		{
 			lock (monitor)
 			{
@@ -184,7 +183,7 @@ namespace STimWPF.Status
 					currentUserSkeletonId = -1;
 					return;
 				}
-
+				ContentCtrl = contentControl;
 				this.depthImageSourceMS = SaveDrawingImage(dIS);
 				currentSkeletons = skeletons.Where(temp => temp.TrackingState == SkeletonTrackingState.Tracked).ToList();
 				currentUserSkeletonId = userSkeleton.TrackingId;

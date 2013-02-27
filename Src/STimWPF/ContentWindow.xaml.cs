@@ -18,55 +18,11 @@ namespace STimWPF
 	/// <summary>
 	/// Interaction logic for TextEntryWindow.xaml
 	/// </summary>
-	public partial class ContentWindow : Window, INotifyPropertyChanged
+	public partial class ContentWindow : Window
 	{
-		private MainPage mainPageLeft;
-		private DetailWFPage detailPageLeft;
-
-		private MainPage mainPageRight;
-		private DetailWFPage detailPageRight;
 
 		public App AppInstance { get; set; }
 
-		public MainPage MainPageLeft
-		{
-			get { return mainPageLeft; }
-			set 
-			{
-				mainPageLeft = value;
-				OnPropertyChanged("MainPageLeft");
-			}
-		}
-
-		public DetailWFPage DetailPageLeft
-		{
-			get { return detailPageLeft; }
-			set
-			{
-				detailPageLeft = value;
-				OnPropertyChanged("DetailPageLeft");
-			}
-		}
-
-		public MainPage MainPageRight
-		{
-			get { return mainPageRight; }
-			set
-			{
-				mainPageRight = value;
-				OnPropertyChanged("MainPageRight");
-			}
-		}
-
-		public DetailWFPage DetailPageRight
-		{
-			get { return detailPageRight; }
-			set
-			{
-				detailPageRight = value;
-				OnPropertyChanged("DetailPageRight");
-			}
-		}
 
 		public Core CoreInstance
 		{
@@ -112,11 +68,5 @@ namespace STimWPF
 			this.iKinectDepthSmall.Source = e.Frame;
 		}
 
-		public event PropertyChangedEventHandler PropertyChanged;
-		private void OnPropertyChanged(String name)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(name));
-		}
 	}
 }

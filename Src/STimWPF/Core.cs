@@ -18,7 +18,7 @@ using System.IO;
 
 namespace STimWPF
 {
-	public class Core: INotifyPropertyChanged
+	public class Core
 	{
 		private const int VISITOR_COLOR_SHIFT = 50;
 		private const int USER_COLOR_SHIFT = 40;
@@ -63,9 +63,9 @@ namespace STimWPF
 
 		private Core() { }
 
-		public void Initialize(Controls.ContentControl contentCtrl, Dispatcher uiDispatcher, int skeletonBufferSize, int depthPercentBufferSize, String destFolder, int playerBufferSize, int uploadPeriod)
+		public void Initialize(Dispatcher uiDispatcher, int skeletonBufferSize, int depthPercentBufferSize, String destFolder, int playerBufferSize, int uploadPeriod)
 		{
-			ContentCtrl = contentCtrl;
+
 			IsKinectConnected = false;
 			PlayBackFromFile = false;
 			SkeletonF = new SkeletonFilter(skeletonBufferSize);
@@ -97,7 +97,7 @@ namespace STimWPF
 					kinectSensor.Start();
 					kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - kinectSensor.ElevationAngle);
-					StatusCtr = new StatusController(uploadPeriod, ToolBox.AngleToRadian(kinectSensor.ElevationAngle), ContentCtrl);
+					StatusCtr = new StatusController(uploadPeriod, ToolBox.AngleToRadian(kinectSensor.ElevationAngle));
 				}
 			}
 		}
@@ -183,7 +183,7 @@ namespace STimWPF
 				}
 			}
 
-			StatusCtr.LoadNewSkeletonData(skeletons, stableSkeleton, depthImageCanvas);
+			StatusCtr.LoadNewSkeletonData(skeletons, stableSkeleton, depthImageCanvas, ContentCtrl);
 		}
 
 		void Player_SkeletonFrameReady(object sender, PlayerSkeletonFrameReadyEventArgs e)
@@ -341,12 +341,5 @@ namespace STimWPF
 			Recorder.Stop(false, true);
 		}
 
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged(String name)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(name));
-		}
 	}
 }
