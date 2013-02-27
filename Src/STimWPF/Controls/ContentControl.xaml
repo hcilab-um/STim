@@ -7,7 +7,7 @@
 						 xmlns:converters="clr-namespace:STimWPF.Converters"
 						 xmlns:controls="clr-namespace:STimWPF.Controls"
 						 x:Name="ContentCtrl"
-             d:DesignHeight="768" d:DesignWidth="1366">
+             d:DesignHeight="600" d:DesignWidth="800">
 	<UserControl.Resources>
 		<converters:LocationMarginConverter x:Key="lmConverter" />
 		<converters:MainPageVisibilityConverter x:Key="mpvConverter" />
@@ -28,14 +28,14 @@
 		<Style x:Key="btStyle" TargetType="Button">
 			<Setter Property="FontSize" Value="12"/>
 			<Setter Property="Margin" Value="15,10"/>
-			<Setter Property="Height" Value="60"/>
+			<Setter Property="Height" Value="30"/>
 			<Setter Property="BorderBrush" Value="Black"/>
 		</Style>
 		
 		<Style x:Key="btMainPageStyle" TargetType="Button">
 			<Setter Property="Margin" Value="10"/>
-			<Setter Property="FontSize" Value="20"/>
-			<Setter Property="Height" Value="50"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Height" Value="40"/>
 			<Setter Property="Background" Value="White"/>
 			<Setter Property="BorderBrush" Value="Black"/> 
 			<EventSetter Event="Click" Handler="onMainPageClick"/>
@@ -43,10 +43,9 @@
 	</UserControl.Resources>
 	<Grid>
 		<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
-			<!-- User Shadow -->
-			<StackPanel Name="sp_WF" HorizontalAlignment="Left" Width="683">
+			<StackPanel Name="sp_WF" HorizontalAlignment="Left" Width="800">
 				<Grid>
-					<Grid Name="sp_WFContent" HorizontalAlignment="Left" Width=" 400" Margin="0,100,0,0">
+					<Grid Name="sp_WFContent" HorizontalAlignment="Left" Width=" 600" Margin="0,40,0,0">
 						<StackPanel Name="sp_WFOverview" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
 																													Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Overview}">
 							<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}">The world is Flat</TextBlock>
@@ -110,7 +109,7 @@
 								</StackPanel>						
 							</StackPanel>
 							<StackPanel Name="sp_WFBerlinWall" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=BerlinWall}">
+																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=BerlinWall}">
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Collapse of the Berlin Wall"/>
 								<Image Source="/STimWPF;component/image/BerlinWall.jpg" Margin="20" Height="100" HorizontalAlignment="Left"/>
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
@@ -123,180 +122,98 @@
 									IBM PC, Windows, a standardized graphical interface for word processing, dial-up modems, a standardized
 									tool for communication, and a global phone network.
 								</TextBlock>
+                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFNetscape" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Netscape}">
+																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Netscape}">
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Netscape"/>
 								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/netscape.png" />
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Netscape went public at the price of $28. Netscape and the Web broadened the audience for the Internet from its roots as a communications medium used primarily by "early adopters and geeks" to something that made the Internet accessible to everyone from five-year-olds to ninety-five-year-olds. The digitization that took place meant that everyday occurrences such as words, files, films, music, and pictures could be accessed and manipulated on a computer screen by all people across the world.
 								</TextBlock>
+                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFWorkflow" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Workflow}">
+																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Workflow}">
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Workflow Software"/>
 								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Workflow.png" />
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman's catch-all for the standards and technologies that allowed work to flow. The ability of machines to talk to other machines with no humans involved, as stated by Friedman. Friedman believes these first three forces have become a "crude foundation of a whole new global platform for collaboration." There was an emergence of software protocols (SMTP – simple mail transfer protocol; HTML – the language that enabled anyone to design and publish documents that could be transmitted to and read on any computer anywhere) Standards on Standards. This is what Friedman called the "Genesis moment of the flat world." The net result "is that people can work with other people on more stuff than ever before." This created a global platform for multiple forms of collaboration. The next six flatteners sprung from this platform.
 								</TextBlock>
+                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFUploading" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Uploading}">
+																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Uploading}">
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Uploading"/>
 								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/uploading.png" />
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Communities uploading and collaborating on online projects. Examples include open source software, blogs, and Wikipedia. Friedman considers the phenomenon "the most disruptive force of all."
 								</TextBlock>
+                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFOutsourcing" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Outsourcing}">
+																		Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Outsourcing}">
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Outsourcing"/>
 								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/outsourcing.gif" />
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman argues that outsourcing has allowed companies to split service and manufacturing activities into components which can be subcontracted and performed in the most efficient, cost-effective way. This process became easier with the mass distribution of fiber optic cables during the introduction of the World Wide Web.
 								</TextBlock>
+                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFInsourcing" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Insourcing}">
+																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Insourcing}">
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Insourcing"/>
 								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Insourcing.jpg" />
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman uses UPS as a prime example for insourcing, in which the company's employees perform services – beyond shipping – for another company. For example, UPS repairs Toshiba computers on behalf of Toshiba. The work is done at the UPS hub, by UPS employees.
 								</TextBlock>
+                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFOffshoring" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Offshoring}">
+																    Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Offshoring}">
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Offshoring"/>
 								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/OffShoring.jpg" />
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									The internal relocation of a company's manufacturing or other processes to a foreign land to take advantage of less costly operations there. China's entrance in the WTO (World Trade Organization) allowed for greater competition in the playing field. Now countries such as Malaysia, Mexico, Brazil must compete against China and each other to have businesses offshore to them.
 								</TextBlock>
+                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFSupplyChain" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=SupplyChain}">
+																		Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=SupplyChain}">
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Supply-chaining"/>
 								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/supply_chain.jpg" />
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman compares the modern retail supply chain to a river, and points to Wal-Mart as the best example of a company using technology to streamline item sales, distribution, and shipping.
 								</TextBlock>
+                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFInforming" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Informing}">
+																		Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Informing}">
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Informing"/>
 								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Informing.jpg" />
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Google and other search engines are the prime example. "Never before in the history of the planet have so many people – on their own – had the ability to find so much information about so many things and about so many other people," writes Friedman. The growth of search engines is tremendous; for example take Google, in which Friedman states that it is "now processing roughly one billion searches per day, up from 150 million just three years ago."
 								</TextBlock>
+                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
 							<StackPanel Name="sp_WFSterois" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Sterois}">
+																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Sterois}">
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="&quot;The Steroids&quot;"/>
 								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Steroids.jpg" />
 								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Wireless, Voice over Internet, and file sharing. Personal digital devices like mobile phones, iPods, personal digital assistants, instant messaging, and voice over Internet Protocol (VoIP). Digital, Mobile, Personal and Virtual – all analog content and processes (from entertainment to photography to word processing) can be digitized and therefore shaped, manipulated and transmitted; virtual – these processes can be done at high speed with total ease; mobile – can be done anywhere, anytime by anyone; and personal – can be done by you.
 								</TextBlock>
+                                <Button Margin="20,10,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 							</StackPanel>
-							<Button Name="DetailMenu_WF" Margin="20,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
 						</Grid>
 					</Grid>
-					<StackPanel Name="sp_WFCtrl" Orientation="Vertical" HorizontalAlignment="Right" Width="200" Margin="0,200,0,0">
+					<StackPanel Name="sp_WFCtrl" Orientation="Vertical" HorizontalAlignment="Right" Width="150" Margin="0,200,0,0">
 						<Button Name="Overview_WF" Style="{StaticResource ResourceKey=btMainPageStyle}">The world is flat</Button>
 						<Button Name="Author_WF" Style="{StaticResource ResourceKey=btMainPageStyle}">Author</Button>
 						<Button Name="Detail_WF" Style="{StaticResource ResourceKey=btMainPageStyle}">Detail</Button>
 					</StackPanel>
 				</Grid>
 			</StackPanel>
-			<StackPanel Name="sp_LA" HorizontalAlignment="Right" Width="683">
-				<Grid>
-					<Grid Name="sp_LAContent" HorizontalAlignment="Left" Width=" 400" Margin="0,100,0,0">
-						<StackPanel Name="sp_LAOverview" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
-																													Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Overview}">
-							<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}">Logitech Attack 3</TextBlock>
-							<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
-								Logitech Attack 3 is an easy-to-use joystick with a full array of customizable controls that gives you durability and ambidextrous control – right out of the box.
-							</TextBlock>
-						</StackPanel>
-						<StackPanel Name="sp_LAAuthor" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
-																												Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Author}">
-							<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}">Logitech</TextBlock>
-							<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/logitech_logo.jpg" />
-							<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
-								Logitech is a world leader in products that connect people to the digital experiences they care about. Spanning multiple computing, communication and entertainment platforms, Logitech’s combined hardware and software enable or enhance digital navigation, music and video entertainment, gaming, social networking, audio and video communication over the Internet, video security and home-entertainment control.
-							</TextBlock>
-						</StackPanel>
-						<Grid Name="sp_LADetail" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
-																												Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Detail}">
-							<StackPanel Name="sp_DetailMenu_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
-																																														Converter={StaticResource ResourceKey=dlavConverter}, ConverterParameter=DetailMenu_LA}">
-								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Cool Features" />
-								<StackPanel Margin="20,20,0,0">
-									<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-										<Button Name="FullArray" Width="100" Click="onLADetailClick">
-											<Image Source="/STimWPF;component/image/fullArray.png"/>
-										</Button>
-										<Button Name="GamingSoftware" Margin="30,0" Width="100" Click="onLADetailClick">
-											<Image Source="/STimWPF;component/image/gamingSoftware.png" />
-										</Button>
-									</StackPanel>
-									<StackPanel Margin="0,30" Orientation="Horizontal" HorizontalAlignment="Left">
-										<Button Name="PlugPlay" Width="100" Click="onLADetailClick">
-											<Image  Source="/STimWPF;component/image/plugPlay.png" />
-										</Button>
-										<Button  Name="Symmetrical" Margin="30,0" Width="100" Click="onLADetailClick">
-											<Image Source="/STimWPF;component/image/Symmetric.png" />
-										</Button>
-									</StackPanel>
-								</StackPanel>
-							</StackPanel>
-							<StackPanel Name="sp_FullArray_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
-																																														Converter={StaticResource ResourceKey=dlavConverter}, ConverterParameter=FullArray}">
-								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Full Array of Control"/>
-								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/fullArray.png" />
-								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
-									You can assert your self with 11 programmable buttons and a rapid-fire trigger.
-								</TextBlock>
-							</StackPanel>
-							<StackPanel Name="sp_PlugPlay_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
-																																														Converter={StaticResource ResourceKey=dlavConverter}, ConverterParameter=PlugPlay}">
-								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Plug-and-play setup"/>
-								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/plugPlay.png" />
-								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
-									It delivers plug-and-play simplicity – or you can install the induced software to customized buttons.
-								</TextBlock>
-							</StackPanel>
-							<StackPanel Name="sp_GamingSoftware_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
-																																														Converter={StaticResource ResourceKey=dlavConverter}, ConverterParameter=GamingSoftware}">
-								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Logitech Gaming software (PC)"/>
-								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/gamingSoftware.png" />
-								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
-									Advanced button customization, multiple controller configurations, and printable gaming profiles let you get serious about your game.
-								</TextBlock>
-							</StackPanel>
-							<StackPanel Name="sp_Symmetrical_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
-																																														Converter={StaticResource ResourceKey=dlavConverter}, ConverterParameter=Symmetrical}">
-								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Symmetrical Handler"/>
-								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Symmetric.png" />
-								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
-									It fits your right or left hand perfectly.
-								</TextBlock>
-							</StackPanel>
-							<Button Name="DetailMenu_LA" Margin="20,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Content="Back" Click="onClickDetailMenu"/>
-						</Grid>
-					</Grid>
-					<StackPanel Name="sp_LACtrl" Orientation="Vertical" HorizontalAlignment="Right" Width="200" Margin="0,200,20,0">
-						<Button Name="Overview_LA" Style="{StaticResource ResourceKey=btMainPageStyle}">
-							Logitech Attack 3
-						</Button>
-						<Button Name="Author_LA" Style="{StaticResource ResourceKey=btMainPageStyle}">
-							Company
-						</Button>
-						<Button Name="Detail_LA" Style="{StaticResource ResourceKey=btMainPageStyle}">
-							Features
-						</Button>
-					</StackPanel>
-				</Grid>
-			</StackPanel>
-			<Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Center"/>
 			<controls:MouseAnimationControl Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top"
 																		Visibility="{Binding ElementName=ContentCtrl, Path=LeftClick, Converter={StaticResource ResourceKey=bvConverter}}"
 																		Margin="{Binding ElementName=ContentCtrl, Path=RelativeCursorLocation, Converter={StaticResource ResourceKey=lmConverter}}"

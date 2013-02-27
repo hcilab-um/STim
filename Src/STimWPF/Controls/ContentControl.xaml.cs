@@ -141,12 +141,7 @@ namespace STimWPF.Controls
 
 		void onClickDetailMenu(object sender, EventArgs e)
 		{
-			Button bt = (Button)sender;
-			string[] nameInfo = bt.Name.Split('_');
-			if(nameInfo[1].Equals("WF"))
-				DetailWFPage = DetailWFPage.DetailMenu_WF;
-			else
-				DetailLAPage = DetailLAPage.DetailMenu_LA;
+		    DetailWFPage = DetailWFPage.DetailMenu_WF;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -158,7 +153,7 @@ namespace STimWPF.Controls
 
 		public string CurrentPage()
 		{
-			return MainPageLA.ToString() + "-" + Detail_LA.ToString() + "|" + MainPageWF.ToString() + "-" + Detail_WF.ToString();
+			return MainPageWF.ToString() + "-" + DetailWFPage.ToString();
 		}
 	}
 }

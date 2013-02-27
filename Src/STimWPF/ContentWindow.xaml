@@ -4,7 +4,7 @@
 				xmlns:converters="clr-namespace:STimWPF.Converters"
         xmlns:controls="clr-namespace:STimWPF.Controls"
 				WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
-				Title="WAG - ContentWindow" Width="1366" Height="768" Closed="contentW_Closed" Loaded="ContentWindow_Loaded">
+				Title="WAG - ContentWindow" Width="800" Height="600" Closed="contentW_Closed" Loaded="ContentWindow_Loaded">
 	<Window.Resources>
 		<converters:SelectionMethodConverter x:Key="smConverter"/>
 		<converters:MethodVisibilityConverter x:Key="vConverter"/>
@@ -21,13 +21,13 @@
 
 		<Image Name="iKinectDepthBig" HorizontalAlignment="Stretch" Margin="10" 
 					 Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Notification}" />
-		<!--Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}"-->
-		<controls:ContentControl x:Name="contentCtrl"
+        
+        <controls:ContentControl x:Name="contentCtrl" Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}"
 							RelativeCursorLocation="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.RelativeCursorLocation}"
 							LeftClick="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.LeftClick}"
 							TimerState="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.Recognizer.TimerState}"/>
-		<!--<controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"
+		<controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"
 							Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Ambient-Notification}" 
-							UserDisplayDistance="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.UserDisplayDistance}"/>-->
+							UserDisplayDistance="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.UserDisplayDistance}"/>
 	</Grid>
 </Window>
