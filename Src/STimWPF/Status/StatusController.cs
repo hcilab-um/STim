@@ -41,7 +41,8 @@ namespace STimWPF.Status
 
 		private Timer Trigger { get; set; }
 		private VisitorController VisitorContr { get; set; }
-		private Core Core { get; set; }
+		private InteractionController InteractionCtr { get; set; }
+		private Controls.ContentControl ContentCtrl { get; set; }
 		private int lastUserSkeletonId;
 		private int currentUserSkeletonId;
 
@@ -59,8 +60,9 @@ namespace STimWPF.Status
 		double viewAngle;
 		DateTime currentDateTime;
 
-		public StatusController(int period, double kinectAngleInRadian)
+		public StatusController(int period, double kinectAngleInRadian, Controls.ContentControl contentCtrl)
 		{
+			ContentCtrl = contentCtrl;
 			lastUserSkeletonId = -1;
 			currentDateTime = DateTime.Now;
 			Trigger = new Timer(new TimerCallback(TimerCallback), null, 0, period);
@@ -263,8 +265,6 @@ namespace STimWPF.Status
 				else
 					wasControlling = false;
 
-				page = GetPage(VisitorContr.Zone);
-
 				location = new Vector3D(headV.X, headV.Y, headV.Z);
 
 				//get movement direction
@@ -282,7 +282,7 @@ namespace STimWPF.Status
 
 				viewDirection = GetViewDirection(shoulderRV, shoulderLV, headV);
 				viewAngle = Vector.AngleBetween(new Vector(0, -1), new Vector(viewDirection.X, viewDirection.Z));
-
+				page = ContentCtrl.CurrentPage();
 				status = new VisitStatus()
 				{
 					SkeletonId = skeleton.TrackingId,
@@ -326,20 +326,6 @@ namespace STimWPF.Status
 			Vector3D bodyDirectionY = ToolBox.GetDisplacementVector(bodyCenterP, headVector);
 			return Vector3D.CrossProduct(bodyDirectionY, bodyDirectionX);
 		}
-
-		private string GetPage(Zone zone)
-		{
-			switch (zone)
-			{
-				case Zone.Interaction:
-					if (Core.Instance.ContentState != ContentState.Detail)
-						return Core.Instance.ContentState.ToString();
-					return Core.Instance.ContentState + "-" + Core.Instance.DetailContentState;
-				default:
-					return "None";
-			}
-		}
-
 	}
 
 }

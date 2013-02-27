@@ -84,8 +84,8 @@
     <Compile Include="Controls\AnimationControl.xaml.cs">
       <DependentUpon>AnimationControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\InteractionControl.xaml.cs">
-      <DependentUpon>InteractionControl.xaml</DependentUpon>
+    <Compile Include="Controls\ContentControl.xaml.cs">
+      <DependentUpon>ContentControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MouseAnimationControl.xaml.cs">
       <DependentUpon>MouseAnimationControl.xaml</DependentUpon>
@@ -93,8 +93,9 @@
     <Compile Include="CircularList.cs" />
     <Compile Include="Converters\AndConverter.cs" />
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
-    <Compile Include="Converters\ContentStateVisibilityConverter.cs" />
-    <Compile Include="Converters\DetailContentStateVisibilityConverter.cs" />
+    <Compile Include="Converters\DetailLAPageVisibilityConverter.cs" />
+    <Compile Include="Converters\MainPageVisibilityConverter.cs" />
+    <Compile Include="Converters\DetailWFPageVisibilityConverter.cs" />
     <Compile Include="Converters\DistanceRectSizeConverter.cs" />
     <Compile Include="Converters\LocationMarginConverter.cs" />
     <Compile Include="Converters\MethodVisibilityConverter.cs" />
@@ -105,13 +106,15 @@
     <Compile Include="Converters\ZoneVisibilityConverter.cs" />
     <Compile Include="DepthImageReadyArgs.cs" />
     <Compile Include="DepthPercentFilter.cs" />
-    <Compile Include="Interaction\ContentState.cs" />
-    <Compile Include="Interaction\DetailContentState.cs" />
+    <Compile Include="Interaction\DetailLAPage.cs" />
+    <Compile Include="Interaction\MainPage.cs" />
+    <Compile Include="Interaction\DetailWFPage.cs" />
     <Compile Include="Interaction\MouseController.cs" />
     <Compile Include="Interaction\VisitorController.cs" />
     <Compile Include="ContentWindow.xaml.cs">
       <DependentUpon>ContentWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IUIInformer.cs" />
     <Compile Include="Status\StatusController.cs" />
     <Compile Include="Util\ExtendedPropertyChangedEventArgs.cs" />
     <Compile Include="Interaction\GestureRecognizer.cs" />
@@ -136,7 +139,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\InteractionControl.xaml">
+    <Page Include="Controls\ContentControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -213,12 +216,25 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image\artifact.png" />
-    <Resource Include="image\man.png" />
-    <Resource Include="image\stick.png" />
-    <Resource Include="image\window.png" />
+    <Resource Include="image\BerlinWall.jpg" />
+    <Resource Include="image\Informing.jpg" />
+    <Resource Include="image\Insourcing.jpg" />
+    <Resource Include="image\logitech_logo.jpg" />
+    <Resource Include="image\netscape.png" />
+    <Resource Include="image\OffShoring.jpg" />
+    <Resource Include="image\outsourcing.gif" />
+    <Resource Include="image\Steroids.jpg" />
+    <Resource Include="image\supply_chain.jpg" />
+    <Resource Include="image\thomas_friedman.jpg" />
+    <Resource Include="image\uploading.png" />
+    <Resource Include="image\Workflow.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="image\fullArray.png" />
+    <Resource Include="image\gamingSoftware.png" />
+    <Resource Include="image\plugPlay.png" />
+    <Resource Include="image\Symmetric.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

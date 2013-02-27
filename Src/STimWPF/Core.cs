@@ -44,31 +44,10 @@ namespace STimWPF
 		public InteractionController InteractionCtr { get; set; }
 		public StatusController StatusCtr { get; set; }
 		public VisitorController VisitorCtr { get; set; }
+		public Controls.ContentControl ContentCtrl { get; set; }
 		public SkeletonRecorder Recorder { get; set; }
 		public SkeletonPlayer Player { get; set; }
 		public bool PlayBackFromFile { get; set; }
-		private ContentState contentState;
-		private DetailContentState detailContentState;
-		
-		public ContentState ContentState 
-		{
-			get { return contentState; }
-			set 
-			{ 
-				contentState = value;
-				OnPropertyChanged("ContentState");
-			}
-		}
-
-		public DetailContentState DetailContentState 
-		{
-			get { return detailContentState; }
-			set
-			{
-				detailContentState = value;
-				OnPropertyChanged("DetailContentState");
-			}
-		}
 		
 		public static Core Instance
 		{
@@ -84,11 +63,9 @@ namespace STimWPF
 
 		private Core() { }
 
-		public void Initialize(Dispatcher uiDispatcher, int skeletonBufferSize, int depthPercentBufferSize, String destFolder, int playerBufferSize, int uploadPeriod)
+		public void Initialize(Controls.ContentControl contentCtrl, Dispatcher uiDispatcher, int skeletonBufferSize, int depthPercentBufferSize, String destFolder, int playerBufferSize, int uploadPeriod)
 		{
-
-			ContentState = ContentState.Overview;
-			DetailContentState = DetailContentState.PartA;
+			ContentCtrl = contentCtrl;
 			IsKinectConnected = false;
 			PlayBackFromFile = false;
 			SkeletonF = new SkeletonFilter(skeletonBufferSize);
@@ -120,7 +97,7 @@ namespace STimWPF
 					kinectSensor.Start();
 					kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - kinectSensor.ElevationAngle);
-					StatusCtr = new StatusController(uploadPeriod, ToolBox.AngleToRadian(kinectSensor.ElevationAngle));
+					StatusCtr = new StatusController(uploadPeriod, ToolBox.AngleToRadian(kinectSensor.ElevationAngle), ContentCtrl);
 				}
 			}
 		}
