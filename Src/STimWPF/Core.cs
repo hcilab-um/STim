@@ -63,9 +63,8 @@ namespace STimWPF
 
 		private Core() { }
 
-		public void Initialize(Controls.ContentControl contentCtrl, Dispatcher uiDispatcher, int skeletonBufferSize, int depthPercentBufferSize, String destFolder, int playerBufferSize, int uploadPeriod)
+		public void Initialize(Dispatcher uiDispatcher, int skeletonBufferSize, int depthPercentBufferSize, String destFolder, int playerBufferSize, int uploadPeriod)
 		{
-			ContentCtrl = contentCtrl;
 			IsKinectConnected = false;
 			PlayBackFromFile = false;
 			SkeletonF = new SkeletonFilter(skeletonBufferSize);
@@ -97,7 +96,7 @@ namespace STimWPF
 					kinectSensor.Start();
 					kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - kinectSensor.ElevationAngle);
-					StatusCtr = new StatusController(uploadPeriod, ToolBox.AngleToRadian(kinectSensor.ElevationAngle), ContentCtrl);
+					StatusCtr = new StatusController(uploadPeriod, ToolBox.AngleToRadian(kinectSensor.ElevationAngle));
 				}
 			}
 		}
@@ -141,7 +140,7 @@ namespace STimWPF
 
 					if (rawSkeleton != null)
 					{
-						stableSkeleton = SkeletonF.ProcessNewSkeletonData(rawSkeleton);
+                        stableSkeleton = SkeletonF.ProcessNewSkeletonData(rawSkeleton);
 					}
 
 				}
@@ -183,7 +182,7 @@ namespace STimWPF
 				}
 			}
 
-			StatusCtr.LoadNewSkeletonData(skeletons, stableSkeleton, depthImageCanvas);
+			StatusCtr.LoadNewSkeletonData(skeletons, stableSkeleton, depthImageCanvas, ContentCtrl);
 		}
 
 		void Player_SkeletonFrameReady(object sender, PlayerSkeletonFrameReadyEventArgs e)

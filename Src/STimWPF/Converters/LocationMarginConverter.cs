@@ -15,7 +15,7 @@ namespace STimWPF.Converters
 			Thickness th = new Thickness();
 			Point3D location = (Point3D)value;
 			th.Left = location.X -30;
-			th.Top = location.Y-45;
+			th.Top = location.Y-30;
 			return th;
 		}
 

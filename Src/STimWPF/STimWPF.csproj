@@ -94,6 +94,8 @@
     <Compile Include="Converters\AndConverter.cs" />
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\DetailLAPageVisibilityConverter.cs" />
+    <Compile Include="Converters\DetailMenuVisibilityConverter.cs" />
+    <Compile Include="Converters\MainPageBackgroundConverter.cs" />
     <Compile Include="Converters\MainPageVisibilityConverter.cs" />
     <Compile Include="Converters\DetailWFPageVisibilityConverter.cs" />
     <Compile Include="Converters\DistanceRectSizeConverter.cs" />

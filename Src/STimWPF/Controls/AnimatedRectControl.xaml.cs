@@ -71,7 +71,6 @@ namespace STimWPF.Controls
 			{
 				if (Zone != Interaction.Zone.Ambient)
 					return;
-
 				animatedRect.RaiseEvent(new RoutedEventArgs(AnimatedRectControl.TimerElapsedEvent, this));
 			});
 		}
