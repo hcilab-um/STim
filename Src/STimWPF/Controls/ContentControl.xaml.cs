@@ -26,10 +26,34 @@ namespace STimWPF.Controls
 		private static readonly DependencyProperty LeftClickProperty = DependencyProperty.Register("LeftClick", typeof(bool), typeof(ContentControl));
 		private static readonly DependencyProperty RelativeCursorLocationProperty = DependencyProperty.Register("RelativeCursorLocation", typeof(Point3D), typeof(ContentControl));
 		private static readonly DependencyProperty TimerStateProperty = DependencyProperty.Register("TimerState", typeof(TimerState), typeof(ContentControl));
-		private MainPage mainPageWF;
+        
+        private bool isPlayingWF;
+        private bool isPlayingLA;
+        private MainPage mainPageWF;
 		private MainPage mainPageLA;
-		private DetailWFPage detailWFPage;
+        private DetailWFPage detailWFPage;
 		private DetailLAPage detailLAPage;
+
+        public bool IsPlayingWF
+        {
+            get { return isPlayingWF; }
+            set
+            {
+                isPlayingWF = value;
+                OnPropertyChanged("IsPlayingWF");
+            }
+        }
+
+        public bool IsPlayingLA
+        {
+            get { return isPlayingLA; }
+            set
+            {
+                isPlayingLA = value;
+                OnPropertyChanged("IsPlayingLA");
+            }
+        }
+
 		public MainPage MainPageWF
 		{
 			get { return mainPageWF; }
@@ -110,6 +134,18 @@ namespace STimWPF.Controls
 				}
 			}
 
+            if (mainPageWF != MainPage.Overview && IsPlayingWF)
+            {
+                IsPlayingWF = false;
+                me_WF.Stop();
+            }
+            
+            if (mainPageLA != MainPage.Overview && IsPlayingLA)
+            {
+                IsPlayingLA = false;
+                me_LA.Stop();
+            }
+
 			if (MainPageWF == MainPage.Detail)
 			{
 				if (nameInfo[1].Equals("WF"))
@@ -141,7 +177,14 @@ namespace STimWPF.Controls
 
         void onClickedPlay_WF(object sender, EventArgs e)
         {
+            IsPlayingWF = true;
             me_WF.Play();
+        }
+
+        private void onClickedPlay_LA(object sender, RoutedEventArgs e)
+        {
+            IsPlayingLA = true;
+            me_LA.Play();
         }
 
 		void onClickDetailMenu(object sender, EventArgs e)
@@ -166,9 +209,17 @@ namespace STimWPF.Controls
 			return MainPageLA.ToString() + "-" + Detail_LA.ToString() + "|" + MainPageWF.ToString() + "-" + Detail_WF.ToString();
 		}
 
-        private void me_WF_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        private void me_WF_MediaEnded(object sender, RoutedEventArgs e)
         {
-
+            IsPlayingWF = false;
+            me_WF.Stop();
         }
+
+        private void me_LA_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            IsPlayingLA = false;
+            me_LA.Stop();
+        }
+
 	}
 }

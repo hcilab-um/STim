@@ -11,8 +11,8 @@ namespace STimWPF.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			bool leftClick = (bool)value;
-			if (leftClick)
+			bool shouldHide = (bool)value;
+			if (shouldHide)
 				return Visibility.Hidden;
 			else
 				return Visibility.Visible;

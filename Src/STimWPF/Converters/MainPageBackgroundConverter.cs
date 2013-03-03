@@ -15,7 +15,7 @@ namespace STimWPF.Converters
             MainPage mp = (MainPage)value;
             string param = (string)parameter;
             if (mp.ToString().Equals(param))
-                return Brushes.Yellow;
+                return Brushes.SkyBlue;
             return Brushes.White;
         }
 

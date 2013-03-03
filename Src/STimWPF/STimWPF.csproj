@@ -240,12 +240,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Resource Include="Video\worldIsFlatTrailer-2.mp4">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Content Include="Video\theWorldIsFlat.mp4" />
     <Resource Include="Image\playbutton.gif" />
-    <Content Include="Video\Review On Logitech Attack 3 Joystick HD.mp4" />
-    <Content Include="Video\worldIsFlatTrailer.mp4" />
+    <Content Include="Video\LogitechAttack3.mp4" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
