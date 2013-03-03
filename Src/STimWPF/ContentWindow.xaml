@@ -26,8 +26,9 @@
 							RelativeCursorLocation="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.RelativeCursorLocation}"
 							LeftClick="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.LeftClick}"
 							TimerState="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.Recognizer.TimerState}"/>
+        
         <controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"
 							Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Ambient-Notification}" 
-							UserDisplayDistance="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.UserDisplayDistance}"/>
+							NotificationDistance="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.UserDisplayDistance}"/>
     </Grid>
 </Window>

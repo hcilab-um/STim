@@ -16,7 +16,38 @@
 		<converters:BoolVisibilityConverter x:Key="bvConverter"/>
         <converters:MainPageBackgroundConverter x:Key="mpbConverter"/>
         <converters:DetailMenuVisibilityConverter x:Key="dmvConverter"/>
-		<Style x:Key="tbTitleStyle" TargetType="TextBlock">
+        <Style x:Key="btWFStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="15,10"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style x:Key="btStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="15,10"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="Chrome" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="#ADADAD"/>
+                                <Setter Property="Opacity" TargetName="Chrome" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="tbTitleStyle" TargetType="TextBlock">
 			<Setter Property="HorizontalAlignment" Value="Left"/>
 			<Setter Property="Margin" Value="20,0"/>
 			<Setter Property="FontSize" Value="20"/>
@@ -27,19 +58,31 @@
 			<Setter Property="FontSize" Value="12"/>
 			<Setter Property="TextWrapping" Value="WrapWithOverflow"/>
 		</Style>
-		<Style x:Key="btStyle" TargetType="Button">
-			<Setter Property="FontSize" Value="12"/>
-			<Setter Property="Margin" Value="15,10"/>
-			<Setter Property="Height" Value="60"/>
-			<Setter Property="BorderBrush" Value="Black"/>
-		</Style>
+        
 		<Style x:Key="btMainPageStyle" TargetType="Button">
 			<Setter Property="Margin" Value="10"/>
 			<Setter Property="FontSize" Value="20"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
 			<Setter Property="Height" Value="50"/>
-			<Setter Property="Background" Value="White"/>
-			<Setter Property="BorderBrush" Value="Black"/> 
-			<EventSetter Event="Click" Handler="onMainPageClick"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="Chrome" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="#ADADAD"/>
+                                <Setter Property="Opacity" TargetName="Chrome" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <EventSetter Event="Click" Handler="onMainPageClick"/>
 		</Style>
 	</UserControl.Resources>
 	<Grid>
@@ -49,7 +92,7 @@
 				<Grid>
 					<Grid Name="sp_WFContent" HorizontalAlignment="Left" Width=" 400" Margin="0,50,0,0">
 						<StackPanel Name="sp_WFOverview" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
-																													Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Overview}">
+																	Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Overview}">
 							<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}">The world is Flat</TextBlock>
 							<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 								An international bestselling book by Thomas Friedman that analyzes globalization,
@@ -57,6 +100,13 @@
 								as a level playing field in terms of commerce, where all competitors have an equal
 								opportunity.
 							</TextBlock>
+                            <StackPanel HorizontalAlignment="Left" Margin="20,20,0,0" >
+                                <MediaElement Name="me_WF" Source="/Video/worldIsFlatTrailer-2.mp4" IsEnabled="True" LoadedBehavior="Manual" UnloadedBehavior="Manual" HorizontalAlignment="Left" Height="200"
+                                              MediaFailed="me_WF_MediaFailed"/>
+                                <Button Background="Transparent" Style="{StaticResource ResourceKey=btStyle}" HorizontalAlignment="Center" BorderBrush="Transparent" Click="onClickedPlay_WF">
+                                    <Image Source="/STimWPF;component/image/playbutton.gif" />
+                                </Button>
+                            </StackPanel>
 						</StackPanel>
 						<StackPanel Name="sp_WFAuthor" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
 															Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Author}">
@@ -74,39 +124,41 @@
                                     <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="10 flatteners" />
                                     <StackPanel Margin="20,20,0,0">
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                            <Button Name="BerlinWall" Style="{StaticResource ResourceKey=btStyle}" Background="White" Click="onWFDetailClick">
+                                            <Button Name="BerlinWall" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
                                                 Berlin Wall Collapse
                                             </Button>
-                                            <Button Name="Workflow" Style="{StaticResource ResourceKey=btStyle}" Background="White" Click="onWFDetailClick">
+                                            <Button Name="Workflow" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
                                                 Workflow software
                                             </Button>
-                                            <Button Name="Offshoring" Style="{StaticResource ResourceKey=btStyle}" Width="70" Background="White" Click="onWFDetailClick">
+                                            <Button Name="Offshoring" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
                                                 Offshoring
                                             </Button>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                            <Button Name="Netscape" Style="{StaticResource ResourceKey=btStyle}" Width="110" Background="White" Click="onWFDetailClick">
+                                            <Button Name="Netscape" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
                                                 Netscape
                                             </Button>
-                                            <Button Name="SupplyChain" Style="{StaticResource ResourceKey=btStyle}" Width="105" Background="White" Click="onWFDetailClick">
+                                            <Button Name="SupplyChain" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
                                                 Supply chain
                                             </Button>
-                                            <Button Name="Sterois" Style="{StaticResource ResourceKey=btStyle}" Background="White" Click="onWFDetailClick">
-                                                “The Sterois”
+                                            <Button Name="Uploading" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+                                                Uploading
                                             </Button>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-                                            <Button Name="Uploading" Style="{StaticResource ResourceKey=btStyle}"  Background="White" Click="onWFDetailClick">
-                                                Uploading
-                                            </Button>
-                                            <Button Name="Informing" Style="{StaticResource ResourceKey=btStyle}" Background="White" Click="onWFDetailClick">
+                                            <Button Name="Informing" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
                                                 Informing
                                             </Button>
-                                            <Button Name="Insourcing" Style="{StaticResource ResourceKey=btStyle}"  Background="White" Click="onWFDetailClick">
+                                            <Button Name="Insourcing" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
                                                 Insourcing
                                             </Button>
-                                            <Button Name="Outsourcing" Style="{StaticResource ResourceKey=btStyle}"  Background="White" Click="onWFDetailClick">
+                                            <Button Name="Outsourcing" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
                                                 Outsourcing
+                                            </Button>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+                                            <Button Name="Sterois" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+                                                “The Sterois”
                                             </Button>
                                         </StackPanel>
                                     </StackPanel>
@@ -208,7 +260,7 @@
                                     </TextBlock>
                                 </StackPanel>
                             </Grid>
-                            <Button Name="DetailMenu_WF" Margin="20,20,0,0" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, Converter={StaticResource ResourceKey=dmvConverter}, ConverterParameter=DetailMenu_WF}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="50" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                            <Button Name="DetailMenu_WF" Margin="20,20,0,0" Background="Transparent" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, Converter={StaticResource ResourceKey=dmvConverter}, ConverterParameter=DetailMenu_WF}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="50" Width="100" Content="Back" Click="onClickDetailMenu"/>
                         </StackPanel>
                     </Grid>
 					<StackPanel Name="sp_WFCtrl" Orientation="Vertical" HorizontalAlignment="Right" Width="200" Margin="0,200,0,0">
@@ -231,14 +283,14 @@
 				<Grid>
 					<Grid Name="sp_LAContent" HorizontalAlignment="Left" Width=" 400" Margin="0,50,0,0">
 						<StackPanel Name="sp_LAOverview" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
-																													Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Overview}">
+																			Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Overview}">
 							<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}">Logitech Attack 3</TextBlock>
 							<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 								Logitech Attack 3 is an easy-to-use joystick with a full array of customizable controls that gives you durability and ambidextrous control – right out of the box.
 							</TextBlock>
 						</StackPanel>
 						<StackPanel Name="sp_LAAuthor" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
-																												Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Author}">
+																		Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Author}">
 							<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}">Logitech</TextBlock>
 							<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/logitech_logo.jpg" />
 							<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
@@ -253,18 +305,18 @@
 								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Cool Features" />
 								<StackPanel Margin="20,20,0,0">
 									<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-										<Button Name="FullArray" Width="100" Click="onLADetailClick">
+                                        <Button Name="FullArray" Style="{StaticResource ResourceKey=btStyle}" Width="100" Click="onLADetailClick">
 											<Image Source="/STimWPF;component/image/fullArray.png"/>
 										</Button>
-										<Button Name="GamingSoftware" Margin="30,0" Width="100" Click="onLADetailClick">
+                                        <Button Name="GamingSoftware" Style="{StaticResource ResourceKey=btStyle}" Margin="30,0" Width="100" Click="onLADetailClick">
 											<Image Source="/STimWPF;component/image/gamingSoftware.png" />
 										</Button>
 									</StackPanel>
 									<StackPanel Margin="0,30" Orientation="Horizontal" HorizontalAlignment="Left">
-										<Button Name="PlugPlay" Width="100" Click="onLADetailClick">
-											<Image  Source="/STimWPF;component/image/plugPlay.png" />
+                                        <Button Name="PlugPlay" Style="{StaticResource ResourceKey=btStyle}" Width="100" Click="onLADetailClick">
+											<Image Source="/STimWPF;component/image/plugPlay.png" />
 										</Button>
-										<Button  Name="Symmetrical" Margin="30,0" Width="100" Click="onLADetailClick">
+                                        <Button Name="Symmetrical" Style="{StaticResource ResourceKey=btStyle}" Margin="30,0" Width="100" Click="onLADetailClick">
 											<Image Source="/STimWPF;component/image/Symmetric.png" />
 										</Button>
 									</StackPanel>
@@ -304,7 +356,7 @@
 							</StackPanel>                                
 						    </Grid>
                             <Button Name="DetailMenu_LA" Margin="20,20,0,0" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, Converter={StaticResource ResourceKey=dmvConverter}, ConverterParameter=DetailMenu_LA}"
-                                                VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="50" Width="100" Content="Back" Click="onClickDetailMenu"/>
+                                                VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="50" Width="100" Content=" Back" Click="onClickDetailMenu"/>
                         </StackPanel>
                     </Grid>
 					<StackPanel Name="sp_LACtrl" Orientation="Vertical" HorizontalAlignment="Right" Width="200" Margin="0,200,20,0">
@@ -313,11 +365,11 @@
 							Logitech Attack 3
 						</Button>
                         <Button Name="Author_LA" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
-								                        Converter={StaticResource ResourceKey=mpbConverter}, ConverterParameter=Author}">>
+								                        Converter={StaticResource ResourceKey=mpbConverter}, ConverterParameter=Author}">
 							Company
 						</Button>
                         <Button Name="Detail_LA" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
-								                        Converter={StaticResource ResourceKey=mpbConverter}, ConverterParameter=Detail}">>
+								                        Converter={StaticResource ResourceKey=mpbConverter}, ConverterParameter=Detail}">
 							Features
 						</Button>
 					</StackPanel>

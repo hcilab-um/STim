@@ -12,92 +12,153 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Windows.Media.Animation;
+using System.ComponentModel;
+using STimWPF.Properties;
 
 namespace STimWPF.Controls
 {
-	/// <summary>
-	/// Interaction logic for AnimatedRectControl.xaml
-	/// </summary>
-	public partial class AnimatedRectControl : UserControl
-	{
-		public static readonly RoutedEvent TimerElapsedEvent = EventManager.RegisterRoutedEvent("TimerElapsed", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(AnimatedRectControl));
+    /// <summary>
+    /// Interaction logic for AnimatedRectControl.xaml
+    /// </summary>
+    public partial class AnimatedRectControl : UserControl, INotifyPropertyChanged
+    {
 
-		public static readonly DependencyProperty ZoneProperty = DependencyProperty.Register("Zone", typeof(Interaction.Zone), typeof(AnimatedRectControl));
-		public static readonly DependencyProperty NotificationDistanceProperty = DependencyProperty.Register("NotificationDistance", typeof(double), typeof(AnimatedRectControl));
+        public event EventHandler AnimationFinished;
 
-		private const int MAX_ELAPSED_TIME_TICK = 3000;
+        private Interaction.Zone zone;
+        private double userDisplayDistance;
 
-		public Interaction.Zone Zone
-		{
-			get { return (Interaction.Zone)GetValue(ZoneProperty); }
-			set { SetValue(ZoneProperty, value); }
-		}
+        private double wPixelsPerMillisecond;
+        private double hPixelsPerMillisecond;
 
-		public double NotificationDistance
-		{
-			get { return (double)GetValue(NotificationDistanceProperty); }
-			set { SetValue(NotificationDistanceProperty, value); }
-		}
+        private AnimationStatus animationStatus;
+        private DateTime lastFrameTime = DateTime.MaxValue;
 
-		// Provide CLR accessors for the event 
-		public event RoutedEventHandler TimerElapsed
-		{
-			add { AddHandler(TimerElapsedEvent, value); }
-			remove { RemoveHandler(TimerElapsedEvent, value); }
-		}
+        public int TimeSpan { get; set; }
 
-		private Random rGenerator = null;
-		private System.Timers.Timer timer = null;
+        public AnimationStatus AnimationStatus
+        {
+            get { return animationStatus; }
+            set
+            {
+                animationStatus = value;
+                OnPropertyChanged("AnimationStatus");
+            }
+        }
 
-		public AnimatedRectControl()
-		{
-			rGenerator = new Random((int)DateTime.Now.Ticks % 3000);
-			timer = new System.Timers.Timer();
-			timer.Elapsed += new System.Timers.ElapsedEventHandler(Timer_Elapsed);
-			InitializeComponent();
-		}
+        public Interaction.Zone Zone
+        {
+            get { return zone; }
+            set
+            {
+                zone = value;
+                OnPropertyChanged("Zone");
+            }
+        }
 
-		private void RectControl_Loaded(object sender, RoutedEventArgs e)
-		{
-			timer.Interval = rGenerator.Next() % MAX_ELAPSED_TIME_TICK + 1;
-			timer.Enabled = true;
-			timer.Start();
-		}
+        public double UserDisplayDistance
+        {
+            get { return userDisplayDistance; }
+            set
+            {
+                userDisplayDistance = value;
+                OnPropertyChanged("UserDisplayDistance");
+            }
+        }
 
-		void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-		{
-			timer.Stop();
-			Dispatcher.Invoke(DispatcherPriority.Render, (Action)delegate()
-			{
-				if (Zone != Interaction.Zone.Ambient)
-					return;
-				animatedRect.RaiseEvent(new RoutedEventArgs(AnimatedRectControl.TimerElapsedEvent, this));
-			});
-		}
+        public AnimatedRectControl()
+        {
+            InitializeComponent();
+        }
 
-		private void Animation_Completed(object sender, EventArgs e)
-		{
-			timer.Interval = rGenerator.Next() % MAX_ELAPSED_TIME_TICK + 1;
-			timer.Start();
-		}
+        double calculatedWidth, calculatedHeight;
+        double maxWidth, maxHeight;
+        internal void CalculateNewSize()
+        {
+            DateTime currentFrameTime = DateTime.Now;
+            TimeSpan delta = currentFrameTime - lastFrameTime;
+            if (lastFrameTime == DateTime.MaxValue)
+                delta = new System.TimeSpan(0);
+            int deltaWPX = (int)(delta.TotalMilliseconds * wPixelsPerMillisecond);
+            int deltaHPX = (int)(delta.TotalMilliseconds * hPixelsPerMillisecond);
+            lastFrameTime = currentFrameTime;
 
-		protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-		{
-			base.OnPropertyChanged(e);
-			if (e.Property != AnimatedRectControl.ZoneProperty)
-				return;
+            switch (AnimationStatus)
+            {
+                case AnimationStatus.Nothing:
+                    var distance = UserDisplayDistance - Settings.Default.InteractionZoneConstrain;
+                    if (distance < 0)
+                        distance = 0;
+                    var range = Settings.Default.NotificationZoneConstrain - Settings.Default.InteractionZoneConstrain;
+                    var width = maxWidth * distance / range;
+                    var height = maxHeight * distance / range;
 
-			if (Zone == Interaction.Zone.Ambient)
-			{
-				timer.Interval = rGenerator.Next() % MAX_ELAPSED_TIME_TICK + 1;
-				timer.Start();
-			}
-			else
-			{
-				//trick from: http://joshsmithonwpf.wordpress.com/2008/08/21/removing-the-value-applied-by-an-animation/
-				animatedRect.BeginAnimation(Rectangle.WidthProperty, null);
-				animatedRect.BeginAnimation(Rectangle.HeightProperty, null);
-			}
-		}
-	}
+                    calculatedWidth = width;
+                    calculatedHeight = height;
+                    return;
+                case AnimationStatus.Decreasing:
+                    if (calculatedWidth <= 0 || calculatedHeight <= 0)
+                    {
+                        AnimationStatus = AnimationStatus.Increasing;
+                        return;
+                    }
+
+                    if (deltaWPX > calculatedWidth)
+                        calculatedWidth = 0;
+                    else
+                        calculatedWidth -= deltaWPX;
+
+                    if (deltaHPX > calculatedHeight)
+                        calculatedHeight = 0;
+                    else
+                        calculatedHeight -= deltaHPX;
+                    return;
+
+                case AnimationStatus.Increasing:
+                    if (calculatedWidth >= maxWidth || calculatedHeight >= maxHeight)
+                    {
+                        AnimationStatus = AnimationStatus.Nothing;
+                        if (AnimationFinished != null)
+                            AnimationFinished(this, null);
+                        return;
+                    }
+                    calculatedWidth += deltaWPX;
+                    calculatedHeight += deltaHPX;
+                    return;
+            }
+        }
+
+        public void UpdateUI()
+        {
+            Canvas.SetLeft(animatedRect, (ActualWidth - calculatedWidth) / 2);
+            Canvas.SetTop(animatedRect, (ActualHeight - calculatedHeight) / 2);
+            animatedRect.Width = calculatedWidth;
+            animatedRect.Height = calculatedHeight;
+        }
+
+        public void AnimationStart()
+        {
+            wPixelsPerMillisecond = (double)ActualWidth / (double)TimeSpan;
+            hPixelsPerMillisecond = (double)ActualHeight / (double)TimeSpan;
+            AnimationStatus = STimWPF.AnimationStatus.Decreasing;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String name)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
+
+        private void arControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            maxWidth = ActualWidth;
+            maxHeight = ActualHeight;
+            calculatedWidth = maxWidth;
+            calculatedHeight = maxHeight;
+            animatedRect.Width = maxWidth;
+            animatedRect.Height = maxHeight;
+        }
+    }
 }

@@ -78,6 +78,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AnimationStatus.cs" />
     <Compile Include="Controls\AnimatedRectControl.xaml.cs">
       <DependentUpon>AnimatedRectControl.xaml</DependentUpon>
     </Compile>
@@ -218,24 +219,33 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image\BerlinWall.jpg" />
-    <Resource Include="image\Informing.jpg" />
-    <Resource Include="image\Insourcing.jpg" />
-    <Resource Include="image\logitech_logo.jpg" />
-    <Resource Include="image\netscape.png" />
-    <Resource Include="image\OffShoring.jpg" />
-    <Resource Include="image\outsourcing.gif" />
-    <Resource Include="image\Steroids.jpg" />
-    <Resource Include="image\supply_chain.jpg" />
-    <Resource Include="image\thomas_friedman.jpg" />
-    <Resource Include="image\uploading.png" />
-    <Resource Include="image\Workflow.png" />
+    <Resource Include="Image\BerlinWall.jpg" />
+    <Resource Include="Image\Informing.jpg" />
+    <Resource Include="Image\Insourcing.jpg" />
+    <Resource Include="Image\logitech_logo.jpg" />
+    <Resource Include="Image\netscape.png" />
+    <Resource Include="Image\OffShoring.jpg" />
+    <Resource Include="Image\outsourcing.gif" />
+    <Resource Include="Image\Steroids.jpg" />
+    <Resource Include="Image\supply_chain.jpg" />
+    <Resource Include="Image\thomas_friedman.jpg" />
+    <Resource Include="Image\uploading.png" />
+    <Resource Include="Image\Workflow.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image\fullArray.png" />
-    <Resource Include="image\gamingSoftware.png" />
-    <Resource Include="image\plugPlay.png" />
-    <Resource Include="image\Symmetric.png" />
+    <Resource Include="Image\fullArray.png" />
+    <Resource Include="Image\gamingSoftware.png" />
+    <Resource Include="Image\plugPlay.png" />
+    <Resource Include="Image\Symmetric.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Video\worldIsFlatTrailer-2.mp4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Image\playbutton.gif" />
+    <Content Include="Video\Review On Logitech Attack 3 Joystick HD.mp4" />
+    <Content Include="Video\worldIsFlatTrailer.mp4" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

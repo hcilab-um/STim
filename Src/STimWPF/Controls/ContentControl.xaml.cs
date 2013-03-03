@@ -139,6 +139,11 @@ namespace STimWPF.Controls
 			}
 		}
 
+        void onClickedPlay_WF(object sender, EventArgs e)
+        {
+            me_WF.Play();
+        }
+
 		void onClickDetailMenu(object sender, EventArgs e)
 		{
 			Button bt = (Button)sender;
@@ -160,5 +165,10 @@ namespace STimWPF.Controls
 		{
 			return MainPageLA.ToString() + "-" + Detail_LA.ToString() + "|" + MainPageWF.ToString() + "-" + Detail_WF.ToString();
 		}
+
+        private void me_WF_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+
+        }
 	}
 }

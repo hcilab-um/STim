@@ -70,6 +70,8 @@ namespace STimWPF.Interaction
 			get { return interactZone; }
 			set
 			{
+                if (interactZone == value)
+                    return;
 				interactZone = value;
 				OnPropertyChanged("Zone");
 			}
