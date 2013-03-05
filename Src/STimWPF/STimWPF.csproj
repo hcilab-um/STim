@@ -240,6 +240,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Resource Include="Image\startFullScreenButton.jpg" />
     <Content Include="Video\theWorldIsFlat.mp4" />
     <Resource Include="Image\playbutton.gif" />
     <Content Include="Video\LogitechAttack3.mp4" />

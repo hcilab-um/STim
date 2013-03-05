@@ -74,7 +74,7 @@
 			<!-- User Shadow -->
 			<StackPanel Name="sp_WF" HorizontalAlignment="Left" Width="683">
 				<Grid>
-					<Grid Name="sp_WFContent" HorizontalAlignment="Left" Width=" 500" Margin="0,50,0,0">
+					<Grid Name="sp_WFContent" HorizontalAlignment="Left" Width=" 480" Margin="0,50,0,0">
 						<StackPanel Name="sp_WFOverview" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
 																	Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Overview}">
 							<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}">The world is Flat</TextBlock>
@@ -85,10 +85,10 @@
 								opportunity.
 							</TextBlock>
                             <Grid HorizontalAlignment="Left" Margin="20,20,0,0" Background="Black">
-                                <MediaElement Name="me_WF" Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\theWorldIsFlat.mp4" LoadedBehavior="Manual" UnloadedBehavior="Manual" HorizontalAlignment="Left" Height="168" Width="300"
+                                <MediaElement Name="me_WF" Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\theWorldIsFlat.mp4" LoadedBehavior="Manual" UnloadedBehavior="Manual" HorizontalAlignment="Left" Height="224" Width="400"
                                               MediaEnded="me_WF_MediaEnded" />
-                                <Button Background="Transparent" Style="{StaticResource ResourceKey=btPictureStyle}" HorizontalAlignment="Center" BorderBrush="Transparent" Click="onClickedPlay_WF" Height="100">
-                                    <Image Source="/STimWPF;component/image/playbutton.gif" Visibility="{Binding ElementName=ContentCtrl, Path=IsPlayingWF, Converter={StaticResource ResourceKey=bvConverter}}"/>
+                                <Button Background="Transparent" Style="{StaticResource ResourceKey=btPictureStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Transparent" Click="onClickedPlay_WF" >
+                                    <Image Source="/STimWPF;component/image/playbutton.gif" Height="100" Visibility="{Binding ElementName=ContentCtrl, Path=IsPlayingWF, Converter={StaticResource ResourceKey=bvConverter}}"/>
                                 </Button>
                             </Grid>
 						</StackPanel>
@@ -236,7 +236,7 @@
                                     </TextBlock>
                                 </StackPanel>
                                 <StackPanel Name="sp_WFSterois" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
-																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Sterois}">
+																									Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Sterois}">
                                     <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="&quot;The Steroids&quot;"/>
                                     <Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Steroids.jpg" />
                                     <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
@@ -265,7 +265,7 @@
 			</StackPanel>
 			<StackPanel Name="sp_LA" HorizontalAlignment="Right" Width="683">
 				<Grid>
-					<Grid Name="sp_LAContent" HorizontalAlignment="Left" Width=" 400" Margin="0,50,0,0">
+					<Grid Name="sp_LAContent" HorizontalAlignment="Left" Width=" 450" Margin="0,50,0,0">
 						<StackPanel Name="sp_LAOverview" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
 																			Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Overview}">
 							<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}">Logitech Attack 3</TextBlock>
@@ -273,9 +273,9 @@
 								Logitech Attack 3 is an easy-to-use joystick with a full array of customizable controls that gives you durability and ambidextrous control – right out of the box.
 							</TextBlock>
                             <Grid HorizontalAlignment="Left" Margin="20,20,0,0" Background="Black">
-                                <MediaElement Name="me_LA" Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\LogitechAttack3.mp4" LoadedBehavior="Manual" UnloadedBehavior="Manual" HorizontalAlignment="Left" Height="168" Width="300"
+                                <MediaElement Name="me_LA" Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\LogitechAttack3.mp4" LoadedBehavior="Manual" UnloadedBehavior="Manual" HorizontalAlignment="Left" Height="224" Width="400"
                                               MediaEnded="me_LA_MediaEnded" />
-                                <Button Background="Transparent" Style="{StaticResource ResourceKey=btPictureStyle}" HorizontalAlignment="Center" BorderBrush="Transparent" Click="onClickedPlay_LA" Height="100">
+                                <Button Background="Transparent" Style="{StaticResource ResourceKey=btPictureStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Transparent" Click="onClickedPlay_LA" Height="100">
                                     <Image Source="/STimWPF;component/image/playbutton.gif" Visibility="{Binding ElementName=ContentCtrl, Path=IsPlayingLA, Converter={StaticResource ResourceKey=bvConverter}}"/>
                                 </Button>
                             </Grid>

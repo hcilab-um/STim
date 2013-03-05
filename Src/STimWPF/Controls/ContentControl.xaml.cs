@@ -134,13 +134,13 @@ namespace STimWPF.Controls
 				}
 			}
 
-            if (mainPageWF != MainPage.Overview && IsPlayingWF)
+            if (mainPageWF != MainPage.Overview)
             {
                 IsPlayingWF = false;
                 me_WF.Stop();
             }
             
-            if (mainPageLA != MainPage.Overview && IsPlayingLA)
+            if (mainPageLA != MainPage.Overview)
             {
                 IsPlayingLA = false;
                 me_LA.Stop();
@@ -177,14 +177,30 @@ namespace STimWPF.Controls
 
         void onClickedPlay_WF(object sender, EventArgs e)
         {
-            IsPlayingWF = true;
-            me_WF.Play();
+            if (IsPlayingWF == false)
+            {
+                IsPlayingWF = true;
+                me_WF.Play();
+            }
+            else
+            {
+                IsPlayingWF = false;
+                me_WF.Pause();
+            }
         }
 
         private void onClickedPlay_LA(object sender, RoutedEventArgs e)
         {
-            IsPlayingLA = true;
-            me_LA.Play();
+            if (IsPlayingLA == false)
+            {
+                IsPlayingLA = true;
+                me_LA.Play();
+            }
+            else
+            {
+                IsPlayingLA = false;
+                me_LA.Pause();
+            }
         }
 
 		void onClickDetailMenu(object sender, EventArgs e)
