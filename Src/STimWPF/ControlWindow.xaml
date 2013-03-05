@@ -26,6 +26,7 @@
 			<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
 				<Button x:Name="bBrowse" Content="Select File" Width="80" Click="bBrowse_Click" />
 				<CheckBox x:Name="cbUseFile" Margin="10,5" Checked="cbUseFile_Checked" Unchecked="cbUseFile_Checked" IsEnabled="{Binding ElementName=mwObject, Path=CoreInstance.Recorder.IsNotRecording}">Use File</CheckBox>
+                <CheckBox Margin="10,5" IsChecked="{Binding ElementName=mwObject, Path=CoreInstance.ShowColorImage}">show color image</CheckBox>
 			</StackPanel>
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,5,0,0">

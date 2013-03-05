@@ -54,8 +54,15 @@ namespace STimWPF.Controls
 
         void triggerTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            //DateTime start = DateTime.Now;
+            DateTime start = DateTime.Now;
             triggerTimer.Enabled = false;
+            if (copyOfZone == Interaction.Zone.Interaction ||
+                copyOfZone == Interaction.Zone.Close) 
+            {
+                triggerTimer.Enabled = true;
+                return;
+            }
+
             if (copyOfZone == Interaction.Zone.Ambient)
             {
                 for (int index = 0; index < triggers.Length; index++)
@@ -76,6 +83,7 @@ namespace STimWPF.Controls
                 for (int index = 0; index < triggers.Length; index++)
                     rectangles[index].CalculateNewSize();
             }
+
             //Console.WriteLine("PreRender: " + (DateTime.Now - start).TotalMilliseconds);
             Dispatcher.Invoke((Action)delegate
             {
@@ -94,7 +102,7 @@ namespace STimWPF.Controls
                 AnimatedRectControl rectangle = ui as AnimatedRectControl;
                 rectangle.Tag = index++;
                 rectangle.AnimationFinished += new EventHandler(AnimationControl_AnimationFinished);
-                rectangle.TimeSpan = 1000;
+                rectangle.TimeSpan = 2000;
                 rectangles.Add(rectangle);
             }
 
