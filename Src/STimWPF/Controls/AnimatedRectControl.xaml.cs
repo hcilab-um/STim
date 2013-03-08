@@ -96,7 +96,7 @@ namespace STimWPF.Controls
 
                     calculatedWidth = width;
                     calculatedHeight = height;
-                    return;
+                    break;
                 case AnimationStatus.Decreasing:
                     if (calculatedWidth <= 0 || calculatedHeight <= 0)
                     {
@@ -113,8 +113,7 @@ namespace STimWPF.Controls
                         calculatedHeight = 0;
                     else
                         calculatedHeight -= deltaHPX;
-                    return;
-
+                    break;
                 case AnimationStatus.Increasing:
                     if (calculatedWidth >= maxWidth || calculatedHeight >= maxHeight)
                     {
@@ -125,8 +124,14 @@ namespace STimWPF.Controls
                     }
                     calculatedWidth += deltaWPX;
                     calculatedHeight += deltaHPX;
-                    return;
+                    break;
             }
+
+            if (calculatedWidth == double.NaN)
+            {
+                Console.WriteLine(calculatedWidth);
+            }
+
         }
 
         public void UpdateUI()
