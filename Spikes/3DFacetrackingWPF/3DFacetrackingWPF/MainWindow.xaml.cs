@@ -84,7 +84,7 @@ namespace _3DFacetrackingWPF
 		private void ProcessSkeleton(Skeleton skeleton)
 		{
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
-			Point3D headP = new Point3D(head.Position.X, head.Position.Y-0.14, head.Position.Z);
+			Point3D headP = new Point3D(head.Position.X, head.Position.Y+0.14, head.Position.Z+0.70);
 			pCamera.Position = headP;
 			pCamera.LookDirection = new Vector3D(-headP.X, -headP.Y, -headP.Z);
 		}

@@ -11,7 +11,7 @@
 		</Grid.RowDefinitions>
 		<Viewport3D Grid.Row="0" HorizontalAlignment="Stretch">
 			<Viewport3D.Camera>
-				<PerspectiveCamera x:Name="pCamera" Position="0, 0, 100" LookDirection="0, 0,-100 " 
+				<PerspectiveCamera x:Name="pCamera" Position="5, 5, 5" LookDirection="-5, -5,-5 " 
 					UpDirection="0,1,0" />
 			</Viewport3D.Camera>
 			<ModelVisual3D>
@@ -44,14 +44,36 @@
 								<DiffuseMaterial Brush="Red"/>
 							</GeometryModel3D.BackMaterial>
 						</GeometryModel3D>
-					</Model3DGroup>
+
+                        <GeometryModel3D>
+                            <GeometryModel3D.Geometry>
+                                <!--Every 3 values represent a 3D point and indexes {0-7}-->
+                                <!--TriangleIndices mark triangle in counter clockwise order-->
+                                <MeshGeometry3D Positions="-0.1,-0.1, 0.3
+														    0.1,-0.1, 0.3  
+												            0.1, 0.1, 0.3
+												           -0.1, 0.1, 0.3
+												           -0.1,-0.1, 0.5
+												            0.1,-0.1, 0.5
+												            0.1, 0.1, 0.5
+												           -0.1, 0.1, 0.5" 
+									   TriangleIndices="0 1 2 2 3 0 
+												        5 1 2 2 6 5
+												        4 5 6 6 7 4  
+														0 4 7 7 3 0
+												        3 7 6 7 6 2
+												        0 4 5 4 5 1"/>
+                            </GeometryModel3D.Geometry>
+                            <GeometryModel3D.Material>
+                                <DiffuseMaterial Brush="Green"/>
+                            </GeometryModel3D.Material>
+                            <GeometryModel3D.BackMaterial>
+                                <DiffuseMaterial Brush="Green"/>
+                            </GeometryModel3D.BackMaterial>
+                        </GeometryModel3D>
+                    </Model3DGroup>
 				</ModelVisual3D.Content>
 			</ModelVisual3D>
 		</Viewport3D>
-		<StackPanel Grid.Row="1">
-			<Slider Name="sl_YRotate" Margin="0,10" Width="700" Height="30" Minimum="0" Maximum="360" Value="0" />
-			<Slider Name="sl_XRotate" Margin="0,10" Width="700" Height="30" Minimum="0" Maximum="360" Value="0" />
-			<Slider Name="sl_ZRotate" Margin="0,10" Width="700" Height="30" Minimum="0" Maximum="360" Value="0" />
-		</StackPanel>
 	</Grid>
 </Window>
