@@ -14,8 +14,8 @@ namespace STimWPF.Interaction
 	{
 		//If there is a displacement of at least the value below of in the dimension of the push then the values
 		// on the two other dimensions are blocked.
-		const int CLOSE_PERCENT_CONSTRAIN = 30;
-
+		const int CLOSE_PERCENT_CONSTRAIN = 60;
+        
 		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0, 0, 1);
 		private static readonly Vector3D kinectLocation = new Vector3D(0, 0, 0);
 		private Vector3D headLocation;

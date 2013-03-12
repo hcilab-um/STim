@@ -3,77 +3,48 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 		mc:Ignorable="d" x:Class="_3DFacetrackingWPF.MainWindow"
+        WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
         Title="MainWindow" Loaded="Window_Loaded_1" Closing="Window_Closing_1" Height="800" Width="800">
 	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="600"/>
-			<RowDefinition Height="200"/>
-		</Grid.RowDefinitions>
-		<Viewport3D Grid.Row="0" HorizontalAlignment="Stretch">
+		<Viewport3D x:Name="viewport" HorizontalAlignment="Stretch">
 			<Viewport3D.Camera>
-				<PerspectiveCamera x:Name="pCamera" Position="5, 5, 5" LookDirection="-5, -5,-5 " 
-					UpDirection="0,1,0" />
+                <!--<PerspectiveCamera x:Name="pCamera" FieldOfView="45.57" Position="0.51, 0.04, 1" LookDirection="-0.30, 0,-1" UpDirection="0,1,0" />-->
+                <PerspectiveCamera x:Name="pCamera" FieldOfView="54.04" Position="0, 0.04, 1" LookDirection="0, 0, -1" UpDirection="0,1,0" />
 			</Viewport3D.Camera>
 			<ModelVisual3D>
 				<ModelVisual3D.Content>
-					<Model3DGroup>
-						<DirectionalLight Color="White" Direction="0, -10, -10" />
-						<GeometryModel3D>
-							<GeometryModel3D.Geometry>
-								<!--Every 3 values represent a 3D point and indexes {0-7}-->
-								<!--TriangleIndices mark triangle in counter clockwise order-->
-								<MeshGeometry3D Positions="-0.1,-0.1,-0.1
-														    0.1,-0.1,-0.1  
-												            0.1, 0.1,-0.1
-												           -0.1, 0.1,-0.1
-												           -0.1,-0.1, 0.1
-												            0.1,-0.1, 0.1
-												            0.1, 0.1, 0.1
-												           -0.1, 0.1, 0.1" 
-									   TriangleIndices="0 1 2 2 3 0 
-												        5 1 2 2 6 5
-												        4 5 6 6 7 4  
-														0 4 7 7 3 0
-												        3 7 6 7 6 2
-												        0 4 5 4 5 1"/>
-							</GeometryModel3D.Geometry>
-							<GeometryModel3D.Material>
-								<DiffuseMaterial Brush="Red"/>
-							</GeometryModel3D.Material>
-							<GeometryModel3D.BackMaterial>
-								<DiffuseMaterial Brush="Red"/>
-							</GeometryModel3D.BackMaterial>
-						</GeometryModel3D>
-
-                        <GeometryModel3D>
+					<Model3DGroup x:Name="model3dGroup">
+						<DirectionalLight Color="White" Direction="0.5, -0.5, -1"/>
+                        <DirectionalLight Color="White" Direction="-0.5, -0.5, -1"/>
+                        <GeometryModel3D x:Name="gm3D">
                             <GeometryModel3D.Geometry>
                                 <!--Every 3 values represent a 3D point and indexes {0-7}-->
-                                <!--TriangleIndices mark triangle in counter clockwise order-->
-                                <MeshGeometry3D Positions="-0.1,-0.1, 0.3
-														    0.1,-0.1, 0.3  
-												            0.1, 0.1, 0.3
-												           -0.1, 0.1, 0.3
-												           -0.1,-0.1, 0.5
-												            0.1,-0.1, 0.5
-												            0.1, 0.1, 0.5
-												           -0.1, 0.1, 0.5" 
-									   TriangleIndices="0 1 2 2 3 0 
-												        5 1 2 2 6 5
-												        4 5 6 6 7 4  
-														0 4 7 7 3 0
-												        3 7 6 7 6 2
-												        0 4 5 4 5 1"/>
+                                <!--TriangleIndices mark triangle in counter clockwise order as front-->
+                                <MeshGeometry3D Positions="-0.5375,-0.29, -0.5
+														    0.5375,-0.29, -0.5 
+												            0.5375, 0.29, -0.5
+												           -0.5375, 0.29, -0.5
+												           -0.5375,-0.29,  0
+												            0.5375,-0.29,  0
+												            0.5375, 0.29,  0
+												           -0.5375, 0.29,  0" 
+									       TriangleIndices="0 1 2 2 3 0
+                                                            5 6 2 2 1 5
+                                                            4 0 3 3 7 4
+                                                            7 3 2 2 6 7
+                                                            0 4 5 5 1 0"/>
                             </GeometryModel3D.Geometry>
                             <GeometryModel3D.Material>
-                                <DiffuseMaterial Brush="Green"/>
+                                <DiffuseMaterial Brush="Yellow"/>
                             </GeometryModel3D.Material>
                             <GeometryModel3D.BackMaterial>
-                                <DiffuseMaterial Brush="Green"/>
+                                <DiffuseMaterial x:Name="dM" Brush="Transparent"/>
                             </GeometryModel3D.BackMaterial>
                         </GeometryModel3D>
                     </Model3DGroup>
 				</ModelVisual3D.Content>
 			</ModelVisual3D>
 		</Viewport3D>
+        <TextBlock Name="tb" HorizontalAlignment="Center" Margin="0,30" Text="123"/>
 	</Grid>
 </Window>
