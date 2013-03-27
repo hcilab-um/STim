@@ -22,42 +22,42 @@ namespace STimWPF.Controls
 	/// </summary>
 	public partial class ContentControl : UserControl, INotifyPropertyChanged, IUIInformer
 	{
-		
+
 		private static readonly DependencyProperty LeftClickProperty = DependencyProperty.Register("LeftClick", typeof(bool), typeof(ContentControl));
 		private static readonly DependencyProperty RelativeCursorLocationProperty = DependencyProperty.Register("RelativeCursorLocation", typeof(Point3D), typeof(ContentControl));
 		private static readonly DependencyProperty TimerStateProperty = DependencyProperty.Register("TimerState", typeof(TimerState), typeof(ContentControl));
-        
-        private bool isPlayingWF;
-        private bool isPlayingLA;
-        private MainPage mainPageWF;
+
+		private bool isPlayingWF;
+		private bool isPlayingLA;
+		private MainPage mainPageWF;
 		private MainPage mainPageLA;
-        private DetailWFPage detailWFPage;
+		private DetailWFPage detailWFPage;
 		private DetailLAPage detailLAPage;
 
-        public bool IsPlayingWF
-        {
-            get { return isPlayingWF; }
-            set
-            {
-                isPlayingWF = value;
-                OnPropertyChanged("IsPlayingWF");
-            }
-        }
+		public bool IsPlayingWF
+		{
+			get { return isPlayingWF; }
+			set
+			{
+				isPlayingWF = value;
+				OnPropertyChanged("IsPlayingWF");
+			}
+		}
 
-        public bool IsPlayingLA
-        {
-            get { return isPlayingLA; }
-            set
-            {
-                isPlayingLA = value;
-                OnPropertyChanged("IsPlayingLA");
-            }
-        }
+		public bool IsPlayingLA
+		{
+			get { return isPlayingLA; }
+			set
+			{
+				isPlayingLA = value;
+				OnPropertyChanged("IsPlayingLA");
+			}
+		}
 
 		public MainPage MainPageWF
 		{
 			get { return mainPageWF; }
-			set 
+			set
 			{
 				mainPageWF = value;
 				OnPropertyChanged("MainPageWF");
@@ -94,7 +94,7 @@ namespace STimWPF.Controls
 			}
 		}
 
-		public bool	LeftClick
+		public bool LeftClick
 		{
 			get { return (bool)GetValue(LeftClickProperty); }
 			set { SetValue(LeftClickProperty, value); }
@@ -125,26 +125,26 @@ namespace STimWPF.Controls
 			{
 				if (m.ToString().Equals(nameInfo[0]))
 				{
-					if(nameInfo[1].Equals("WF"))
+					if (nameInfo[1].Equals("WF"))
 						MainPageWF = m;
-					else if(nameInfo[1].Equals("LA"))
+					else if (nameInfo[1].Equals("LA"))
 						MainPageLA = m;
 					else
-						throw new Exception("Invalid Name: "+nameInfo[1]);
+						throw new Exception("Invalid Name: " + nameInfo[1]);
 				}
 			}
 
-            if (mainPageWF != MainPage.Overview)
-            {
-                IsPlayingWF = false;
-                me_WF.Stop();
-            }
-            
-            if (mainPageLA != MainPage.Overview)
-            {
-                IsPlayingLA = false;
-                me_LA.Stop();
-            }
+			if (mainPageWF != MainPage.Overview)
+			{
+				IsPlayingWF = false;
+				me_WF.Stop();
+			}
+
+			if (mainPageLA != MainPage.Overview)
+			{
+				IsPlayingLA = false;
+				//me_LA.Stop();
+			}
 
 			if (MainPageWF == MainPage.Detail)
 			{
@@ -175,39 +175,39 @@ namespace STimWPF.Controls
 			}
 		}
 
-        void onClickedPlay_WF(object sender, EventArgs e)
-        {
-            if (IsPlayingWF == false)
-            {
-                IsPlayingWF = true;
-                me_WF.Play();
-            }
-            else
-            {
-                IsPlayingWF = false;
-                me_WF.Pause();
-            }
-        }
+		void onClickedPlay_WF(object sender, EventArgs e)
+		{
+			if (IsPlayingWF == false)
+			{
+				IsPlayingWF = true;
+				me_WF.Play();
+			}
+			else
+			{
+				IsPlayingWF = false;
+				me_WF.Pause();
+			}
+		}
 
-        private void onClickedPlay_LA(object sender, RoutedEventArgs e)
-        {
-            if (IsPlayingLA == false)
-            {
-                IsPlayingLA = true;
-                me_LA.Play();
-            }
-            else
-            {
-                IsPlayingLA = false;
-                me_LA.Pause();
-            }
-        }
+		private void onClickedPlay_LA(object sender, RoutedEventArgs e)
+		{
+			if (IsPlayingLA == false)
+			{
+				IsPlayingLA = true;
+				//me_LA.Play();
+			}
+			else
+			{
+				IsPlayingLA = false;
+				//me_LA.Pause();
+			}
+		}
 
 		void onClickDetailMenu(object sender, EventArgs e)
 		{
 			Button bt = (Button)sender;
 			string[] nameInfo = bt.Name.Split('_');
-			if(nameInfo[1].Equals("WF"))
+			if (nameInfo[1].Equals("WF"))
 				DetailWFPage = DetailWFPage.DetailMenu_WF;
 			else
 				DetailLAPage = DetailLAPage.DetailMenu_LA;
@@ -222,20 +222,20 @@ namespace STimWPF.Controls
 
 		public string CurrentPage()
 		{
-			return MainPageLA.ToString() + "-" + Detail_LA.ToString() + "|" + MainPageWF.ToString() + "-" + Detail_WF.ToString();
+			return String.Empty; // MainPageLA.ToString() + "-" + Detail_LA.ToString() + "|" + MainPageWF.ToString() + "-" + Detail_WF.ToString();
 		}
 
-        private void me_WF_MediaEnded(object sender, RoutedEventArgs e)
-        {
-            IsPlayingWF = false;
-            me_WF.Stop();
-        }
+		private void me_WF_MediaEnded(object sender, RoutedEventArgs e)
+		{
+			IsPlayingWF = false;
+			me_WF.Stop();
+		}
 
-        private void me_LA_MediaEnded(object sender, RoutedEventArgs e)
-        {
-            IsPlayingLA = false;
-            me_LA.Stop();
-        }
+		private void me_LA_MediaEnded(object sender, RoutedEventArgs e)
+		{
+			IsPlayingLA = false;
+			//me_LA.Stop();
+		}
 
 	}
 }

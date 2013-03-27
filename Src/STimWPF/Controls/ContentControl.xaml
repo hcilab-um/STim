@@ -14,42 +14,42 @@
 		<converters:DetailWFPageVisibilityConverter x:Key="dwfvConverter"/>
 		<converters:DetailLAPageVisibilityConverter x:Key="dlavConverter"/>
 		<converters:BoolVisibilityConverter x:Key="bvConverter"/>
-        <converters:MainPageBackgroundConverter x:Key="mpbConverter"/>
-        <converters:DetailMenuVisibilityConverter x:Key="dmvConverter"/>
-        <Style x:Key="btWFStyle" TargetType="Button">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Margin" Value="15,10"/>
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Background" Value="Transparent"/>
-        </Style>
-        <Style x:Key="btPictureStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid x:Name="Chrome" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="#ADADAD"/>
-                                <Setter Property="Opacity" TargetName="Chrome" Value="0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="btStyle" TargetType="Button">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Margin" Value="15,10"/>
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="BorderThickness" Value="1"/>
-        </Style>
-        <Style x:Key="tbTitleStyle" TargetType="TextBlock">
+		<converters:MainPageBackgroundConverter x:Key="mpbConverter"/>
+		<converters:DetailMenuVisibilityConverter x:Key="dmvConverter"/>
+		<Style x:Key="btWFStyle" TargetType="Button">
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Margin" Value="15,10"/>
+			<Setter Property="Height" Value="60"/>
+			<Setter Property="BorderBrush" Value="Black"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style x:Key="btPictureStyle" TargetType="Button">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Grid x:Name="Chrome" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Foreground" Value="#ADADAD"/>
+								<Setter Property="Opacity" TargetName="Chrome" Value="0.5"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style x:Key="btStyle" TargetType="Button">
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Margin" Value="15,10"/>
+			<Setter Property="Height" Value="60"/>
+			<Setter Property="BorderBrush" Value="Black"/>
+			<Setter Property="BorderThickness" Value="1"/>
+		</Style>
+		<Style x:Key="tbTitleStyle" TargetType="TextBlock">
 			<Setter Property="HorizontalAlignment" Value="Left"/>
 			<Setter Property="Margin" Value="20,0"/>
 			<Setter Property="FontSize" Value="22"/>
@@ -59,20 +59,20 @@
 			<Setter Property="Margin" Value="20,20,0,0"/>
 			<Setter Property="FontSize" Value="12"/>
 			<Setter Property="TextWrapping" Value="WrapWithOverflow"/>
-		</Style>       
+		</Style>
 		<Style x:Key="btMainPageStyle" TargetType="Button">
 			<Setter Property="Margin" Value="10"/>
 			<Setter Property="FontSize" Value="20"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="BorderBrush" Value="Black"/>
+			<Setter Property="BorderThickness" Value="2"/>
 			<Setter Property="Height" Value="50"/>
-            <EventSetter Event="Click" Handler="onMainPageClick"/>
+			<EventSetter Event="Click" Handler="onMainPageClick"/>
 		</Style>
 	</UserControl.Resources>
 	<Grid>
 		<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
 			<!-- User Shadow -->
-			<StackPanel Name="sp_WF" HorizontalAlignment="Left" Width="683">
+			<StackPanel Name="sp_WF" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1000">
 				<Grid>
 					<Grid Name="sp_WFContent" HorizontalAlignment="Left" Width=" 480" Margin="0,50,0,0">
 						<StackPanel Name="sp_WFOverview" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
@@ -84,13 +84,13 @@
 								as a level playing field in terms of commerce, where all competitors have an equal
 								opportunity.
 							</TextBlock>
-                            <Grid HorizontalAlignment="Left" Margin="20,20,0,0" Background="Black">
-                                <MediaElement Name="me_WF" Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\theWorldIsFlat.mp4" LoadedBehavior="Manual" UnloadedBehavior="Manual" HorizontalAlignment="Left" Height="224" Width="400"
+							<Grid HorizontalAlignment="Left" Margin="20,20,0,0" Background="Black">
+								<MediaElement Name="me_WF" Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\theWorldIsFlat.mp4" LoadedBehavior="Manual" UnloadedBehavior="Manual" HorizontalAlignment="Left" Height="224" Width="400"
                                               MediaEnded="me_WF_MediaEnded" />
-                                <Button Background="Transparent" Style="{StaticResource ResourceKey=btPictureStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Transparent" Click="onClickedPlay_WF" >
-                                    <Image Source="/STimWPF;component/image/playbutton.gif" Height="100" Visibility="{Binding ElementName=ContentCtrl, Path=IsPlayingWF, Converter={StaticResource ResourceKey=bvConverter}}"/>
-                                </Button>
-                            </Grid>
+								<Button Background="Transparent" Style="{StaticResource ResourceKey=btPictureStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Transparent" Click="onClickedPlay_WF" >
+									<Image Source="/STimWPF;component/image/playbutton.gif" Height="100" Visibility="{Binding ElementName=ContentCtrl, Path=IsPlayingWF, Converter={StaticResource ResourceKey=bvConverter}}"/>
+								</Button>
+							</Grid>
 						</StackPanel>
 						<StackPanel Name="sp_WFAuthor" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
 															Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Author}">
@@ -100,58 +100,58 @@
 								An American journalist, columnist and author. He writes a twice-weekly column for The New York Times. He has written extensively on foreign affairs including global trade, the Middle East, globalization, and environmental issues and has won the Pulitzer Prize three times.
 							</TextBlock>
 						</StackPanel>
-                        <StackPanel Name="sp_WFDetail" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
+						<StackPanel Name="sp_WFDetail" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
 														Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Detail}">
-                            <Grid>
-                                <StackPanel Name="sp_WFDetailMenu" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+							<Grid>
+								<StackPanel Name="sp_WFDetailMenu" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																						        Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=DetailMenu_WF}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="10 flatteners" />
-                                    <StackPanel Margin="20,20,0,0">
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                            <Button Name="BerlinWall" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
-                                                Berlin Wall Collapse
-                                            </Button>
-                                            <Button Name="Workflow" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
-                                                Workflow software
-                                            </Button>
-                                            <Button Name="Offshoring" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
-                                                Offshoring
-                                            </Button>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                            <Button Name="Netscape" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
-                                                Netscape
-                                            </Button>
-                                            <Button Name="SupplyChain" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
-                                                Supply chain
-                                            </Button>
-                                            <Button Name="Uploading" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
-                                                Uploading
-                                            </Button>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-                                            <Button Name="Informing" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
-                                                Informing
-                                            </Button>
-                                            <Button Name="Insourcing" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
-                                                Insourcing
-                                            </Button>
-                                            <Button Name="Outsourcing" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
-                                                Outsourcing
-                                            </Button>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-                                            <Button Name="Sterois" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
-                                                “The Sterois”
-                                            </Button>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </StackPanel>
-                                <StackPanel Name="sp_WFBerlinWall" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="10 flatteners" />
+									<StackPanel Margin="20,20,0,0">
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+											<Button Name="BerlinWall" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+												Berlin Wall Collapse
+											</Button>
+											<Button Name="Workflow" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+												Workflow software
+											</Button>
+											<Button Name="Offshoring" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+												Offshoring
+											</Button>
+										</StackPanel>
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+											<Button Name="Netscape" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+												Netscape
+											</Button>
+											<Button Name="SupplyChain" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+												Supply chain
+											</Button>
+											<Button Name="Uploading" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+												Uploading
+											</Button>
+										</StackPanel>
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+											<Button Name="Informing" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+												Informing
+											</Button>
+											<Button Name="Insourcing" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+												Insourcing
+											</Button>
+											<Button Name="Outsourcing" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+												Outsourcing
+											</Button>
+										</StackPanel>
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+											<Button Name="Sterois" Style="{StaticResource ResourceKey=btWFStyle}" Width="100" Background="White" Click="onWFDetailClick">
+												“The Sterois”
+											</Button>
+										</StackPanel>
+									</StackPanel>
+								</StackPanel>
+								<StackPanel Name="sp_WFBerlinWall" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 											    						Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=BerlinWall}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Collapse of the Berlin Wall"/>
-                                    <Image Source="/STimWPF;component/image/BerlinWall.jpg" Margin="20" Height="100" HorizontalAlignment="Left"/>
-                                    <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Collapse of the Berlin Wall"/>
+									<Image Source="/STimWPF;component/image/BerlinWall.jpg" Margin="20" Height="100" HorizontalAlignment="Left"/>
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman called the flattener, "When the walls came down, and the windows came up." 
 									The event not only symbolized the end of the Cold War, it allowed people from the other
 									side of the wall to join the economic mainstream. "11/9/89" is a discussion about the
@@ -160,21 +160,21 @@
 									to one another. At that point, the basic platform for the revolution to follow was created:
 									IBM PC, Windows, a standardized graphical interface for word processing, dial-up modems, a standardized
 									tool for communication, and a global phone network.
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Name="sp_WFNetscape" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_WFNetscape" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Netscape}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Netscape"/>
-                                    <Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/netscape.png" />
-                                    <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Netscape"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/netscape.png" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									    Netscape went public at the price of $28. Netscape and the Web broadened the audience for the Internet from its roots as a communications medium used primarily by "early adopters and geeks" to something that made the Internet accessible to everyone from five-year-olds to ninety-five-year-olds. The digitization that took place meant that everyday occurrences such as words, files, films, music, and pictures could be accessed and manipulated on a computer screen by all people across the world.
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Name="sp_WFWorkflow" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_WFWorkflow" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																	Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Workflow}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Workflow Software"/>
-                                    <Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Workflow.png" />
-                                    <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Workflow Software"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Workflow.png" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman's catch-all for the standards and technologies that allowed work to flow. 
                                     The ability of machines to talk to other machines with no humans involved, as 
                                     stated by Friedman. Friedman believes these first three forces have become a "crude
@@ -185,85 +185,85 @@
                                     moment of the flat world." The net result "is that people can work with other people on more
                                     stuff than ever before." This created a global platform for multiple forms of collaboration.
                                     The next six flatteners sprung from this platform.
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Name="sp_WFUploading" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_WFUploading" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																		Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Uploading}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Uploading"/>
-                                    <Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/uploading.png" />
-                                    <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Uploading"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/uploading.png" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Communities uploading and collaborating on online projects. Examples include open source software, blogs, and Wikipedia. Friedman considers the phenomenon "the most disruptive force of all."
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Name="sp_WFOutsourcing" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_WFOutsourcing" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Outsourcing}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Outsourcing"/>
-                                    <Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/outsourcing.gif" />
-                                    <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Outsourcing"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/outsourcing.gif" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman argues that outsourcing has allowed companies to split service and manufacturing activities into components which can be subcontracted and performed in the most efficient, cost-effective way. This process became easier with the mass distribution of fiber optic cables during the introduction of the World Wide Web.
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Name="sp_WFInsourcing" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_WFInsourcing" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Insourcing}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Insourcing"/>
-                                    <Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Insourcing.jpg" />
-                                    <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Insourcing"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Insourcing.jpg" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman uses UPS as a prime example for insourcing, in which the company's employees perform services – beyond shipping – for another company. For example, UPS repairs Toshiba computers on behalf of Toshiba. The work is done at the UPS hub, by UPS employees.
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Name="sp_WFOffshoring" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_WFOffshoring" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Offshoring}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Offshoring"/>
-                                    <Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/OffShoring.jpg" />
-                                    <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Offshoring"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/OffShoring.jpg" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									The internal relocation of a company's manufacturing or other processes to a foreign land to take advantage of less costly operations there. China's entrance in the WTO (World Trade Organization) allowed for greater competition in the playing field. Now countries such as Malaysia, Mexico, Brazil must compete against China and each other to have businesses offshore to them.
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Name="sp_WFSupplyChain" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_WFSupplyChain" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=SupplyChain}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Supply-chaining"/>
-                                    <Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/supply_chain.jpg" />
-                                    <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Supply-chaining"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/supply_chain.jpg" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Friedman compares the modern retail supply chain to a river, and points to Wal-Mart as the best example of a company using technology to streamline item sales, distribution, and shipping.
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Name="sp_WFInforming" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_WFInforming" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																																														Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Informing}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Informing"/>
-                                    <Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Informing.jpg" />
-                                    <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Informing"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Informing.jpg" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Google and other search engines are the prime example. "Never before in the history of the planet have so many people – on their own – had the ability to find so much information about so many things and about so many other people," writes Friedman. The growth of search engines is tremendous; for example take Google, in which Friedman states that it is "now processing roughly one billion searches per day, up from 150 million just three years ago."
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Name="sp_WFSterois" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_WFSterois" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, 
 																									Converter={StaticResource ResourceKey=dwfvConverter}, ConverterParameter=Sterois}">
-                                    <TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="&quot;The Steroids&quot;"/>
-                                    <Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Steroids.jpg" />
-                                    <TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="&quot;The Steroids&quot;"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Steroids.jpg" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Wireless, Voice over Internet, and file sharing. Personal digital devices like mobile phones, iPods, personal digital assistants, instant messaging, and voice over Internet Protocol (VoIP). Digital, Mobile, Personal and Virtual – all analog content and processes (from entertainment to photography to word processing) can be digitized and therefore shaped, manipulated and transmitted; virtual – these processes can be done at high speed with total ease; mobile – can be done anywhere, anytime by anyone; and personal – can be done by you.
-                                    </TextBlock>
-                                </StackPanel>
-                            </Grid>
-                            <Button Name="DetailMenu_WF" Margin="20,20,0,0" Background="Transparent" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, Converter={StaticResource ResourceKey=dmvConverter}, ConverterParameter=DetailMenu_WF}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="50" Width="100" Content="Back" Click="onClickDetailMenu"/>
-                        </StackPanel>
-                    </Grid>
+									</TextBlock>
+								</StackPanel>
+							</Grid>
+							<Button Name="DetailMenu_WF" Margin="20,20,0,0" Background="Transparent" Visibility="{Binding ElementName=ContentCtrl, Path=DetailWFPage, Converter={StaticResource ResourceKey=dmvConverter}, ConverterParameter=DetailMenu_WF}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="50" Width="100" Content="Back" Click="onClickDetailMenu"/>
+						</StackPanel>
+					</Grid>
 					<StackPanel Name="sp_WFCtrl" Orientation="Vertical" HorizontalAlignment="Right" Width="200" Margin="0,200,0,0">
-                        <Button Name="Overview_WF" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
+						<Button Name="Overview_WF" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
 								                        Converter={StaticResource ResourceKey=mpbConverter}, ConverterParameter=Overview}">
-                            The world is flat
-                        </Button>
-                        <Button Name="Author_WF" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
+							The world is flat
+						</Button>
+						<Button Name="Author_WF" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
 								                        Converter={StaticResource ResourceKey=mpbConverter}, ConverterParameter=Author}">
-                            Author
-                        </Button>
-                        <Button Name="Detail_WF" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
+							Author
+						</Button>
+						<Button Name="Detail_WF" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageWF, 
 								                        Converter={StaticResource ResourceKey=mpbConverter}, ConverterParameter=Detail}">
-                            Detail
-                        </Button>
+							Detail
+						</Button>
 					</StackPanel>
 				</Grid>
 			</StackPanel>
-			<StackPanel Name="sp_LA" HorizontalAlignment="Right" Width="683">
+			<!--<StackPanel Name="sp_LA" HorizontalAlignment="Right" Width="683">
 				<Grid>
 					<Grid Name="sp_LAContent" HorizontalAlignment="Left" Width=" 450" Margin="0,50,0,0">
 						<StackPanel Name="sp_LAOverview" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
@@ -272,14 +272,14 @@
 							<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 								Logitech Attack 3 is an easy-to-use joystick with a full array of customizable controls that gives you durability and ambidextrous control – right out of the box.
 							</TextBlock>
-                            <Grid HorizontalAlignment="Left" Margin="20,20,0,0" Background="Black">
-                                <MediaElement Name="me_LA" Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\LogitechAttack3.mp4" LoadedBehavior="Manual" UnloadedBehavior="Manual" HorizontalAlignment="Left" Height="224" Width="400"
+							<Grid HorizontalAlignment="Left" Margin="20,20,0,0" Background="Black">
+								<MediaElement Name="me_LA" Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\LogitechAttack3.mp4" LoadedBehavior="Manual" UnloadedBehavior="Manual" HorizontalAlignment="Left" Height="224" Width="400"
                                               MediaEnded="me_LA_MediaEnded" />
-                                <Button Background="Transparent" Style="{StaticResource ResourceKey=btPictureStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Transparent" Click="onClickedPlay_LA" Height="100">
-                                    <Image Source="/STimWPF;component/image/playbutton.gif" Visibility="{Binding ElementName=ContentCtrl, Path=IsPlayingLA, Converter={StaticResource ResourceKey=bvConverter}}"/>
-                                </Button>
-                            </Grid>
-                        </StackPanel>
+								<Button Background="Transparent" Style="{StaticResource ResourceKey=btPictureStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Transparent" Click="onClickedPlay_LA" Height="100">
+									<Image Source="/STimWPF;component/image/playbutton.gif" Visibility="{Binding ElementName=ContentCtrl, Path=IsPlayingLA, Converter={StaticResource ResourceKey=bvConverter}}"/>
+								</Button>
+							</Grid>
+						</StackPanel>
 						<StackPanel Name="sp_LAAuthor" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
 																		Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Author}">
 							<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}">Logitech</TextBlock>
@@ -288,85 +288,85 @@
 								Logitech is a world leader in products that connect people to the digital experiences they care about. Spanning multiple computing, communication and entertainment platforms, Logitech’s combined hardware and software enable or enhance digital navigation, music and video entertainment, gaming, social networking, audio and video communication over the Internet, video security and home-entertainment control.
 							</TextBlock>
 						</StackPanel>
-                        <StackPanel Name="sp_LADetail" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
+						<StackPanel Name="sp_LADetail" Visibility="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
 								                        Converter={StaticResource ResourceKey=mpvConverter}, ConverterParameter=Detail}">
-						    <Grid>
-							     <StackPanel Name="sp_DetailMenu_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
+							<Grid>
+								<StackPanel Name="sp_DetailMenu_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
 																																														Converter={StaticResource ResourceKey=dlavConverter}, ConverterParameter=DetailMenu_LA}">
-								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Cool Features" />
-								<StackPanel Margin="20,20,0,0">
-									<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                            <Button Name="FullArray" Style="{StaticResource ResourceKey=btPictureStyle}" Width="100" Click="onLADetailClick">
-											<Image Source="/STimWPF;component/image/fullArray.png"/>
-										</Button>
-                                            <Button Name="GamingSoftware" Style="{StaticResource ResourceKey=btPictureStyle}" Margin="30,0" Width="100" Click="onLADetailClick">
-											<Image Source="/STimWPF;component/image/gamingSoftware.png" />
-										</Button>
-									</StackPanel>
-									<StackPanel Margin="0,30" Orientation="Horizontal" HorizontalAlignment="Left">
-                                            <Button Name="PlugPlay" Style="{StaticResource ResourceKey=btPictureStyle}" Width="100" Click="onLADetailClick">
-											<Image Source="/STimWPF;component/image/plugPlay.png" />
-										</Button>
-                                            <Button Name="Symmetrical" Style="{StaticResource ResourceKey=btPictureStyle}" Margin="30,0" Width="100" Click="onLADetailClick">
-											<Image Source="/STimWPF;component/image/Symmetric.png" />
-										</Button>
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Cool Features" />
+									<StackPanel Margin="20,20,0,0">
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+											<Button Name="FullArray" Style="{StaticResource ResourceKey=btPictureStyle}" Width="100" Click="onLADetailClick">
+												<Image Source="/STimWPF;component/image/fullArray.png"/>
+											</Button>
+											<Button Name="GamingSoftware" Style="{StaticResource ResourceKey=btPictureStyle}" Margin="30,0" Width="100" Click="onLADetailClick">
+												<Image Source="/STimWPF;component/image/gamingSoftware.png" />
+											</Button>
+										</StackPanel>
+										<StackPanel Margin="0,30" Orientation="Horizontal" HorizontalAlignment="Left">
+											<Button Name="PlugPlay" Style="{StaticResource ResourceKey=btPictureStyle}" Width="100" Click="onLADetailClick">
+												<Image Source="/STimWPF;component/image/plugPlay.png" />
+											</Button>
+											<Button Name="Symmetrical" Style="{StaticResource ResourceKey=btPictureStyle}" Margin="30,0" Width="100" Click="onLADetailClick">
+												<Image Source="/STimWPF;component/image/Symmetric.png" />
+											</Button>
+										</StackPanel>
 									</StackPanel>
 								</StackPanel>
-							</StackPanel>
-							     <StackPanel Name="sp_FullArray_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
+								<StackPanel Name="sp_FullArray_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
 																																														Converter={StaticResource ResourceKey=dlavConverter}, ConverterParameter=FullArray}">
-								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Full Array of Control"/>
-								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/fullArray.png" />
-								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Full Array of Control"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/fullArray.png" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									You can assert your self with 11 programmable buttons and a rapid-fire trigger.
-								</TextBlock>
-							</StackPanel>
-							     <StackPanel Name="sp_PlugPlay_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_PlugPlay_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
 																																														Converter={StaticResource ResourceKey=dlavConverter}, ConverterParameter=PlugPlay}">
-								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Plug-and-play setup"/>
-								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/plugPlay.png" />
-								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Plug-and-play setup"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/plugPlay.png" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									It delivers plug-and-play simplicity – or you can install the induced software to customized buttons.
-								</TextBlock>
-							</StackPanel>
-							     <StackPanel Name="sp_GamingSoftware_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_GamingSoftware_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
 																							Converter={StaticResource ResourceKey=dlavConverter}, ConverterParameter=GamingSoftware}">
-								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Logitech Gaming software (PC)"/>
-								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/gamingSoftware.png" />
-								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Logitech Gaming software (PC)"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/gamingSoftware.png" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									Advanced button customization, multiple controller configurations, and printable gaming profiles let you get serious about your game.
-								</TextBlock>
-							</StackPanel>
-							     <StackPanel Name="sp_Symmetrical_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Name="sp_Symmetrical_LA" VerticalAlignment="Top" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, 
 																							Converter={StaticResource ResourceKey=dlavConverter}, ConverterParameter=Symmetrical}">
-								<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Symmetrical Handler"/>
-								<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Symmetric.png" />
-								<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
+									<TextBlock Style="{StaticResource ResourceKey=tbTitleStyle}" Text="Symmetrical Handler"/>
+									<Image  Margin="20" Height="100" HorizontalAlignment="Left" Source="/STimWPF;component/image/Symmetric.png" />
+									<TextBlock Style="{StaticResource ResourceKey=tbContentStyle}">
 									It fits your right or left hand perfectly.
-								</TextBlock>
-							</StackPanel>                                
-						    </Grid>
-                            <Button Name="DetailMenu_LA" Margin="20,20,0,0" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, Converter={StaticResource ResourceKey=dmvConverter}, ConverterParameter=DetailMenu_LA}"
+									</TextBlock>
+								</StackPanel>
+							</Grid>
+							<Button Name="DetailMenu_LA" Margin="20,20,0,0" Visibility="{Binding ElementName=ContentCtrl, Path=DetailLAPage, Converter={StaticResource ResourceKey=dmvConverter}, ConverterParameter=DetailMenu_LA}"
                                                 VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="50" Width="100" Content=" Back" Click="onClickDetailMenu"/>
-                        </StackPanel>
-                    </Grid>
+						</StackPanel>
+					</Grid>
 					<StackPanel Name="sp_LACtrl" Orientation="Vertical" HorizontalAlignment="Right" Width="200" Margin="0,200,20,0">
-                        <Button Name="Overview_LA" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
+						<Button Name="Overview_LA" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
 								                        Converter={StaticResource ResourceKey=mpbConverter}, ConverterParameter=Overview}">
 							Logitech Attack 3
 						</Button>
-                        <Button Name="Author_LA" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
+						<Button Name="Author_LA" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
 								                        Converter={StaticResource ResourceKey=mpbConverter}, ConverterParameter=Author}">
 							Company
 						</Button>
-                        <Button Name="Detail_LA" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
+						<Button Name="Detail_LA" Style="{StaticResource ResourceKey=btMainPageStyle}" Background="{Binding ElementName=ContentCtrl, Path=MainPageLA, 
 								                        Converter={StaticResource ResourceKey=mpbConverter}, ConverterParameter=Detail}">
 							Features
 						</Button>
 					</StackPanel>
 				</Grid>
-			</StackPanel>
-			<Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Center"/>
+			</StackPanel>-->
+			<!--<Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Center"/>-->
 			<controls:MouseAnimationControl Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top"
 																		Visibility="{Binding ElementName=ContentCtrl, Path=LeftClick, Converter={StaticResource ResourceKey=bvConverter}}"
 																		Margin="{Binding ElementName=ContentCtrl, Path=RelativeCursorLocation, Converter={StaticResource ResourceKey=lmConverter}}"
