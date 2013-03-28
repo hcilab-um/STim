@@ -9,7 +9,8 @@
 		<Viewport3D x:Name="viewport" HorizontalAlignment="Stretch">
 			<Viewport3D.Camera>
 				<!--<PerspectiveCamera x:Name="pCamera" FieldOfView="47.07" Position="0.5375, 0.04, 1" LookDirection="-0.435539, 0, -1" UpDirection="0,1,0" />-->
-				<PerspectiveCamera x:Name="pCamera" FieldOfView="55.07" Position="0, 0.04, 1" LookDirection="0, 0, -1" UpDirection="0,1,0" />
+				<!--<PerspectiveCamera x:Name="pCamera" FieldOfView="55.07" Position="0, 0.04, 1" LookDirection="0, 0, -1" UpDirection="0,1,0" />-->
+				<PerspectiveCamera x:Name="pCamera" Position="0, 0.04, 1" LookDirection="0, 0, -1" UpDirection="0,1,0" />
 				<!--<MatrixCamera x:Name="mCamera">
 					<MatrixCamera.ViewMatrix>
 						<Matrix3D M11="1" M12="0" M13="0" M14="0"

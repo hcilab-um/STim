@@ -39,6 +39,8 @@ namespace STimWPF.Controls
 		public AmbientNotificationControl()
 		{
 			InitializeComponent();
+			meAmbient.Volume = 0;
+			meNotification.Volume = 0;
 		}
 
 		protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)

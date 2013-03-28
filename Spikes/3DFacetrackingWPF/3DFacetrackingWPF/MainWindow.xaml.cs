@@ -135,6 +135,13 @@ namespace _3DFacetrackingWPF
 
 		private void ProcessSkeleton(Skeleton skeleton)
 		{
+			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
+			Vector3D headP = new Vector3D();
+			headP.X = head.Position.X;
+			headP.Y = head.Position.Y;
+			headP.Z = head.Position.Z;
+			pCamera.Position = (Point3D)headP;
+			pCamera.LookDirection = -headP;
 		}
 
 		private void Window_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
