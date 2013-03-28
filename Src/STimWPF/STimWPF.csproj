@@ -58,7 +58,7 @@
     <Reference Include="log4net">
       <HintPath>..\SharedLib\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Kinect, Version=1.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Kinect, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -79,6 +79,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AnimationStatus.cs" />
+    <Compile Include="Controls\AmbientNotificationControl.xaml.cs">
+      <DependentUpon>AmbientNotificationControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\AnimatedRectControl.xaml.cs">
       <DependentUpon>AnimatedRectControl.xaml</DependentUpon>
     </Compile>
@@ -96,6 +99,7 @@
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\DetailLAPageVisibilityConverter.cs" />
     <Compile Include="Converters\DetailMenuVisibilityConverter.cs" />
+    <Compile Include="Converters\DistanceVideoPositionConverter.cs" />
     <Compile Include="Converters\MainPageBackgroundConverter.cs" />
     <Compile Include="Converters\MainPageVisibilityConverter.cs" />
     <Compile Include="Converters\DetailWFPageVisibilityConverter.cs" />
@@ -134,6 +138,10 @@
     <Compile Include="Playback\SkeletonPlayer.cs" />
     <Compile Include="Util\ToolBox.cs" />
     <Compile Include="Status\VisitStatus.cs" />
+    <Page Include="Controls\AmbientNotificationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\AnimatedRectControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -241,6 +249,8 @@
   <ItemGroup />
   <ItemGroup>
     <Resource Include="Image\startFullScreenButton.jpg" />
+    <Content Include="Video\montage-audio-march13.mov" />
+    <Content Include="Video\notificationVideo.mp4" />
     <Content Include="Video\theWorldIsFlat.mp4" />
     <Resource Include="Image\playbutton.gif" />
     <Content Include="Video\LogitechAttack3.mp4" />

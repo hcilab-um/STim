@@ -24,62 +24,62 @@ namespace _3DFacetrackingWPF
 	public partial class MainWindow : Window
 	{
 		const double SCREEN_WIDTH = 1.02;
-        const double SCREEN_HEIGHT = 0.58;
-        private KinectSensor kinectSensor;
-        
-        private static readonly Point3D startV = new Point3D(-0.5375, -0.29, -0.5);
-        private static readonly Point3D endV = new Point3D(-0.5375, 0.29, -0.5);
+		const double SCREEN_HEIGHT = 0.58;
+		private KinectSensor kinectSensor;
 
-        private static readonly Point3D startH = new Point3D(-0.5375, -0.29, -0.5);
-        private static readonly Point3D endH = new Point3D(0.5375, -0.29, -0.5);
+		private static readonly Point3D startV = new Point3D(-0.5375, -0.29, -0.5);
+		private static readonly Point3D endV = new Point3D(-0.5375, 0.29, -0.5);
+
+		private static readonly Point3D startH = new Point3D(-0.5375, -0.29, -0.5);
+		private static readonly Point3D endH = new Point3D(0.5375, -0.29, -0.5);
 
 		public MainWindow()
 		{
 			InitializeComponent();
-            drawGrid();
+			drawGrid();
 		}
 
-        private void drawGrid()
-        {
-            ScreenSpaceLines3D normal0Wire = new ScreenSpaceLines3D();
-            int width = 1;
-            normal0Wire.Thickness = width;
-            normal0Wire.Color = Colors.Black;
-            Point3D a, b;
-            for (int i = 0; i < 107; i++)
-            {
-                a = startV;
-                b = endV;
-                a.X += i * 0.01;
-                b.X += i * 0.01;
-                normal0Wire.Points.Add(a);
-                normal0Wire.Points.Add(b);
-            }
+		private void drawGrid()
+		{
+			ScreenSpaceLines3D normal0Wire = new ScreenSpaceLines3D();
+			int width = 1;
+			normal0Wire.Thickness = width;
+			normal0Wire.Color = Colors.Red;
+			Point3D a, b;
+			for (int i = 0; i < 107; i++)
+			{
+				a = startV;
+				b = endV;
+				a.X += i * 0.01;
+				b.X += i * 0.01;
+				normal0Wire.Points.Add(a);
+				normal0Wire.Points.Add(b);
+			}
 
-            for (int i = 0; i < 58; i++)
-            {
-                a = startH;
-                b = endH;
-                a.Y += i * 0.01;
-                b.Y += i * 0.01;
-                normal0Wire.Points.Add(a);
-                normal0Wire.Points.Add(b);
-            }
+			for (int i = 0; i < 58; i++)
+			{
+				a = startH;
+				b = endH;
+				a.Y += i * 0.01;
+				b.Y += i * 0.01;
+				normal0Wire.Points.Add(a);
+				normal0Wire.Points.Add(b);
+			}
 
-            normal0Wire.Points.Add(new Point3D(-0.5375,-0.289, -0.5));
-            normal0Wire.Points.Add(new Point3D(-0.5375,-0.289, 0));
+			normal0Wire.Points.Add(new Point3D(-0.5375, -0.289, -0.5));
+			normal0Wire.Points.Add(new Point3D(-0.5375, -0.289, 0));
 
-            normal0Wire.Points.Add(new Point3D(0.5375,-0.289, -0.5));
-            normal0Wire.Points.Add(new Point3D(0.5375,-0.289, 0));
+			normal0Wire.Points.Add(new Point3D(0.5375, -0.289, -0.5));
+			normal0Wire.Points.Add(new Point3D(0.5375, -0.289, 0));
 
-            normal0Wire.Points.Add(new Point3D(-0.5375, 0.289, -0.5));
-            normal0Wire.Points.Add(new Point3D(-0.5375, 0.289, 0));
+			normal0Wire.Points.Add(new Point3D(-0.5375, 0.289, -0.5));
+			normal0Wire.Points.Add(new Point3D(-0.5375, 0.289, 0));
 
-            normal0Wire.Points.Add(new Point3D(0.5375, 0.289, -0.5));
-            normal0Wire.Points.Add(new Point3D(0.5375, 0.289, 0));
+			normal0Wire.Points.Add(new Point3D(0.5375, 0.289, -0.5));
+			normal0Wire.Points.Add(new Point3D(0.5375, 0.289, 0));
 
-            viewport.Children.Add(normal0Wire);
-        }
+			viewport.Children.Add(normal0Wire);
+		}
 
 		private void Window_Loaded_1(object sender, RoutedEventArgs e)
 		{
@@ -87,7 +87,7 @@ namespace _3DFacetrackingWPF
 			{
 				Console.WriteLine("No Kinect Found");
 			}
-			else 
+			else
 			{
 				kinectSensor = KinectSensor.KinectSensors[0];
 				if (kinectSensor == null || kinectSensor.Status == KinectStatus.NotPowered)
@@ -135,19 +135,6 @@ namespace _3DFacetrackingWPF
 
 		private void ProcessSkeleton(Skeleton skeleton)
 		{
-           
-		    Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
-			Vector3D headP = new Vector3D(head.Position.X, head.Position.Y+0.4275, head.Position.Z);
-            double z = headP.Z;
-            if (z == 0)
-                return;
-            double angle = Math.Atan(SCREEN_WIDTH / 2 / z) * 180 / Math.PI*2;
-            pCamera.FieldOfView = angle;
-            pCamera.LookDirection = new Vector3D(-headP.X, -headP.Y, -headP.Z);
-            headP.Y += 0.04;
-            pCamera.Position = (Point3D)headP;
-            Vector3D displacement = new Vector3D(pCamera.Position.X - headP.X, pCamera.Position.Y - headP.Y, pCamera.Position.Z - headP.Z);
-            tb.Text = displacement.Length.ToString();
 		}
 
 		private void Window_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)

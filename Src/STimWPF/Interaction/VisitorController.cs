@@ -126,25 +126,25 @@ namespace STimWPF.Interaction
 				UserDisplayDistance = DetectUserPosition(skeleton);
 			}
 
-			if (userDisplayDistance < Settings.Default.CloseZoneConstrain)
+            if (UserDisplayDistance < Settings.Default.CloseZoneConstrain)
 			{
 				Zone = Zone.Close;
 				return;
 			}
 
-			if (userDisplayDistance >= Settings.Default.CloseZoneConstrain && userDisplayDistance < Settings.Default.InteractionZoneConstrain)
+            if (UserDisplayDistance >= Settings.Default.CloseZoneConstrain && userDisplayDistance < Settings.Default.InteractionZoneConstrain)
 			{
 				Zone = Zone.Interaction;
 				return;
 			}
 
-			if (userDisplayDistance >= Settings.Default.InteractionZoneConstrain && userDisplayDistance < Settings.Default.NotificationZoneConstrain)
+            if (UserDisplayDistance >= Settings.Default.InteractionZoneConstrain && userDisplayDistance < Settings.Default.NotificationZoneConstrain)
 			{
 				Zone = Zone.Notification;
 				return;
 			}
 
-			if (userDisplayDistance >= Settings.Default.NotificationZoneConstrain)
+            if (UserDisplayDistance >= Settings.Default.NotificationZoneConstrain)
 			{
 				Zone = Zone.Ambient;
 				return;

@@ -292,8 +292,6 @@ namespace STimWPF
 				zoneShift = 0;
 			}
 
-			
-
 			for (int i = 0; i < depthPixels.Length; ++i)
 			{
 
@@ -306,7 +304,7 @@ namespace STimWPF
 				// Write out red byte                 
 				colorPixels[colorPixelIndex++] = (byte)(depthPixels[i].PlayerIndex == playerIndex ? intensity + zoneShift : intensity);
 
-				++colorPixelIndex;
+				colorPixelIndex++;
 			}
 
 			// Write the pixel data into our bitmap
