@@ -25,9 +25,6 @@ namespace STimWPF.Controls
 	public partial class ContentControl : UserControl, INotifyPropertyChanged, IUIInformer
 	{
 
-		private static readonly DependencyProperty LeftClickProperty = DependencyProperty.Register("LeftClick", typeof(bool), typeof(ContentControl));
-		private static readonly DependencyProperty RelativeCursorLocationProperty = DependencyProperty.Register("RelativeCursorLocation", typeof(Point3D), typeof(ContentControl));
-		private static readonly DependencyProperty TimerStateProperty = DependencyProperty.Register("TimerState", typeof(TimerState), typeof(ContentControl));
 		private static readonly DependencyProperty KinectSensorProperty = DependencyProperty.Register("KinectSensor", typeof(KinectSensor), typeof(ContentControl));
 
 		private bool isPlayingWF;
@@ -68,24 +65,6 @@ namespace STimWPF.Controls
 				detailWFPage = value;
 				OnPropertyChanged("DetailWFPage");
 			}
-		}
-
-		public bool LeftClick
-		{
-			get { return (bool)GetValue(LeftClickProperty); }
-			set { SetValue(LeftClickProperty, value); }
-		}
-
-		public Point3D RelativeCursorLocation
-		{
-			get { return (Point3D)GetValue(RelativeCursorLocationProperty); }
-			set { SetValue(RelativeCursorLocationProperty, value); }
-		}
-
-		public TimerState TimerState
-		{
-			get { return (TimerState)GetValue(TimerStateProperty); }
-			set { SetValue(TimerStateProperty, value); }
 		}
 
 		public ContentControl()

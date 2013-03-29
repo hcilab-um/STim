@@ -77,23 +77,6 @@ namespace STimWPF
         {
             AppInstance = appInst;
             InitializeComponent();
-            LocationChanged += new EventHandler(ContentWindow_LocationChanged);
-            SizeChanged += new SizeChangedEventHandler(ContentWindow_SizeChanged);
-        }
-
-        void ContentWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (this.WindowState == WindowState.Maximized)
-            {
-                Left = 0;
-                Top = 0;
-            }
-            CoreInstance.InteractionCtr.MouseBoundaries = new Rect(Left, Top, ActualWidth, ActualHeight);
-        }
-
-        void ContentWindow_LocationChanged(object sender, EventArgs e)
-        {
-            CoreInstance.InteractionCtr.MouseBoundaries = new Rect(Left, Top, ActualWidth, ActualHeight);
         }
 
         private void contentW_Closed(object sender, EventArgs e)

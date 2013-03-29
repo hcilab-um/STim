@@ -175,7 +175,7 @@ namespace STimWPF
 				lastUpdate = currentTimeMilliseconds;
 
 				//Process the skeleton to control the mouse
-				InteractionCtr.ProcessNewSkeletonData(stableSkeleton, deltaTime, VisitorCtr.Zone);
+				//InteractionCtr.ProcessNewSkeletonData(stableSkeleton, deltaTime, VisitorCtr.Zone);
 
                 //Console.WriteLine("InteractionCtr.ProcessNewSkeletonData: " + (DateTime.Now - measure).TotalMilliseconds);
                 //measure = DateTime.Now;                
@@ -238,7 +238,7 @@ namespace STimWPF
 			Skeleton stableSkeleton = SkeletonF.ProcessNewSkeletonData(e.FrameSkeleton);
 			VisitorCtr.DetectZone(stableSkeleton);
 			//Process the new skeleton in the Interaction Controller
-			InteractionCtr.ProcessNewSkeletonData(stableSkeleton, e.Delay, VisitorCtr.Zone);
+			//InteractionCtr.ProcessNewSkeletonData(stableSkeleton, e.Delay, VisitorCtr.Zone);
 
 			//We paint the skeleton and send the image over to the UI
 			if (ColorImageReady != null)
