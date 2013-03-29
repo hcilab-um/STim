@@ -25,6 +25,7 @@
 							RelativeCursorLocation="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.RelativeCursorLocation}"
 							LeftClick="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.LeftClick}"
 							TimerState="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.Recognizer.TimerState}"
+							KinectSensor="{Binding ElementName=contentW, Path=CoreInstance.KinectSensor}"
 							VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
 		<!--<controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"

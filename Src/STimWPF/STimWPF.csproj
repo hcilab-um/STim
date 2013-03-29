@@ -246,7 +246,6 @@
     <Resource Include="Image\plugPlay.png" />
     <Resource Include="Image\Symmetric.png" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Resource Include="Image\startFullScreenButton.jpg" />
     <Content Include="Video\montage-audio-march13.mov" />
@@ -254,6 +253,16 @@
     <Content Include="Video\theWorldIsFlat.mp4" />
     <Resource Include="Image\playbutton.gif" />
     <Content Include="Video\LogitechAttack3.mp4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Kinect.Toolkit.Controls\Microsoft.Kinect.Toolkit.Controls.csproj">
+      <Project>{4508C4D1-85BB-4F3F-9E3B-CC93D231C65D}</Project>
+      <Name>Microsoft.Kinect.Toolkit.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Kinect.Toolkit\Microsoft.Kinect.Toolkit.csproj">
+      <Project>{C6F9C31B-6130-4443-A5CC-EF0664552ECD}</Project>
+      <Name>Microsoft.Kinect.Toolkit</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

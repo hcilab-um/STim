@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using STimWPF.Interaction;
 using System.Windows.Media.Media3D;
 using System.ComponentModel;
+using Microsoft.Kinect.Toolkit.Controls;
+using Microsoft.Kinect;
 
 namespace STimWPF.Controls
 {
@@ -26,13 +28,17 @@ namespace STimWPF.Controls
 		private static readonly DependencyProperty LeftClickProperty = DependencyProperty.Register("LeftClick", typeof(bool), typeof(ContentControl));
 		private static readonly DependencyProperty RelativeCursorLocationProperty = DependencyProperty.Register("RelativeCursorLocation", typeof(Point3D), typeof(ContentControl));
 		private static readonly DependencyProperty TimerStateProperty = DependencyProperty.Register("TimerState", typeof(TimerState), typeof(ContentControl));
+		private static readonly DependencyProperty KinectSensorProperty = DependencyProperty.Register("KinectSensor", typeof(KinectSensor), typeof(ContentControl));
 
 		private bool isPlayingWF;
-		private bool isPlayingLA;
 		private MainPage mainPageWF;
-		private MainPage mainPageLA;
 		private DetailWFPage detailWFPage;
-		private DetailLAPage detailLAPage;
+
+		public KinectSensor KinectSensor
+		{
+			get { return (KinectSensor)GetValue(KinectSensorProperty); }
+			set { SetValue(KinectSensorProperty, value); }
+		}
 
 		public bool IsPlayingWF
 		{
@@ -44,16 +50,6 @@ namespace STimWPF.Controls
 			}
 		}
 
-		public bool IsPlayingLA
-		{
-			get { return isPlayingLA; }
-			set
-			{
-				isPlayingLA = value;
-				OnPropertyChanged("IsPlayingLA");
-			}
-		}
-
 		public MainPage MainPageWF
 		{
 			get { return mainPageWF; }
@@ -61,26 +57,6 @@ namespace STimWPF.Controls
 			{
 				mainPageWF = value;
 				OnPropertyChanged("MainPageWF");
-			}
-		}
-
-		public MainPage MainPageLA
-		{
-			get { return mainPageLA; }
-			set
-			{
-				mainPageLA = value;
-				OnPropertyChanged("MainPageLA");
-			}
-		}
-
-		public DetailLAPage DetailLAPage
-		{
-			get { return detailLAPage; }
-			set
-			{
-				detailLAPage = value;
-				OnPropertyChanged("DetailLAPage");
 			}
 		}
 
@@ -117,9 +93,9 @@ namespace STimWPF.Controls
 			InitializeComponent();
 		}
 
-		void onMainPageClick(object sender, EventArgs e)
+		void OnMainPageClick(object sender, RoutedEventArgs e)
 		{
-			Button bt = (Button)sender;
+			KinectTileButton bt = (KinectTileButton)sender;
 			string[] nameInfo = bt.Name.Split('_');
 			foreach (MainPage m in Enum.GetValues(typeof(MainPage)))
 			{
@@ -127,8 +103,6 @@ namespace STimWPF.Controls
 				{
 					if (nameInfo[1].Equals("WF"))
 						MainPageWF = m;
-					else if (nameInfo[1].Equals("LA"))
-						MainPageLA = m;
 					else
 						throw new Exception("Invalid Name: " + nameInfo[1]);
 				}
@@ -140,24 +114,16 @@ namespace STimWPF.Controls
 				me_WF.Stop();
 			}
 
-			if (mainPageLA != MainPage.Overview)
-			{
-				IsPlayingLA = false;
-				//me_LA.Stop();
-			}
-
 			if (MainPageWF == MainPage.Detail)
 			{
 				if (nameInfo[1].Equals("WF"))
 					DetailWFPage = DetailWFPage.DetailMenu_WF;
-				else
-					DetailLAPage = DetailLAPage.DetailMenu_LA;
 			}
 		}
 
-		void onWFDetailClick(object sender, EventArgs e)
+		void OnWFDetailClick(object sender, RoutedEventArgs e)
 		{
-			Button bt = (Button)sender;
+			KinectTileButton bt = (KinectTileButton)sender;
 			foreach (DetailWFPage d in Enum.GetValues(typeof(DetailWFPage)))
 			{
 				if (d.ToString().Equals(bt.Name))
@@ -165,17 +131,7 @@ namespace STimWPF.Controls
 			}
 		}
 
-		void onLADetailClick(object sender, EventArgs e)
-		{
-			Button bt = (Button)sender;
-			foreach (DetailLAPage d in Enum.GetValues(typeof(DetailLAPage)))
-			{
-				if (d.ToString().Equals(bt.Name))
-					DetailLAPage = d;
-			}
-		}
-
-		void onClickedPlay_WF(object sender, EventArgs e)
+		void OnClickedPlay_WF(object sender, RoutedEventArgs e)
 		{
 			if (IsPlayingWF == false)
 			{
@@ -189,28 +145,12 @@ namespace STimWPF.Controls
 			}
 		}
 
-		private void onClickedPlay_LA(object sender, RoutedEventArgs e)
-		{
-			if (IsPlayingLA == false)
-			{
-				IsPlayingLA = true;
-				//me_LA.Play();
-			}
-			else
-			{
-				IsPlayingLA = false;
-				//me_LA.Pause();
-			}
-		}
-
 		void onClickDetailMenu(object sender, EventArgs e)
 		{
-			Button bt = (Button)sender;
+			KinectTileButton bt = (KinectTileButton)sender;
 			string[] nameInfo = bt.Name.Split('_');
 			if (nameInfo[1].Equals("WF"))
 				DetailWFPage = DetailWFPage.DetailMenu_WF;
-			else
-				DetailLAPage = DetailLAPage.DetailMenu_LA;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -222,19 +162,13 @@ namespace STimWPF.Controls
 
 		public string CurrentPage()
 		{
-			return MainPageWF.ToString() + "-" + Detail_WF.ToString(); //MainPageLA.ToString() + "-" + Detail_LA.ToString() + "|" +
+			return MainPageWF.ToString() + "-" + Detail_WF.ToString();
 		}
 
 		private void me_WF_MediaEnded(object sender, RoutedEventArgs e)
 		{
 			IsPlayingWF = false;
 			me_WF.Stop();
-		}
-
-		private void me_LA_MediaEnded(object sender, RoutedEventArgs e)
-		{
-			IsPlayingLA = false;
-			//me_LA.Stop();
 		}
 
 	}

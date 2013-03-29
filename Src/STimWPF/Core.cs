@@ -29,7 +29,6 @@ namespace STimWPF
 		private readonly Brush inferredJointBrush = Brushes.Yellow;
 		private const double JointThickness = 3;
 
-		private static KinectSensor kinectSensor;
 		private static Core instance = null;
 
 		private SkeletonDrawer skeletonDrawer;
@@ -41,6 +40,7 @@ namespace STimWPF
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 		public event EventHandler<DepthImageReadyArgs> DepthImageReady;
 
+		public KinectSensor KinectSensor { get; set; }
 		public SkeletonFilter SkeletonF { get; set; }
 		public DepthPercentFilter DepthPercentF { get; set; }
 		public InteractionController InteractionCtr { get; set; }
@@ -94,20 +94,20 @@ namespace STimWPF
 			else
 			{
 				IsKinectConnected = true;
-				kinectSensor = KinectSensor.KinectSensors[0];
-				if (kinectSensor == null || kinectSensor.Status == KinectStatus.NotPowered)
+				KinectSensor = KinectSensor.KinectSensors[0];
+				if (KinectSensor == null || KinectSensor.Status == KinectStatus.NotPowered)
 					IsKinectConnected = false;
 				else
 				{
 					//need to update the kinect gear angle to figure out user distance
 
-					kinectSensor.DepthStream.Enable();
-					kinectSensor.ColorStream.Enable();
-					kinectSensor.SkeletonStream.Enable();
-					kinectSensor.Start();
-					kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
-					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - kinectSensor.ElevationAngle);
-					StatusCtr = new StatusController(uploadPeriod, ToolBox.AngleToRadian(kinectSensor.ElevationAngle));
+					KinectSensor.DepthStream.Enable();
+					KinectSensor.ColorStream.Enable();
+					KinectSensor.SkeletonStream.Enable();
+					KinectSensor.Start();
+					KinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
+					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - KinectSensor.ElevationAngle);
+					StatusCtr = new StatusController(uploadPeriod, ToolBox.AngleToRadian(KinectSensor.ElevationAngle));
 				}
 			}
 		}
@@ -252,7 +252,7 @@ namespace STimWPF
         {
             DepthImagePixel[] depthPixels;
             
-			depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
+			depthPixels = new DepthImagePixel[KinectSensor.DepthStream.FramePixelDataLength];
             depthFrame.CopyDepthImagePixelDataTo(depthPixels);
             int closePixel = 0;
             short constrain = (short)(Settings.Default.InteractionZoneConstrain * 1000);
@@ -270,13 +270,13 @@ namespace STimWPF
 			byte[] colorPixels;
 
 			// Allocate space to put the depth pixels we'll receive
-			depthPixels = new DepthImagePixel[kinectSensor.DepthStream.FramePixelDataLength];
+			depthPixels = new DepthImagePixel[KinectSensor.DepthStream.FramePixelDataLength];
 
 			// Allocate space to put the color pixels we'll create
-			colorPixels = new byte[kinectSensor.DepthStream.FramePixelDataLength * sizeof(int)];
+			colorPixels = new byte[KinectSensor.DepthStream.FramePixelDataLength * sizeof(int)];
 
 			// This is the bitmap we'll display on-screen
-			WriteableBitmap colorBitmap = new WriteableBitmap(kinectSensor.DepthStream.FrameWidth, kinectSensor.DepthStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
+			WriteableBitmap colorBitmap = new WriteableBitmap(KinectSensor.DepthStream.FrameWidth, KinectSensor.DepthStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
 			depthFrame.CopyDepthImagePixelDataTo(depthPixels);
 			// Convert the depth to RGB
 			int colorPixelIndex = 0;
@@ -338,7 +338,7 @@ namespace STimWPF
 		{
 			DrawingGroup dgDepthImageAndSkeleton = new DrawingGroup();
 			DrawingImage drawingImage = new DrawingImage(dgDepthImageAndSkeleton);
-			skeletonDrawer = new SkeletonDrawer(kinectSensor);
+			skeletonDrawer = new SkeletonDrawer(KinectSensor);
 			using (DrawingContext drawingContext = dgDepthImageAndSkeleton.Open())
 			{
 				InitializeShadowImage(depthFrame, VisitorCtr.Zone, drawingContext);
@@ -358,7 +358,7 @@ namespace STimWPF
 		{
 			DrawingGroup dgColorImageAndSkeleton = new DrawingGroup();
 			DrawingImage drawingImage = new DrawingImage(dgColorImageAndSkeleton);
-			skeletonDrawer = new SkeletonDrawer(kinectSensor);
+			skeletonDrawer = new SkeletonDrawer(KinectSensor);
 			using (DrawingContext drawingContext = dgColorImageAndSkeleton.Open())
 			{
 				InitializeColorImage(colorFrame, drawingContext);
@@ -388,10 +388,10 @@ namespace STimWPF
 
 		public void Shutdown()
 		{
-			if (kinectSensor != null)
+			if (KinectSensor != null)
 			{
-				kinectSensor.Stop();
-				kinectSensor.Dispose();
+				KinectSensor.Stop();
+				KinectSensor.Dispose();
 			}
 			Recorder.Stop(false, true);
 		}

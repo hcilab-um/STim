@@ -107,7 +107,6 @@ namespace STimWPF.Controls
             }
 
             triggers = new DateTime[index];
-            Button a;
             CalculateTriggers();
             triggerTimer.Start();
         }
