@@ -153,14 +153,10 @@ namespace STimWPF.Interaction
 				RelativeCursorLocation = FindCursorPosition(skeleton, MouseBoundaries, selectionMethod);
 				AbsoluteCursorLocation = ConvertToAbsoluteCursorLocation(RelativeCursorLocation, MouseBoundaries);
 				//3- Looks for gestures [pressed, released]
-                ICollection<InteractionGesture> gestures = Recognizer.ProcessGestures(skeleton, deltaMilliseconds, absoluteCursorLocation, selectionMethod, HasUserClicked);
+        ICollection<InteractionGesture> gestures = Recognizer.ProcessGestures(skeleton, deltaMilliseconds, absoluteCursorLocation, selectionMethod, HasUserClicked);
 				if (gestures != null && gestures.Count > 0 && gestures.ElementAt(0).Type == GestureType.Tap)
 				{
 					LeftClick = true;
-				}
-				if (SelectionMethod == Interaction.SelectionMethod.Timer)
-				{
-					MouseController.SendMouseInput((int)AbsoluteCursorLocation.X, (int)AbsoluteCursorLocation.Y, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, leftClick);
 				}
 			}
 		}

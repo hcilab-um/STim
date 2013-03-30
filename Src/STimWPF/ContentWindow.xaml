@@ -22,11 +22,8 @@
 
 		<controls:ContentControl x:Name="contentCtrl" Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, 
                             Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}"
-							RelativeCursorLocation="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.RelativeCursorLocation}"
-							LeftClick="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.LeftClick}"
-							TimerState="{Binding ElementName=contentW, Path=CoreInstance.InteractionCtr.Recognizer.TimerState}"
-							KinectSensor="{Binding ElementName=contentW, Path=CoreInstance.KinectSensor}"
-							VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+														KinectSensor="{Binding ElementName=contentW, Path=CoreInstance.KinectSensor}"
+														VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
 		<!--<controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"
 							Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, 

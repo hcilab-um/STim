@@ -116,7 +116,6 @@
     <Compile Include="Interaction\DetailLAPage.cs" />
     <Compile Include="Interaction\MainPage.cs" />
     <Compile Include="Interaction\DetailWFPage.cs" />
-    <Compile Include="Interaction\MouseController.cs" />
     <Compile Include="Interaction\VisitorController.cs" />
     <Compile Include="ContentWindow.xaml.cs">
       <DependentUpon>ContentWindow.xaml</DependentUpon>

@@ -42,7 +42,6 @@ namespace STimWPF.Status
 
         private Timer Trigger { get; set; }
         private VisitorController VisitorContr { get; set; }
-        private InteractionController InteractionCtr { get; set; }
         private Controls.ContentControl ContentCtrl { get; set; }
         private int lastUserSkeletonId;
         private int currentUserSkeletonId;
