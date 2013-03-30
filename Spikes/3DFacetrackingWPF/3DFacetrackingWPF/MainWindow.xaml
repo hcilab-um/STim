@@ -1,24 +1,32 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-		mc:Ignorable="d" x:Class="_3DFacetrackingWPF.MainWindow"
-        WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
-        Title="MainWindow" Loaded="Window_Loaded_1" Closing="Window_Closing_1" Height="800" Width="800">
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:converters="clr-namespace:KinectWPF3D.Converters"
+		mc:Ignorable="d" x:Class="KinectWPF3D.MainWindow"
+    WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
+    Name="mWindow" Title="MainWindow" 
+		Loaded="Window_Loaded_1" Closing="Window_Closing_1" Height="800" Width="800">
+	<Window.Resources>
+		<converters:HeadViewMatrixConverter x:Key="hvmConverter"/>
+	</Window.Resources>
 	<Grid>
 		<Viewport3D x:Name="viewport" HorizontalAlignment="Stretch">
 			<Viewport3D.Camera>
-				<!--<PerspectiveCamera x:Name="pCamera" FieldOfView="47.07" Position="0.5375, 0.04, 1" LookDirection="-0.435539, 0, -1" UpDirection="0,1,0" />-->
-				<!--<PerspectiveCamera x:Name="pCamera" FieldOfView="55.07" Position="0, 0.04, 1" LookDirection="0, 0, -1" UpDirection="0,1,0" />-->
-				<PerspectiveCamera x:Name="pCamera" Position="0, 0.04, 1" LookDirection="0, 0, -1" UpDirection="0,1,0" />
-				<!--<MatrixCamera x:Name="mCamera">
-					<MatrixCamera.ViewMatrix>
-						<Matrix3D M11="1" M12="0" M13="0" M14="0"
-											M21="0" M22="1" M23="0" M24="0"
-											M31="0" M32="1" M33="0" M34="0"/>
-					</MatrixCamera.ViewMatrix>
-				</MatrixCamera>-->
-				<!--<OrthographicCamera Position="0, 0, 0" LookDirection="0, 0, -1" UpDirection="0,1,0"/>-->
+				<MatrixCamera x:Name="mCamera" ViewMatrix="{Binding ElementName=mWindow, Path=HeadV, Converter=hvmConverter}">
+					<!--<MatrixCamera.ViewMatrix>
+						<Matrix3D M11="-1"		M12="0"			M13="0"				M14="0"
+											M21="0"			M22="-1"		M23="0"				M24="0"
+											M31="0"			M32="0"			M33="-1"			M34="-1"
+											OffsetX="0" OffsetY="0" OffsetZ="0"	  M44="1"/>
+					</MatrixCamera.ViewMatrix>-->
+					<!--<MatrixCamera.ProjectionMatrix>
+						<Matrix3D M11="-1"		M12="0"			M13="0"				M14="0"
+											M21="0"			M22="-1"		M23="0"				M24="0"
+											M31="0"			M32="0"			M33="-1"			M34="0"
+											OffsetX="0" OffsetY="0" OffsetZ="-1"	M44="1"/>
+					</MatrixCamera.ProjectionMatrix>-->
+				</MatrixCamera>
 			</Viewport3D.Camera>
 			<ModelVisual3D>
 				<ModelVisual3D.Content>
@@ -47,7 +55,7 @@
 								<DiffuseMaterial Brush="Yellow"/>
 							</GeometryModel3D.Material>
 							<GeometryModel3D.BackMaterial>
-								<DiffuseMaterial x:Name="dM" Brush="Transparent"/>
+								<DiffuseMaterial Brush="Transparent"/>
 							</GeometryModel3D.BackMaterial>
 						</GeometryModel3D>
 					</Model3DGroup>

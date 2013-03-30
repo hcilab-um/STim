@@ -15,13 +15,14 @@ using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using _3DTools;
+using System.ComponentModel;
 
-namespace _3DFacetrackingWPF
+namespace KinectWPF3D
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class MainWindow : Window, INotifyPropertyChanged
 	{
 		const double SCREEN_WIDTH = 1.02;
 		const double SCREEN_HEIGHT = 0.58;
@@ -32,6 +33,17 @@ namespace _3DFacetrackingWPF
 
 		private static readonly Point3D startH = new Point3D(-0.5375, -0.29, -0.5);
 		private static readonly Point3D endH = new Point3D(0.5375, -0.29, -0.5);
+
+		private Vector3D headV;
+		public Vector3D HeadV
+		{
+			get { return headV; }
+			set
+			{
+				headV = value;
+				OnPropertyChanged("HeadV");
+			}
+		}
 
 		public MainWindow()
 		{
@@ -136,12 +148,10 @@ namespace _3DFacetrackingWPF
 		private void ProcessSkeleton(Skeleton skeleton)
 		{
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
-			Vector3D headP = new Vector3D();
-			headP.X = head.Position.X;
-			headP.Y = head.Position.Y;
-			headP.Z = head.Position.Z;
-			pCamera.Position = (Point3D)headP;
-			pCamera.LookDirection = -headP;
+			if (head != null)
+			{
+				HeadV = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
+			}
 		}
 
 		private void Window_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
@@ -152,5 +162,12 @@ namespace _3DFacetrackingWPF
 			}
 		}
 
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		private void OnPropertyChanged(String name)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(name));
+		}
 	}
 }

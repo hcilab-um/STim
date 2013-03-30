@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DFacetrackingWPF", "3DFacetrackingWPF\3DFacetrackingWPF.csproj", "{901FE9A6-CC62-4B16-9A5A-C0E330C80318}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectWPF3D", "3DFacetrackingWPF\KinectWPF3D.csproj", "{901FE9A6-CC62-4B16-9A5A-C0E330C80318}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

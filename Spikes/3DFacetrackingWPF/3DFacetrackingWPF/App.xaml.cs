@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace _3DFacetrackingWPF
+namespace KinectWPF3D
 {
 	/// <summary>
 	/// Interaction logic for App.xaml
