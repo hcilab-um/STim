@@ -150,7 +150,7 @@ namespace KinectWPF3D
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
 			if (head != null)
 			{
-				HeadV = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
+				HeadV = new Vector3D(head.Position.X, head.Position.Y+0.405, head.Position.Z+1);
 			}
 		}
 

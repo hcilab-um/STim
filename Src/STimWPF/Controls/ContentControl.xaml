@@ -23,7 +23,7 @@
 			<Setter Property="Width" Value="150"/>
 			<Setter Property="BorderBrush" Value="Black"/>
 			<Setter Property="BorderThickness" Value="2"/>
-			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Background" Value="SkyBlue"/>
 		</Style>
 		<Style x:Key="btPictureStyle" TargetType="{x:Type k:KinectTileButton}">
 			<Setter Property="Background" Value="Transparent"/>
@@ -49,6 +49,7 @@
 			<Setter Property="Height" Value="60"/>
 			<Setter Property="BorderBrush" Value="Black"/>
 			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Background" Value="SkyBlue"/>
 		</Style>
 		<Style x:Key="tbTitleStyle" TargetType="TextBlock">
 			<Setter Property="HorizontalAlignment" Value="Left"/>
@@ -66,6 +67,7 @@
 			<Setter Property="FontSize" Value="30"/>
 			<Setter Property="BorderBrush" Value="Black"/>
 			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="Background" Value="SkyBlue"/>
 			<Setter Property="Height" Value="100"/>
 			<Setter Property="Width" Value="230"/>
 			<EventSetter Event="Click" Handler="OnMainPageClick"/>
@@ -108,40 +110,40 @@
 							<TextBlock Margin="20,0" Style="{StaticResource ResourceKey=tbTitleStyle}" Text="10 flatteners" />
 							<StackPanel Margin="20,20,0,0">
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-									<k:KinectTileButton Name="BerlinWall" Style="{StaticResource ResourceKey=btWFStyle}" Background="White" Click="OnWFDetailClick">
+									<k:KinectTileButton Name="BerlinWall" Style="{StaticResource ResourceKey=btWFStyle}"  Click="OnWFDetailClick">
 										Berlin Wall Collapse
 									</k:KinectTileButton>
-									<k:KinectTileButton Name="Workflow" Style="{StaticResource ResourceKey=btWFStyle}" Background="White" Click="OnWFDetailClick">
+									<k:KinectTileButton Name="Workflow" Style="{StaticResource ResourceKey=btWFStyle}"  Click="OnWFDetailClick">
 										Workflow software
 									</k:KinectTileButton>
-									<k:KinectTileButton Name="Offshoring" Style="{StaticResource ResourceKey=btWFStyle}" Background="White" Click="OnWFDetailClick">
+									<k:KinectTileButton Name="Offshoring" Style="{StaticResource ResourceKey=btWFStyle}"  Click="OnWFDetailClick">
 										Offshoring
 									</k:KinectTileButton>
 								</StackPanel>
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-									<k:KinectTileButton Name="Netscape" Style="{StaticResource ResourceKey=btWFStyle}" Background="White" Click="OnWFDetailClick">
+									<k:KinectTileButton Name="Netscape" Style="{StaticResource ResourceKey=btWFStyle}"  Click="OnWFDetailClick">
 										Netscape
 									</k:KinectTileButton>
-									<k:KinectTileButton Name="SupplyChain" Style="{StaticResource ResourceKey=btWFStyle}" Background="White" Click="OnWFDetailClick">
+									<k:KinectTileButton Name="SupplyChain" Style="{StaticResource ResourceKey=btWFStyle}"  Click="OnWFDetailClick">
 										Supply chain
 									</k:KinectTileButton>
-									<k:KinectTileButton Name="Uploading" Style="{StaticResource ResourceKey=btWFStyle}" Background="White" Click="OnWFDetailClick">
+									<k:KinectTileButton Name="Uploading" Style="{StaticResource ResourceKey=btWFStyle}"  Click="OnWFDetailClick">
 										Uploading
 									</k:KinectTileButton>
 								</StackPanel>
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-									<k:KinectTileButton Name="Informing" Style="{StaticResource ResourceKey=btWFStyle}" Background="White" Click="OnWFDetailClick">
+									<k:KinectTileButton Name="Informing" Style="{StaticResource ResourceKey=btWFStyle}"  Click="OnWFDetailClick">
 										Informing
 									</k:KinectTileButton>
-									<k:KinectTileButton Name="Insourcing" Style="{StaticResource ResourceKey=btWFStyle}" Background="White" Click="OnWFDetailClick">
+									<k:KinectTileButton Name="Insourcing" Style="{StaticResource ResourceKey=btWFStyle}"  Click="OnWFDetailClick">
 										Insourcing
 									</k:KinectTileButton>
-									<k:KinectTileButton Name="Outsourcing" Style="{StaticResource ResourceKey=btWFStyle}" Background="White" Click="OnWFDetailClick">
+									<k:KinectTileButton Name="Outsourcing" Style="{StaticResource ResourceKey=btWFStyle}"  Click="OnWFDetailClick">
 										Outsourcing
 									</k:KinectTileButton>
 								</StackPanel>
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-									<k:KinectTileButton Name="Sterois" Style="{StaticResource ResourceKey=btWFStyle}" Background="White" Click="OnWFDetailClick">
+									<k:KinectTileButton Name="Sterois" Style="{StaticResource ResourceKey=btWFStyle}"  Click="OnWFDetailClick">
 										“The Sterois”
 									</k:KinectTileButton>
 								</StackPanel>

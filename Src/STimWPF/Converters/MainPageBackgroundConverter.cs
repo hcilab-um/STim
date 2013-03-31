@@ -15,8 +15,8 @@ namespace STimWPF.Converters
             MainPage mp = (MainPage)value;
             string param = (string)parameter;
             if (mp.ToString().Equals(param))
-                return Brushes.SkyBlue;
-            return Brushes.White;
+                return Brushes.GreenYellow;
+						return Brushes.SkyBlue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

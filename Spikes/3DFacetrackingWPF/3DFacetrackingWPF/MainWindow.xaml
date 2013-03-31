@@ -15,24 +15,18 @@
 			<Viewport3D.Camera>
 				<MatrixCamera x:Name="mCamera">
 											<!--ViewMatrix="{Binding ElementName=mWindow, Path=HeadV, Converter={StaticResource ResourceKey=hvmConverter}}">-->
-					<!--<MatrixCamera.ViewMatrix>
-						<Matrix3D M11="-0.5"		M12="0"			M13="0"				M14="0"
-											M21="0"			M22="-0.25"		M23="0"				M24="0"
-											M31="0"			M32="0"			M33="-0.5"			M34="-0.25"
-											OffsetX="0" OffsetY="0" OffsetZ="0"	  M44="1"/>
-					</MatrixCamera.ViewMatrix>-->
 					<MatrixCamera.ViewMatrix>
-						<Matrix3D M11="-2"	M12="0"				M13="0"					M14="0"
-											M21="0"			M22="-4"		M23="0"					M24="0"
-											M31="0"			M32="0"				M33="-2"				M34="-2"
+						<Matrix3D M11="-1"		M12="0"				M13="0"					M14="0"
+											M21="0"			M22="-1"			M23="0"					M24="0"
+											M31="0"			M32="0"				M33="-1"				M34="-1"
 											OffsetX="0" OffsetY="0"		OffsetZ="0"			M44="1"/>
 					</MatrixCamera.ViewMatrix>
-					<!--<MatrixCamera.ProjectionMatrix>
-						<Matrix3D M11="1"					M12="0"					M13="0"				M14="0"
-											M21="0"					M22="1"					M23="0"				M24="0"
-											M31="0"					M32="0"					M33="-3"			M34="-4"
+					<MatrixCamera.ProjectionMatrix>
+						<Matrix3D M11="1.8604"		M12="0"					M13="0"				M14="0"
+											M21="0"					M22="3.4482"		M23="0"				M24="0"
+											M31="0"					M32="0"					M33="5"				M34="6"
 											OffsetX="0"			OffsetY="0"			OffsetZ="-1"	M44="0"/>
-					</MatrixCamera.ProjectionMatrix>-->
+					</MatrixCamera.ProjectionMatrix>
 				</MatrixCamera>
 			</Viewport3D.Camera>
 			<ModelVisual3D>
