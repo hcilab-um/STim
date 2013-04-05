@@ -52,10 +52,10 @@ namespace KinectWPF3D
 			Point3D cameraPosition = new Point3D(0, 0.04, 1);
 			Vector3D lookDirection = new Vector3D(0, 0, -1);
 			Vector3D upDirection = new Vector3D(0, 1, 0);
-			double fov = 56.52;
+			double fov = 32.34;
 			double zn = 1;
 			double zf = 100;
-			double aspectRatio = 1; //0.5375/0.29;
+			double aspectRatio = 0.5375/0.29;
 			mCamera.ViewMatrix = Math3D.SetViewMatrix(cameraPosition, lookDirection, upDirection);
 			mCamera.ProjectionMatrix = Math3D.SetPerspectiveFov(fov, aspectRatio, zn, zf);
 		}
@@ -63,7 +63,7 @@ namespace KinectWPF3D
 		private void drawGrid()
 		{
 			ScreenSpaceLines3D normal0Wire = new ScreenSpaceLines3D();
-			int width = 1;
+			int width = 2;
 			normal0Wire.Thickness = width;
 			normal0Wire.Color = Colors.Red;
 			Point3D a, b;
