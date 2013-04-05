@@ -49,6 +49,15 @@ namespace KinectWPF3D
 		{
 			InitializeComponent();
 			drawGrid();
+			Point3D cameraPosition = new Point3D(0, 0.04, 1);
+			Vector3D lookDirection = new Vector3D(0, 0, -1);
+			Vector3D upDirection = new Vector3D(0, 1, 0);
+			double fov = 56.52;
+			double zn = 1;
+			double zf = 100;
+			double aspectRatio = 1; //0.5375/0.29;
+			mCamera.ViewMatrix = Math3D.SetViewMatrix(cameraPosition, lookDirection, upDirection);
+			mCamera.ProjectionMatrix = Math3D.SetPerspectiveFov(fov, aspectRatio, zn, zf);
 		}
 
 		private void drawGrid()

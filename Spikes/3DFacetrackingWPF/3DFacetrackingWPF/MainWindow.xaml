@@ -13,39 +13,25 @@
 	<Grid>
 		<Viewport3D x:Name="viewport" HorizontalAlignment="Stretch">
 			<Viewport3D.Camera>
-				<MatrixCamera x:Name="mCamera">
-											<!--ViewMatrix="{Binding ElementName=mWindow, Path=HeadV, Converter={StaticResource ResourceKey=hvmConverter}}">-->
-					<MatrixCamera.ViewMatrix>
-						<Matrix3D M11="-1"		M12="0"				M13="0"					M14="0"
-											M21="0"			M22="-1"			M23="0"					M24="0"
-											M31="0"			M32="0"				M33="-1"				M34="-1"
-											OffsetX="0" OffsetY="0"		OffsetZ="0"			M44="1"/>
-					</MatrixCamera.ViewMatrix>
-					<MatrixCamera.ProjectionMatrix>
-						<Matrix3D M11="1.8604"		M12="0"					M13="0"				M14="0"
-											M21="0"					M22="3.4482"		M23="0"				M24="0"
-											M31="0"					M32="0"					M33="5"				M34="6"
-											OffsetX="0"			OffsetY="0"			OffsetZ="-1"	M44="0"/>
-					</MatrixCamera.ProjectionMatrix>
-				</MatrixCamera>
+				<MatrixCamera x:Name="mCamera"/>
 			</Viewport3D.Camera>
 			<ModelVisual3D>
 				<ModelVisual3D.Content>
 					<Model3DGroup x:Name="model3dGroup">
 						<DirectionalLight Color="White" Direction="0.5, -0.5, -1"/>
-						<DirectionalLight Color="White" Direction="-0.5, -0.5, -1"/>
+						<DirectionalLight Color="White" Direction="-0.5, 0.5, -1"/>
 						<GeometryModel3D x:Name="gm3D">
 							<GeometryModel3D.Geometry>
 								<!--Every 3 values represent a 3D point and indexes {0-7}-->
 								<!--TriangleIndices mark triangle in counter clockwise order as front-->
-								<MeshGeometry3D Positions="-0.5375,-0.29, -0.5
-																						0.5375,-0.29, -0.5 
-																					  0.5375, 0.29, -0.5
-																					 -0.5375, 0.29, -0.5
-																					 -0.5375,-0.29,  0
-																					  0.5375,-0.29,  0
-																					  0.5375, 0.29,  0
-																					 -0.5375, 0.29,  0" 
+								<MeshGeometry3D Positions="-0.5375,-0.29,  -0.5
+																						0.5375,-0.29,  -0.5 
+																					  0.5375, 0.29,  -0.5
+																					 -0.5375, 0.29,  -0.5
+																					 -0.5375,-0.29,   0
+																					  0.5375,-0.29,   0
+																					  0.5375, 0.29,   0
+																					 -0.5375, 0.29,   0" 
 													TriangleIndices="0 1 2 2 3 0
 																					 5 6 2 2 1 5
 																					 4 0 3 3 7 4
