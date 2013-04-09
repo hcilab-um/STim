@@ -8,6 +8,12 @@ namespace KinectWPF3D
 {
 	public class Math3D
 	{
+
+		/// <summary>
+		/// LookAtRH
+		/// </summary>
+		/// http://msdn.microsoft.com/en-us/library/bb281711(v=vs.85).aspx
+		/// <returns></returns>
 		public static Matrix3D SetViewMatrix(Point3D cameraPosition, Vector3D lookDirection, Vector3D upDirection)
 		{
 			// Normalize vectors:
@@ -22,15 +28,9 @@ namespace KinectWPF3D
 			// Construct M matrix:
 			Matrix3D M = new Matrix3D()
 			{
-				M11 = XScale.X,
-				M12 = YScale.X,
-				M13 = ZScale.X,
-				M21 = XScale.Y,
-				M22 = YScale.Y,
-				M23 = ZScale.Y,
-				M31 = XScale.Z,
-				M32 = YScale.Z,
-				M33 = ZScale.Z
+				M11 = XScale.X, M12 = YScale.X, M13 = ZScale.X,
+				M21 = XScale.Y, M22 = YScale.Y, M23 = ZScale.Y,
+				M31 = XScale.Z, M32 = YScale.Z, M33 = ZScale.Z
 			};
 
 			// Translate the camera position to the origin:
@@ -45,8 +45,14 @@ namespace KinectWPF3D
 			return viewMatrix;
 		}
 
+		/// <summary>
+		/// PerspectiveOffCenterRH
+		/// </summary>
+		/// http://msdn.microsoft.com/en-us/library/bb281731(v=vs.85).aspx
+		/// <returns></returns>
 		public static Matrix3D SetPerspectiveOffCenter(double left, double right, double bottom, double top, double near, double far)
 		{
+			//Right H
 			Matrix3D perspectiveMatrix = new Matrix3D();
 			perspectiveMatrix.M11 = 2 * near / (right - left);
 			perspectiveMatrix.M22 = 2 * near / (top - bottom);
@@ -56,18 +62,7 @@ namespace KinectWPF3D
 			perspectiveMatrix.M34 = -1.0;
 			perspectiveMatrix.OffsetZ = near * far / (near - far);
 			perspectiveMatrix.M44 = 0;
-			return perspectiveMatrix;
-		}
 
-		public static Matrix3D SetPerspective(double width, double height, double near, double far)
-		{
-			Matrix3D perspectiveMatrix = new Matrix3D();
-			perspectiveMatrix.M11 = 2 * near / width;
-			perspectiveMatrix.M22 = 2 * near / height;
-			perspectiveMatrix.M33 = far / (near - far);
-			perspectiveMatrix.M34 = -1.0;
-			perspectiveMatrix.OffsetZ = near * far / (near - far);
-			perspectiveMatrix.M44 = 0;
 			return perspectiveMatrix;
 		}
 
@@ -84,5 +79,6 @@ namespace KinectWPF3D
 			perspectiveMatrix.M44 = 0;
 			return perspectiveMatrix;
 		}
+
 	}
 }

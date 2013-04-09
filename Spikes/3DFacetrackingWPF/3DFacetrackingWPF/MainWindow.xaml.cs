@@ -35,6 +35,7 @@ namespace KinectWPF3D
 		private static readonly Point3D endH = new Point3D(0.5375, -0.29, -0.5);
 
 		private Vector3D headV;
+
 		public Vector3D HeadV
 		{
 			get { return headV; }
@@ -49,15 +50,18 @@ namespace KinectWPF3D
 		{
 			InitializeComponent();
 			drawGrid();
-			Point3D cameraPosition = new Point3D(0, 0.04, 1);
-			Vector3D lookDirection = new Vector3D(0, 0, -1);
-			Vector3D upDirection = new Vector3D(0, 1, 0);
-			double fov = 32.34;
-			double zn = 1;
-			double zf = 100;
-			double aspectRatio = 0.5375/0.29;
-			mCamera.ViewMatrix = Math3D.SetViewMatrix(cameraPosition, lookDirection, upDirection);
-			mCamera.ProjectionMatrix = Math3D.SetPerspectiveFov(fov, aspectRatio, zn, zf);
+			Vector3D v = new Vector3D(0, 0.04, 1);
+			v.Normalize();
+			HeadV = v;
+			//Point3D cameraPosition = new Point3D(0.5375, 0.04, 1);
+			//Vector3D lookDirection = new Vector3D(-0.435539, 0, -1);
+			//Vector3D upDirection = new Vector3D(0, 1, 0);
+			//double fov = Math.Atan(0.29) * 180 / Math.PI * 2;
+			//double zn = 1;
+			//double zf = 100;
+			//double aspectRatio = 0.5375 / 0.29;
+			//mCamera.ViewMatrix = Math3D.SetViewMatrix(cameraPosition, lookDirection, upDirection);
+			//mCamera.ProjectionMatrix = Math3D.SetPerspectiveFov(fov, aspectRatio, zn, zf);
 		}
 
 		private void drawGrid()
@@ -67,7 +71,7 @@ namespace KinectWPF3D
 			normal0Wire.Thickness = width;
 			normal0Wire.Color = Colors.Red;
 			Point3D a, b;
-			for (int i = 0; i < 107; i++)
+			for (int i = 0; i <= 107; i++)
 			{
 				a = startV;
 				b = endV;
@@ -77,7 +81,7 @@ namespace KinectWPF3D
 				normal0Wire.Points.Add(b);
 			}
 
-			for (int i = 0; i < 58; i++)
+			for (int i = 0; i <= 58; i++)
 			{
 				a = startH;
 				b = endH;
@@ -148,6 +152,7 @@ namespace KinectWPF3D
 					}
 				}
 			}
+
 			if (skeleton != null)
 			{
 				ProcessSkeleton(skeleton);
@@ -159,7 +164,11 @@ namespace KinectWPF3D
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
 			if (head != null)
 			{
-				HeadV = new Vector3D(head.Position.X, head.Position.Y+0.405, head.Position.Z+1);
+				//HeadV = new Vector3D(0, 0.04, 1);
+				//HeadV = new Vector3D(head.Position.X, head.Position.Y+0.405, head.Position.Z+0.5);
+				Vector3D v = new Vector3D(head.Position.X, head.Position.Y + 0.405, head.Position.Z);
+				//v.Normalize();
+				HeadV = v;
 			}
 		}
 

@@ -9,11 +9,14 @@
 		Loaded="Window_Loaded_1" Closing="Window_Closing_1" Height="580" Width="1075">
 	<Window.Resources>
 		<converters:HeadViewMatrixConverter x:Key="hvmConverter"/>
+		<converters:HeadProjectionMatrixConverter x:Key="hpmConverter"/>
 	</Window.Resources>
 	<Grid>
 		<Viewport3D x:Name="viewport" HorizontalAlignment="Stretch">
 			<Viewport3D.Camera>
-				<MatrixCamera x:Name="mCamera"/>
+				<MatrixCamera x:Name="mCamera" 
+											ViewMatrix="{Binding ElementName=mWindow, Path=HeadV, Converter={StaticResource ResourceKey=hvmConverter}}"
+											ProjectionMatrix="{Binding ElementName=mWindow, Path=HeadV, Converter={StaticResource ResourceKey=hpmConverter}}"/>
 			</Viewport3D.Camera>
 			<ModelVisual3D>
 				<ModelVisual3D.Content>
@@ -49,6 +52,64 @@
 				</ModelVisual3D.Content>
 			</ModelVisual3D>
 		</Viewport3D>
-		<TextBlock Name="tb" HorizontalAlignment="Center" Margin="0,30" Text="123"/>
+		<StackPanel Orientation="Vertical">
+			<StackPanel Name="spViewMatrix" Orientation="Vertical" Width="400" HorizontalAlignment="Left">
+				<StackPanel Orientation="Horizontal">
+					<Label Width="100" FontSize="20" Foreground="Blue"  Content="{Binding ElementName=mCamera, Path=ViewMatrix.M11, FallbackValue=1}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M12, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M13, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M14, FallbackValue=0}"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M21, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M22, FallbackValue=1}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M23, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M24, FallbackValue=0}"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M31, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M32, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M33, FallbackValue=1}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M34, FallbackValue=0}"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.OffsetX, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.OffsetY, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.OffsetZ, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M44, FallbackValue=1}"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Name="spProjectionMatrix" Orientation="Vertical" Margin="0,50" Width="400" HorizontalAlignment="Left">
+				<StackPanel Orientation="Horizontal">
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M11, FallbackValue=1}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M12, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M13, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M14, FallbackValue=0}"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M21, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M22, FallbackValue=1}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M23, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M24, FallbackValue=0}"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M31, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M32, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M33, FallbackValue=1}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M34, FallbackValue=0}"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.OffsetX, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.OffsetY, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.OffsetZ, FallbackValue=0}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M44, FallbackValue=1}"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="0,50" Width="300" HorizontalAlignment="Left">
+				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mWindow, Path=HeadV.X, FallbackValue=0}"/>
+				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mWindow, Path=HeadV.Y, FallbackValue=0}"/>
+				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mWindow, Path=HeadV.Z, FallbackValue=0}"/>
+			</StackPanel>
+		</StackPanel>
 	</Grid>
 </Window>
