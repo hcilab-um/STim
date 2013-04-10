@@ -23,11 +23,11 @@
 					<Model3DGroup x:Name="model3dGroup">
 						<DirectionalLight Color="White" Direction="0.5, -0.5, -1"/>
 						<DirectionalLight Color="White" Direction="-0.5, 0.5, -1"/>
-						<GeometryModel3D x:Name="gm3D">
-							<GeometryModel3D.Geometry>
+						<!--<GeometryModel3D x:Name="gm3D">
+							<GeometryModel3D.Geometry>-->
 								<!--Every 3 values represent a 3D point and indexes {0-7}-->
 								<!--TriangleIndices mark triangle in counter clockwise order as front-->
-								<MeshGeometry3D Positions="-0.5375,-0.29,  -0.5
+								<!--<MeshGeometry3D Positions="-0.5375,-0.29,  -0.5
 																						0.5375,-0.29,  -0.5 
 																					  0.5375, 0.29,  -0.5
 																					 -0.5375, 0.29,  -0.5
@@ -47,6 +47,54 @@
 							<GeometryModel3D.BackMaterial>
 								<DiffuseMaterial Brush="Blue"/>
 							</GeometryModel3D.BackMaterial>
+						</GeometryModel3D>-->
+						<GeometryModel3D>
+							<GeometryModel3D.Geometry>
+								<MeshGeometry3D Positions="0.1895,-0.29, -0.5
+																					 0.3375,-0.29, -0.5
+																					 0.3375,-0.165,-0.5
+																					 0.1895,-0.165,-0.5
+																					 0.1895,-0.29, -0.304
+																					 0.3375,-0.29, -0.304
+																					 0.3375,-0.165,-0.304
+																					 0.1895,-0.165,-0.304" 
+													TriangleIndices="0 1 2 2 3 0
+																					 5 6 2 2 1 5
+																					 4 0 3 3 7 4
+																					 7 3 2 2 6 7
+																					 0 4 5 5 1 0
+																					 4 5 6 6 7 4"/>
+							</GeometryModel3D.Geometry>
+							<GeometryModel3D.Material>
+								<DiffuseMaterial Brush="Transparent"/>
+							</GeometryModel3D.Material>
+							<GeometryModel3D.BackMaterial>
+								<DiffuseMaterial Brush="Transparent"/>
+							</GeometryModel3D.BackMaterial>
+						</GeometryModel3D>
+						<GeometryModel3D>
+							<GeometryModel3D.Geometry>
+								<MeshGeometry3D Positions="0.3895,-0.29, -0.5
+																					 0.5375,-0.29, -0.5
+																					 0.5375,-0.165,-0.5
+																					 0.3895,-0.165,-0.5
+																					 0.3895,-0.29, -0.304
+																					 0.5375,-0.29, -0.304
+																					 0.5375,-0.165,-0.304
+																					 0.3895,-0.165,-0.304" 
+													TriangleIndices="0 1 2 2 3 0
+																					 5 6 2 2 1 5
+																					 4 0 3 3 7 4
+																					 7 3 2 2 6 7
+																					 0 4 5 5 1 0
+																					 4 5 6 6 7 4"/>
+							</GeometryModel3D.Geometry>
+							<GeometryModel3D.Material>
+								<DiffuseMaterial Brush="Gray"/>
+							</GeometryModel3D.Material>
+							<GeometryModel3D.BackMaterial>
+								<DiffuseMaterial Brush="Gray"/>
+							</GeometryModel3D.BackMaterial>
 						</GeometryModel3D>
 					</Model3DGroup>
 				</ModelVisual3D.Content>
@@ -55,7 +103,7 @@
 		<StackPanel Orientation="Vertical">
 			<StackPanel Name="spViewMatrix" Orientation="Vertical" Width="400" HorizontalAlignment="Left">
 				<StackPanel Orientation="Horizontal">
-					<Label Width="100" FontSize="20" Foreground="Blue"  Content="{Binding ElementName=mCamera, Path=ViewMatrix.M11, FallbackValue=1}"/>
+					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M11, FallbackValue=1}"/>
 					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M12, FallbackValue=0}"/>
 					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M13, FallbackValue=0}"/>
 					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M14, FallbackValue=0}"/>

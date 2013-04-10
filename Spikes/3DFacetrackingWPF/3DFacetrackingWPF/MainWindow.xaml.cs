@@ -49,19 +49,7 @@ namespace KinectWPF3D
 		public MainWindow()
 		{
 			InitializeComponent();
-			drawGrid();
-			Vector3D v = new Vector3D(0, 0.04, 1);
-			v.Normalize();
-			HeadV = v;
-			//Point3D cameraPosition = new Point3D(0.5375, 0.04, 1);
-			//Vector3D lookDirection = new Vector3D(-0.435539, 0, -1);
-			//Vector3D upDirection = new Vector3D(0, 1, 0);
-			//double fov = Math.Atan(0.29) * 180 / Math.PI * 2;
-			//double zn = 1;
-			//double zf = 100;
-			//double aspectRatio = 0.5375 / 0.29;
-			//mCamera.ViewMatrix = Math3D.SetViewMatrix(cameraPosition, lookDirection, upDirection);
-			//mCamera.ProjectionMatrix = Math3D.SetPerspectiveFov(fov, aspectRatio, zn, zf);
+			//drawGrid();
 		}
 
 		private void drawGrid()
@@ -164,11 +152,7 @@ namespace KinectWPF3D
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
 			if (head != null)
 			{
-				//HeadV = new Vector3D(0, 0.04, 1);
-				//HeadV = new Vector3D(head.Position.X, head.Position.Y+0.405, head.Position.Z+0.5);
-				Vector3D v = new Vector3D(head.Position.X, head.Position.Y + 0.405, head.Position.Z);
-				//v.Normalize();
-				HeadV = v;
+				HeadV = new Vector3D(head.Position.X, head.Position.Y+0.32, head.Position.Z);
 			}
 		}
 

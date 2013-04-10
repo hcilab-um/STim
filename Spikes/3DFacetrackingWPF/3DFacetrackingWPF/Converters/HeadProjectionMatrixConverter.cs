@@ -17,15 +17,14 @@ namespace KinectWPF3D.Converters
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			Vector3D CamPos = (Vector3D)value;
+			CamPos.Y -= 0.04;
 			double zn = 1;
 			double zf = 10;
-			double aspectRatio = HALF_WIDTH / HALF_HEIGHT;
-			double left = zn * (-0.28 * aspectRatio - CamPos.X) / CamPos.Z;
-			double right = zn * (0.28 * aspectRatio - CamPos.X) / CamPos.Z;
-			double bottom = zn * (-0.28 - CamPos.Y) / CamPos.Z;
-			double top = zn * (0.28 - CamPos.Y) / CamPos.Z;
+			double left = zn * (-HALF_WIDTH - CamPos.X) / CamPos.Z;
+			double right = zn * (HALF_WIDTH - CamPos.X) / CamPos.Z;
+			double bottom = zn * (-HALF_HEIGHT - CamPos.Y) / CamPos.Z;
+			double top = zn * (HALF_HEIGHT - CamPos.Y) / CamPos.Z;
 			return Math3D.SetPerspectiveOffCenter(left, right, bottom, top, zn, zf);
-			//return Math3D.SetPerspectiveOffCenter(-HALF_WIDTH, HALF_WIDTH, -HALF_HEIGHT, HALF_HEIGHT, zn, zf);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

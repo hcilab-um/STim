@@ -14,10 +14,6 @@ namespace KinectWPF3D.Converters
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			Vector3D CamPos = (Vector3D)value;
-			Vector3D lookTarget = -CamPos;
-			//lookTarget.Z = 0;
-			//lookTarget.Y += 0.04;
-
 			return Math3D.SetViewMatrix((Point3D)CamPos, LOOK_DIR, UP_DIR);
 		}
 
