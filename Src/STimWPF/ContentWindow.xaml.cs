@@ -86,16 +86,16 @@ namespace STimWPF
 
         private void ContentWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            CoreInstance.DepthImageReady += new EventHandler<DepthImageReadyArgs>(CoreInstance_DepthImageReady);
+            //CoreInstance.DepthImageReady += new EventHandler<DepthImageReadyArgs>(CoreInstance_DepthImageReady);
         }
 
-        void CoreInstance_DepthImageReady(object sender, DepthImageReadyArgs e)
-        {
-            if (this.iKinectDepthBig.IsVisible)
-                this.iKinectDepthBig.Source = e.Frame;
-            if (this.iKinectDepthSmall.IsVisible)
-                this.iKinectDepthSmall.Source = e.Frame;
-        }
+				//void CoreInstance_DepthImageReady(object sender, DepthImageReadyArgs e)
+				//{
+				//    if (this.iKinectDepthBig.IsVisible)
+				//        this.iKinectDepthBig.Source = e.Frame;
+				//    if (this.iKinectDepthSmall.IsVisible)
+				//        this.iKinectDepthSmall.Source = e.Frame;
+				//}
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(String name)

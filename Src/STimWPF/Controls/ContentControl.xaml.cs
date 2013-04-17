@@ -103,10 +103,10 @@ namespace STimWPF.Controls
 		void OnWFDetailClick(object sender, RoutedEventArgs e)
 		{
 			KinectTileButton bt = (KinectTileButton)sender;
-			foreach (DetailWFPage d in Enum.GetValues(typeof(DetailWFPage)))
+			foreach (DetailWFPage dWFP in Enum.GetValues(typeof(DetailWFPage)))
 			{
-				if (d.ToString().Equals(bt.Name))
-					DetailWFPage = d;
+				if (dWFP.ToString().Equals(bt.Name))
+					DetailWFPage = dWFP;
 			}
 		}
 
