@@ -24,15 +24,15 @@ namespace KinectWPF3D
 	/// </summary>
 	public partial class MainWindow : Window, INotifyPropertyChanged
 	{
-		const double SCREEN_WIDTH = 1.02;
-		const double SCREEN_HEIGHT = 0.58;
+		const double SCREEN_WIDTH = 1.062;
+		const double SCREEN_HEIGHT = 0.582;
 		private KinectSensor kinectSensor;
 
-		private static readonly Point3D startV = new Point3D(-0.5375, -0.29, -0.5);
-		private static readonly Point3D endV = new Point3D(-0.5375, 0.29, -0.5);
+		private static readonly Point3D startV = new Point3D(-0.530, -0.29, -0.5);
+		private static readonly Point3D endV = new Point3D(-0.530, 0.29, -0.5);
 
-		private static readonly Point3D startH = new Point3D(-0.5375, -0.29, -0.5);
-		private static readonly Point3D endH = new Point3D(0.5375, -0.29, -0.5);
+		private static readonly Point3D startH = new Point3D(-0.530, -0.29, -0.5);
+		private static readonly Point3D endH = new Point3D(0.530, -0.29, -0.5);
 
 		private Vector3D headV;
 
@@ -49,7 +49,7 @@ namespace KinectWPF3D
 		public MainWindow()
 		{
 			InitializeComponent();
-			//drawGrid();
+			drawGrid();
 		}
 
 		private void drawGrid()
@@ -58,38 +58,39 @@ namespace KinectWPF3D
 			int width = 2;
 			normal0Wire.Thickness = width;
 			normal0Wire.Color = Colors.Red;
-			Point3D a, b;
-			for (int i = 0; i <= 107; i++)
-			{
-				a = startV;
-				b = endV;
-				a.X += i * 0.01;
-				b.X += i * 0.01;
-				normal0Wire.Points.Add(a);
-				normal0Wire.Points.Add(b);
-			}
 
-			for (int i = 0; i <= 58; i++)
-			{
-				a = startH;
-				b = endH;
-				a.Y += i * 0.01;
-				b.Y += i * 0.01;
-				normal0Wire.Points.Add(a);
-				normal0Wire.Points.Add(b);
-			}
+			normal0Wire.Points.Add(startV);
+			normal0Wire.Points.Add(endV);
 
-			normal0Wire.Points.Add(new Point3D(-0.5375, -0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(-0.5375, -0.289, 0));
+			normal0Wire.Points.Add(new Point3D(0.530, -0.29, -0.5));
+			normal0Wire.Points.Add(new Point3D(0.530, 0.29, -0.5));
 
-			normal0Wire.Points.Add(new Point3D(0.5375, -0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(0.5375, -0.289, 0));
+			normal0Wire.Points.Add(new Point3D(0.530, 0.29, -0.5));
+			normal0Wire.Points.Add(new Point3D(-0.530, 0.29, -0.5));
+			
+			normal0Wire.Points.Add(startH);
+			normal0Wire.Points.Add(endH);
 
-			normal0Wire.Points.Add(new Point3D(-0.5375, 0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(-0.5375, 0.289, 0));
+			normal0Wire.Points.Add(new Point3D(0, 0, 0));
+			normal0Wire.Points.Add(new Point3D(0, 0, -0.5));
 
-			normal0Wire.Points.Add(new Point3D(0.5375, 0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(0.5375, 0.289, 0));
+			normal0Wire.Points.Add(new Point3D(0, 0, -0.25));
+			normal0Wire.Points.Add(new Point3D(0.530, 0, -0.25));
+
+			normal0Wire.Points.Add(new Point3D(0, 0, -0.25));
+			normal0Wire.Points.Add(new Point3D(0, 0.29, -0.25));
+
+			normal0Wire.Points.Add(new Point3D(-0.530, -0.289, -0.5));
+			normal0Wire.Points.Add(new Point3D(-0.530, -0.289, -0.042));
+
+			normal0Wire.Points.Add(new Point3D(0.530, -0.289, -0.5));
+			normal0Wire.Points.Add(new Point3D(0.530, -0.289, -0.042));
+
+			normal0Wire.Points.Add(new Point3D(-0.530, 0.289, -0.5));
+			normal0Wire.Points.Add(new Point3D(-0.530, 0.289, -0.042));
+
+			normal0Wire.Points.Add(new Point3D(0.530, 0.289, -0.5));
+			normal0Wire.Points.Add(new Point3D(0.530, 0.289, -0.042));
 
 			viewport.Children.Add(normal0Wire);
 		}
@@ -152,7 +153,7 @@ namespace KinectWPF3D
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
 			if (head != null)
 			{
-				HeadV = new Vector3D(head.Position.X, head.Position.Y+0.32, head.Position.Z);
+				HeadV = new Vector3D(head.Position.X, head.Position.Y+0.52, head.Position.Z-0.02);
 			}
 		}
 
