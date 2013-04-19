@@ -18,7 +18,7 @@ using System.IO;
 
 namespace STimWPF
 {
-	public class Core: INotifyPropertyChanged
+	public class Core : INotifyPropertyChanged
 	{
 		private const int VISITOR_COLOR_SHIFT = 50;
 		private const int USER_COLOR_SHIFT = 40;
@@ -34,11 +34,11 @@ namespace STimWPF
 		private SkeletonDrawer skeletonDrawer;
 		private long lastUpdate = -1;
 		private int playerIndex = -1;
-        private bool showColorImage;
+		private bool showColorImage;
 
 		private List<VisitStatus> visitStatus = new List<VisitStatus>();
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
-		public event EventHandler<DepthImageReadyArgs> DepthImageReady;
+		//public event EventHandler<DepthImageReadyArgs> DepthImageReady;
 
 		public KinectSensor KinectSensor { get; set; }
 		public SkeletonFilter SkeletonF { get; set; }
@@ -50,7 +50,7 @@ namespace STimWPF
 		public SkeletonRecorder Recorder { get; set; }
 		public SkeletonPlayer Player { get; set; }
 		public bool PlayBackFromFile { get; set; }
-        public bool IsKinectConnected { get; set; }
+		public bool IsKinectConnected { get; set; }
 
 		public static Core Instance
 		{
@@ -62,15 +62,15 @@ namespace STimWPF
 			}
 		}
 
-        public bool ShowColorImage
-        {
-            get { return showColorImage; }
-            set
-            {
-                showColorImage = value;
-                OnPropertyChanged("ShowColorImage");
-            }
-        }
+		public bool ShowColorImage
+		{
+			get { return showColorImage; }
+			set
+			{
+				showColorImage = value;
+				OnPropertyChanged("ShowColorImage");
+			}
+		}
 
 		private Core() { }
 
@@ -85,7 +85,7 @@ namespace STimWPF
 			Player.SkeletonFrameReady += new EventHandler<PlayerSkeletonFrameReadyEventArgs>(Player_SkeletonFrameReady);
 			InteractionCtr = new InteractionController();
 			VisitorCtr = new VisitorController();
-            ShowColorImage = false;
+			ShowColorImage = false;
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
 				IsKinectConnected = false;
@@ -114,7 +114,6 @@ namespace STimWPF
 
 		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
-            //DateTime start = DateTime.Now, measure = DateTime.Now;
 
 			if (PlayBackFromFile)
 				return;
@@ -132,9 +131,6 @@ namespace STimWPF
 					skeletonFrame.CopySkeletonDataTo(skeletons);
 					currentTimeMilliseconds = skeletonFrame.Timestamp;
 
-                    //Console.WriteLine("CopySkeletonDataTo: " + (DateTime.Now - measure).TotalMilliseconds);
-                    //measure = DateTime.Now;
-
 					//find closest skeleton and playerIndex. 
 					//Idea from: http://stackoverflow.com/questions/13847046/getuserpixels-alternative-in-official-kinect-sdk/13849204#13849204
 					for (int i = 0; i < skeletons.Length; i++)
@@ -146,7 +142,7 @@ namespace STimWPF
 								rawSkeleton = skeletons[i];
 								playerIndex = i + 1;
 							}
-							else if(rawSkeleton.Position.Z > skeletons[i].Position.Z)
+							else if (rawSkeleton.Position.Z > skeletons[i].Position.Z)
 							{
 								rawSkeleton = skeletons[i];
 								playerIndex = i + 1;
@@ -154,15 +150,8 @@ namespace STimWPF
 						}
 					}
 
-                    //Console.WriteLine("TrackingState != SkeletonTrackingState.NotTracked: " + (DateTime.Now - measure).TotalMilliseconds);
-                    //measure = DateTime.Now;
-
 					if (rawSkeleton != null)
-                        stableSkeleton = SkeletonF.ProcessNewSkeletonData(rawSkeleton);
-
-                    //Console.WriteLine("SkeletonF.ProcessNewSkeletonData: " + (DateTime.Now - measure).TotalMilliseconds);
-                    //measure = DateTime.Now;
-
+						stableSkeleton = SkeletonF.ProcessNewSkeletonData(rawSkeleton);
 				}
 			}
 
@@ -174,62 +163,40 @@ namespace STimWPF
 					deltaTime = 0;
 				lastUpdate = currentTimeMilliseconds;
 
-				//Process the skeleton to control the mouse
-				//InteractionCtr.ProcessNewSkeletonData(stableSkeleton, deltaTime, VisitorCtr.Zone);
-
-                //Console.WriteLine("InteractionCtr.ProcessNewSkeletonData: " + (DateTime.Now - measure).TotalMilliseconds);
-                //measure = DateTime.Now;                
-
 				//Sends the new skeleton into the recorder
 				Recorder.ProcessNewSkeletonData(rawSkeleton, deltaTime);
-
-                //Console.WriteLine("InteractionCtr.ProcessNewSkeletonData: " + (DateTime.Now - measure).TotalMilliseconds);
-                //measure = DateTime.Now;
 			}
 
 			//Processes the skeleton to find what interaction zone the user is
 			VisitorCtr.DetectZone(stableSkeleton);
 
-            //Console.WriteLine("VisitorCtr.DetectZone: " + (DateTime.Now - measure).TotalMilliseconds);
-            //measure = DateTime.Now;
-
-			using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
-			{
-				if (DepthImageReady != null && depthFrame != null)
-				{
-                    VisitorCtr.ClosePercent = CloseDepthPercentage(depthFrame);
-                    if (VisitorCtr.Zone == Zone.Notification || VisitorCtr.Zone == Zone.Interaction)
-                    {
-                        depthImageCanvas = DrawDepthImage(depthFrame, stableSkeleton);
-                        DepthImageReady(this, new DepthImageReadyArgs() { Frame = depthImageCanvas });
-                    }
-				}
-			}
-
-            //Console.WriteLine("DrawDepthImage: " + (DateTime.Now - measure).TotalMilliseconds);
-            //measure = DateTime.Now;
+			//using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
+			//{
+			//  if (DepthImageReady != null && depthFrame != null)
+			//  {
+			//    VisitorCtr.ClosePercent = CloseDepthPercentage(depthFrame);
+			//    if (VisitorCtr.Zone == Zone.Notification || VisitorCtr.Zone == Zone.Interaction)
+			//    {
+			//      depthImageCanvas = DrawDepthImage(depthFrame, stableSkeleton);
+			//      DepthImageReady(this, new DepthImageReadyArgs() { Frame = depthImageCanvas });
+			//    }
+			//  }
+			//}
 
 			using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
 			{
 				if (ColorImageReady != null)
 				{
-                    if (ShowColorImage)
-                    {
-                        DrawingImage imageCanvas = DrawColorImage(colorFrame, stableSkeleton);
-                        ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
-                    }
+					if (ShowColorImage)
+					{
+						DrawingImage imageCanvas = DrawColorImage(colorFrame, stableSkeleton);
+						ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
+					}
 				}
 			}
 
-            //Console.WriteLine("DrawColorImage: " + (DateTime.Now - measure).TotalMilliseconds);
-            //measure = DateTime.Now;
-
 			StatusCtr.LoadNewSkeletonData(skeletons, stableSkeleton, depthImageCanvas, ContentCtrl);
 
-            //Console.WriteLine("StatusCtr.LoadNewSkeletonData: " + (DateTime.Now - measure).TotalMilliseconds);
-            //measure = DateTime.Now;
-
-            //Console.WriteLine("Total: " + (DateTime.Now - start).TotalMilliseconds);
 		}
 
 		void Player_SkeletonFrameReady(object sender, PlayerSkeletonFrameReadyEventArgs e)
@@ -248,21 +215,21 @@ namespace STimWPF
 			}
 		}
 
-        int CloseDepthPercentage(DepthImageFrame depthFrame)
-        {
-            DepthImagePixel[] depthPixels;
-            
+		int CloseDepthPercentage(DepthImageFrame depthFrame)
+		{
+			DepthImagePixel[] depthPixels;
+
 			depthPixels = new DepthImagePixel[KinectSensor.DepthStream.FramePixelDataLength];
-            depthFrame.CopyDepthImagePixelDataTo(depthPixels);
-            int closePixel = 0;
-            short constrain = (short)(Settings.Default.InteractionZoneConstrain * 1000);
-            for (int i = 0; i < depthPixels.Length; ++i)
+			depthFrame.CopyDepthImagePixelDataTo(depthPixels);
+			int closePixel = 0;
+			short constrain = (short)(Settings.Default.InteractionZoneConstrain * 1000);
+			for (int i = 0; i < depthPixels.Length; ++i)
 			{
 				closePixel += (depthPixels[i].Depth <= constrain ? 1 : 0);
-            }
-            int rawPercent = (int)((double)closePixel / depthPixels.Length * 100);
-            return DepthPercentF.ProcessNewPercentageData(rawPercent);
-        }
+			}
+			int rawPercent = (int)((double)closePixel / depthPixels.Length * 100);
+			return DepthPercentF.ProcessNewPercentageData(rawPercent);
+		}
 
 		void InitializeShadowImage(DepthImageFrame depthFrame, Zone zone, DrawingContext drawingContext)
 		{

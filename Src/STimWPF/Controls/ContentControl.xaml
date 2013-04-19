@@ -87,7 +87,7 @@
 								opportunity.
 					</TextBlock>
 					<Grid HorizontalAlignment="Left" Margin="10,20,0,0" Background="Black">
-						<MediaElement Name="me_WF" Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\theWorldIsFlat.mp4" LoadedBehavior="Manual" UnloadedBehavior="Manual" 
+						<MediaElement Name="me_WF" Source="C:\Users\xiang\Documents\GitHub\STim\Src\STimWPF\Video\theWorldIsFlat.mp4" LoadedBehavior="Manual" UnloadedBehavior="Manual" 
 												HorizontalAlignment="Left" Height="400" Width="600" MediaEnded="me_WF_MediaEnded" />
 						<k:KinectTileButton Background="Transparent" Style="{StaticResource ResourceKey=btPictureStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Transparent" Click="OnClickedPlay_WF" >
 							<Image Source="/STimWPF;component/image/playbutton.gif" Height="100" Visibility="{Binding ElementName=ContentCtrl, Path=IsPlayingWF, Converter={StaticResource ResourceKey=bvConverter}}"/>

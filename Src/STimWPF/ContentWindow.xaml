@@ -16,9 +16,9 @@
 	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="{Binding ElementName=contentW, 
 	    	Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction-Notification-Ambient}">
 
-		<Image Name="iKinectDepthSmall" HorizontalAlignment="Right" Margin="0,0,20,20" VerticalAlignment="Bottom" Height="100"
+		<!--<Image Name="iKinectDepthSmall" HorizontalAlignment="Right" Margin="0,0,20,20" VerticalAlignment="Bottom" Height="100"
 					 Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, 
-                     Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}" />
+                     Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}" />-->
 
 		<controls:ContentControl x:Name="contentCtrl" Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, 
                             Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}"

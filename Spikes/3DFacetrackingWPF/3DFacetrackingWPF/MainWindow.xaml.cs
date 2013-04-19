@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using _3DTools;
 using System.ComponentModel;
+using Microsoft.Kinect.Toolkit.FaceTracking;
 
 namespace KinectWPF3D
 {
@@ -24,15 +25,22 @@ namespace KinectWPF3D
 	/// </summary>
 	public partial class MainWindow : Window, INotifyPropertyChanged
 	{
-		const double SCREEN_WIDTH = 1.062;
-		const double SCREEN_HEIGHT = 0.582;
+		const double SCREEN_WIDTH = 1.02;
+		const double SCREEN_HEIGHT = 0.58;
+
 		private KinectSensor kinectSensor;
+		private FaceTracker faceTracker;
+
+		private byte[] colorImage;
+		private short[] depthImage;
+		private Skeleton[] skeletonData;
 
 		private static readonly Point3D startV = new Point3D(-0.530, -0.29, -0.5);
 		private static readonly Point3D endV = new Point3D(-0.530, 0.29, -0.5);
-
 		private static readonly Point3D startH = new Point3D(-0.530, -0.29, -0.5);
 		private static readonly Point3D endH = new Point3D(0.530, -0.29, -0.5);
+
+		private EnumIndexableCollection<FeaturePoint, Vector3DF> FacePoints;
 
 		private Vector3D headV;
 
@@ -106,46 +114,68 @@ namespace KinectWPF3D
 				kinectSensor = KinectSensor.KinectSensors[0];
 				if (kinectSensor == null || kinectSensor.Status == KinectStatus.NotPowered)
 					return;
-				kinectSensor.SkeletonStream.Enable();
+
+				kinectSensor.DepthStream.Enable();
+				kinectSensor.ColorStream.Enable();
+				kinectSensor.SkeletonStream.Enable(new TransformSmoothParameters() { Correction = 0.5f, JitterRadius = 0.05f, MaxDeviationRadius = 0.05f, Prediction = 0.5f, Smoothing = 0.5f });
+
+				kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
+				this.depthImage = new short[kinectSensor.DepthStream.FramePixelDataLength];
+				this.colorImage = new byte[kinectSensor.ColorStream.FramePixelDataLength];
+				this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength];
 				kinectSensor.Start();
-				kinectSensor.SkeletonFrameReady += this.Kinect_SkeletonFrameReady;
+				faceTracker = new FaceTracker(kinectSensor);
 			}
 		}
 
-		private void Kinect_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
+		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
-			Skeleton[] skeletons = null;
-			Skeleton skeleton = null;
+
+			using (ColorImageFrame colorImageFrame = e.OpenColorImageFrame())
+			{
+				if (colorImageFrame == null)
+					return;
+				colorImageFrame.CopyPixelDataTo(this.colorImage);
+			}
+
+			using (DepthImageFrame depthImageFrame = e.OpenDepthImageFrame())
+			{
+				if (depthImageFrame == null)
+					return;
+				depthImageFrame.CopyPixelDataTo(this.depthImage);
+			}
+
 			using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
 			{
-				if (skeletonFrame != null)
-				{
-					skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
-					skeletonFrame.CopySkeletonDataTo(skeletons);
+				if (skeletonFrame == null)
+					return;
+				skeletonFrame.CopySkeletonDataTo(skeletonData);
+			}
 
-					//find closest skeleton and playerIndex. 
-					//Idea from: http://stackoverflow.com/questions/13847046/getuserpixels-alternative-in-official-kinect-sdk/13849204#13849204
-					for (int i = 0; i < skeletons.Length; i++)
+			Skeleton rawSkeleton = null;
+			for (int i = 0; i < skeletonData.Length; i++)
+			{
+				if (skeletonData[i].TrackingState != SkeletonTrackingState.NotTracked)
+				{
+					if (rawSkeleton == null)
 					{
-						if (skeletons[i].TrackingState != SkeletonTrackingState.NotTracked)
-						{
-							if (skeleton == null)
-							{
-								skeleton = skeletons[i];
-							}
-							else if (skeleton.Position.Z > skeletons[i].Position.Z)
-							{
-								skeleton = skeletons[i];
-							}
-						}
+						rawSkeleton = skeletonData[i];
+					}
+					else if (rawSkeleton.Position.Z > skeletonData[i].Position.Z)
+					{
+						rawSkeleton = skeletonData[i];
 					}
 				}
 			}
 
-			if (skeleton != null)
-			{
-				ProcessSkeleton(skeleton);
-			}
+			ProcessSkeleton(rawSkeleton);
+			//FaceTrackFrame faceFrame = faceTracker.Track(kinectSensor.ColorStream.Format, colorImage, kinectSensor.DepthStream.Format, depthImage, rawSkeleton);
+			//if (faceFrame.TrackSuccessful)
+			//{
+			//  FacePoints = faceFrame.Get3DShape();
+			//  Vector3DF eye = FacePoints[FeaturePoint.RightOfRightEyebrow];
+			//  HeadV = new Vector3D(eye.X, eye.Y, eye.Z);
+			//}
 		}
 
 		private void ProcessSkeleton(Skeleton skeleton)
@@ -172,5 +202,6 @@ namespace KinectWPF3D
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(name));
 		}
+
 	}
 }
