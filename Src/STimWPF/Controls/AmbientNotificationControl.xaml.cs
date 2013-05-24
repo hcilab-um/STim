@@ -40,7 +40,7 @@ namespace STimWPF.Controls
 		{
 			InitializeComponent();
 			meAmbient.Volume = 0;
-			meNotification.Volume = 0;
+			//meNotification.Volume = 0;
 		}
 
 		protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
@@ -50,14 +50,13 @@ namespace STimWPF.Controls
 			{
 				if (UserDisplayDistance >= Settings.Default.NotificationZoneConstrain || UserDisplayDistance <= Settings.Default.InteractionZoneConstrain)
 					return;
-				double range = Settings.Default.NotificationZoneConstrain - Settings.Default.InteractionZoneConstrain;
-				double relativeProgress = 1-(UserDisplayDistance - Settings.Default.InteractionZoneConstrain)/range;
-				int actualProgress = (int)(relativeProgress * 20000);
-				TimeSpan ts = new TimeSpan(0, 0, 0, 0, actualProgress);
-				//meNotification.Stop();
-				meNotification.Position = ts;
-				meNotification.Play();
-				meNotification.Pause();
+				//double range = Settings.Default.NotificationZoneConstrain - Settings.Default.InteractionZoneConstrain;
+				//double relativeProgress = 1-(UserDisplayDistance - Settings.Default.InteractionZoneConstrain)/range;
+				//int actualProgress = (int)(relativeProgress * 20000);
+				//TimeSpan ts = new TimeSpan(0, 0, 0, 0, actualProgress);
+				//meNotification.Position = ts;
+				//meNotification.Play();
+				//meNotification.Pause();
 			}
 		}
 

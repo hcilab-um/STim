@@ -25,7 +25,7 @@ namespace STimWPF
 			base.OnStartup(e);
 			log4net.Config.XmlConfigurator.Configure();
 
-			String destFolder = Settings.Default.DestFolder.Replace("xiang", Environment.UserName);
+			String destFolder = Settings.Default.DestFolder.Replace("zSpace", Environment.UserName);
 
             Core.Instance.Initialize
             (

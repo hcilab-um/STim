@@ -11,10 +11,10 @@
 		<converters:DistanceVideoPositionConverter x:Key="dvpConverter"/>
 	</UserControl.Resources>
 	<Grid Background="Transparent">
-		<MediaElement Name="meNotification" LoadedBehavior="Manual" UnloadedBehavior="Manual" ScrubbingEnabled="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                      Source="C:\Users\xiang\Documents\GitHub\STim\Src\STimWPF\Video\notificationVideo.mp4"
+		<!--<MediaElement Name="meNotification" LoadedBehavior="Manual" UnloadedBehavior="Manual" ScrubbingEnabled="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                      Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\notificationVideo.mp4"
                       Visibility="{Binding ElementName=anControl, Path=Zone, 
-                      Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Notification}"/>
+                      Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Notification}"/>-->
 		<MediaElement Name="meAmbient" LoadedBehavior="Manual" UnloadedBehavior="Manual" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                       Visibility="{Binding ElementName=anControl, Path=Zone, 
                       Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Ambient}">
@@ -23,7 +23,7 @@
 					<EventTrigger.Actions>
 						<BeginStoryboard>
 							<Storyboard Name="sb_meAmbient" SlipBehavior="Slip" RepeatBehavior="Forever">
-								<MediaTimeline Source="C:\Users\xiang\Documents\GitHub\STim\Src\STimWPF\Video\montage-audio-march13.mov" 
+								<MediaTimeline Source="C:\Users\zSpace\Documents\GitHub\STim\Src\STimWPF\Video\montage-audio-march13.mov" 
                                                Storyboard.TargetName="meAmbient" Duration="0:0:5" />
 							</Storyboard>
 						</BeginStoryboard>

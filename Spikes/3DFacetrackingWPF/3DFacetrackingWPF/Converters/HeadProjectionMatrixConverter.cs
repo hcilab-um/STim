@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Data;
 using System.Windows.Media.Media3D;
 
-namespace KinectWPF3D.Converters
+namespace SpikeWPF.Converters
 {
 	public class HeadProjectionMatrixConverter : IValueConverter
 	{
@@ -17,7 +17,6 @@ namespace KinectWPF3D.Converters
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			Vector3D CamPos = (Vector3D)value;
-			CamPos.Y -= 0.038;
 			double zn = 0.2;
 			double zf = 100;
 			double left = zn * (-HALF_WIDTH - CamPos.X) / CamPos.Z;

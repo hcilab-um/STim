@@ -14,11 +14,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using _3DTools;
 using System.ComponentModel;
-using Microsoft.Kinect.Toolkit.FaceTracking;
+using SpikeWPF.Properties;
+//using Microsoft.Kinect.Toolkit.FaceTracking;
 
-namespace KinectWPF3D
+namespace SpikeWPF
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
@@ -28,21 +28,18 @@ namespace KinectWPF3D
 		const double SCREEN_WIDTH = 1.02;
 		const double SCREEN_HEIGHT = 0.58;
 
+		private const float RenderWidth = 640.0f;
+		private const float RenderHeight = 480.0f;
+		
 		private KinectSensor kinectSensor;
-		private FaceTracker faceTracker;
+		//private FaceTracker faceTracker;
 
 		private byte[] colorImage;
 		private short[] depthImage;
 		private Skeleton[] skeletonData;
+		private SkeletonDrawer skeletonDrawer;
 
-		private static readonly Point3D startV = new Point3D(-0.530, -0.29, -0.5);
-		private static readonly Point3D endV = new Point3D(-0.530, 0.29, -0.5);
-		private static readonly Point3D startH = new Point3D(-0.530, -0.29, -0.5);
-		private static readonly Point3D endH = new Point3D(0.530, -0.29, -0.5);
-
-		private EnumIndexableCollection<FeaturePoint, Vector3DF> FacePoints;
-
-		private Vector3D headV;
+		private Vector3D headV = new Vector3D(0, 0, Settings.Default.NotificationZoneConstrain);
 
 		public Vector3D HeadV
 		{
@@ -57,50 +54,6 @@ namespace KinectWPF3D
 		public MainWindow()
 		{
 			InitializeComponent();
-			drawGrid();
-		}
-
-		private void drawGrid()
-		{
-			ScreenSpaceLines3D normal0Wire = new ScreenSpaceLines3D();
-			int width = 2;
-			normal0Wire.Thickness = width;
-			normal0Wire.Color = Colors.Red;
-
-			normal0Wire.Points.Add(startV);
-			normal0Wire.Points.Add(endV);
-
-			normal0Wire.Points.Add(new Point3D(0.530, -0.29, -0.5));
-			normal0Wire.Points.Add(new Point3D(0.530, 0.29, -0.5));
-
-			normal0Wire.Points.Add(new Point3D(0.530, 0.29, -0.5));
-			normal0Wire.Points.Add(new Point3D(-0.530, 0.29, -0.5));
-			
-			normal0Wire.Points.Add(startH);
-			normal0Wire.Points.Add(endH);
-
-			normal0Wire.Points.Add(new Point3D(0, 0, 0));
-			normal0Wire.Points.Add(new Point3D(0, 0, -0.5));
-
-			normal0Wire.Points.Add(new Point3D(0, 0, -0.25));
-			normal0Wire.Points.Add(new Point3D(0.530, 0, -0.25));
-
-			normal0Wire.Points.Add(new Point3D(0, 0, -0.25));
-			normal0Wire.Points.Add(new Point3D(0, 0.29, -0.25));
-
-			normal0Wire.Points.Add(new Point3D(-0.530, -0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(-0.530, -0.289, -0.042));
-
-			normal0Wire.Points.Add(new Point3D(0.530, -0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(0.530, -0.289, -0.042));
-
-			normal0Wire.Points.Add(new Point3D(-0.530, 0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(-0.530, 0.289, -0.042));
-
-			normal0Wire.Points.Add(new Point3D(0.530, 0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(0.530, 0.289, -0.042));
-
-			viewport.Children.Add(normal0Wire);
 		}
 
 		private void Window_Loaded_1(object sender, RoutedEventArgs e)
@@ -124,26 +77,25 @@ namespace KinectWPF3D
 				this.colorImage = new byte[kinectSensor.ColorStream.FramePixelDataLength];
 				this.skeletonData = new Skeleton[kinectSensor.SkeletonStream.FrameSkeletonArrayLength];
 				kinectSensor.Start();
-				faceTracker = new FaceTracker(kinectSensor);
 			}
 		}
 
 		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
 
-			using (ColorImageFrame colorImageFrame = e.OpenColorImageFrame())
-			{
-				if (colorImageFrame == null)
-					return;
-				colorImageFrame.CopyPixelDataTo(this.colorImage);
-			}
+			//using (ColorImageFrame colorImageFrame = e.OpenColorImageFrame())
+			//{
+			//  if (colorImageFrame == null)
+			//    return;
+			//  colorImageFrame.CopyPixelDataTo(this.colorImage);
+			//}
 
-			using (DepthImageFrame depthImageFrame = e.OpenDepthImageFrame())
-			{
-				if (depthImageFrame == null)
-					return;
-				depthImageFrame.CopyPixelDataTo(this.depthImage);
-			}
+			//using (DepthImageFrame depthImageFrame = e.OpenDepthImageFrame())
+			//{
+			//  if (depthImageFrame == null)
+			//    return;
+			//  depthImageFrame.CopyPixelDataTo(this.depthImage);
+			//}
 
 			using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
 			{
@@ -169,6 +121,7 @@ namespace KinectWPF3D
 			}
 
 			ProcessSkeleton(rawSkeleton);
+			
 			//FaceTrackFrame faceFrame = faceTracker.Track(kinectSensor.ColorStream.Format, colorImage, kinectSensor.DepthStream.Format, depthImage, rawSkeleton);
 			//if (faceFrame.TrackSuccessful)
 			//{
@@ -180,28 +133,65 @@ namespace KinectWPF3D
 
 		private void ProcessSkeleton(Skeleton skeleton)
 		{
-			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
-			if (head != null)
+			if (skeleton == null)
 			{
-				HeadV = new Vector3D(head.Position.X, head.Position.Y+0.52, head.Position.Z-0.02);
+				HeadV = new Vector3D(0, 0, 10);
+				return;
 			}
+			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
+
+			if (head != null)
+				HeadV = new Vector3D(head.Position.X, head.Position.Y + 0.39, head.Position.Z);
 		}
 
 		private void Window_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			if (null != this.kinectSensor)
-			{
 				this.kinectSensor.Stop();
-			}
 		}
 
-
 		public event PropertyChangedEventHandler PropertyChanged;
+
 		private void OnPropertyChanged(String name)
 		{
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(name));
 		}
 
+		//drawing color image and skeleton
+		private DrawingImage DrawColorImage(ColorImageFrame colorFrame, Skeleton skeleton)
+		{
+			DrawingGroup dgColorImageAndSkeleton = new DrawingGroup();
+			DrawingImage drawingImage = new DrawingImage(dgColorImageAndSkeleton);
+			skeletonDrawer = new SkeletonDrawer(kinectSensor);
+			using (DrawingContext drawingContext = dgColorImageAndSkeleton.Open())
+			{
+				InitializeColorImage(colorFrame, drawingContext);
+				skeletonDrawer.DrawFullSkeleton(skeleton, drawingContext);
+			}
+
+			//Make sure the image remains within the defined width and height
+			dgColorImageAndSkeleton.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+
+			return drawingImage;
+		}
+
+		private static void InitializeColorImage(ColorImageFrame colorFrame, DrawingContext drawingContext)
+		{
+			if (colorFrame != null)
+			{
+				byte[] cbyte = new byte[colorFrame.PixelDataLength];
+				colorFrame.CopyPixelDataTo(cbyte);
+				int stride = colorFrame.Width * 4;
+
+				ImageSource imageBackground = BitmapSource.Create(640, 480, 96, 96, PixelFormats.Bgr32, null, cbyte, stride);
+				drawingContext.DrawImage(imageBackground, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+			}
+			else
+			{
+				// Draw a transparent background to set the render size
+				drawingContext.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+			}
+		}
 	}
 }

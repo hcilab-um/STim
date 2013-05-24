@@ -7,15 +7,12 @@ using System.Windows.Media.Media3D;
 
 namespace SpikeWPF.Converters
 {
-	public class HeadViewMatrixConverter: IValueConverter
+	public class HeadDistanceConverter: IValueConverter
 	{
-		static readonly Vector3D UP_DIR = new Vector3D(0, 1, 0);
-		static readonly Vector3D LOOK_DIR = new Vector3D(0, 0, -1);
-
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			Vector3D CamPos = (Vector3D)value;
-			return Math3D.SetViewMatrix((Point3D)CamPos, LOOK_DIR, UP_DIR);
+			Vector3D headV = (Vector3D)value;
+			return headV.Z;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

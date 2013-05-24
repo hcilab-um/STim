@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectWPF3D", "3DFacetrackingWPF\KinectWPF3D.csproj", "{901FE9A6-CC62-4B16-9A5A-C0E330C80318}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeWPF", "3DFacetrackingWPF\SpikeWPF.csproj", "{901FE9A6-CC62-4B16-9A5A-C0E330C80318}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C6F9C31B-6130-4443-A5CC-EF0664552ECD} = {C6F9C31B-6130-4443-A5CC-EF0664552ECD}
+		{1BCF9CEE-DF01-430E-B49D-41A9A88963EB} = {1BCF9CEE-DF01-430E-B49D-41A9A88963EB}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Kinect.Toolkit", "Microsoft.Kinect.Toolkit\Microsoft.Kinect.Toolkit.csproj", "{C6F9C31B-6130-4443-A5CC-EF0664552ECD}"
 EndProject

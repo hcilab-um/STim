@@ -25,7 +25,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\xiang\\Desktop\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\zSpace\\Desktop\\")]
         public string DestFolder {
             get {
                 return ((string)(this["DestFolder"]));
@@ -148,7 +148,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\xiang\\Dropbox\\STimStatus\\Image\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\zSpace\\Dropbox\\STimStatus\\Image\\")]
         public string ImageFolder {
             get {
                 return ((string)(this["ImageFolder"]));

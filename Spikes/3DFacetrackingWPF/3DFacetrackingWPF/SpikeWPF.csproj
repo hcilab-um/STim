@@ -7,7 +7,7 @@
     <ProjectGuid>{901FE9A6-CC62-4B16-9A5A-C0E330C80318}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KinectWPF3D</RootNamespace>
+    <RootNamespace>SpikeWPF</RootNamespace>
     <AssemblyName>3DFacetrackingWPF</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -59,6 +59,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\HeadConeLocationConverter.cs" />
+    <Compile Include="DiscGeometry3D.cs" />
+    <Compile Include="RoundMesh3D.cs" />
+    <Compile Include="SkeletonDrawer.cs" />
+    <Compile Include="SphereGeometry3D.cs" />
+    <Page Include="Controls\SpatialAlignControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TransparencyControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -67,6 +80,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\SpatialAlignControl.xaml.cs">
+      <DependentUpon>SpatialAlignControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TransparencyControl.xaml.cs">
+      <DependentUpon>TransparencyControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\DistanceColorConverter.cs" />
+    <Compile Include="Converters\HeadDistanceConverter.cs" />
     <Compile Include="Converters\HeadProjectionMatrixConverter.cs" />
     <Compile Include="Converters\HeadViewMatrixConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -103,14 +124,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.Kinect.Toolkit.FaceTracking\Microsoft.Kinect.Toolkit.FaceTracking.csproj">
-      <Project>{1BCF9CEE-DF01-430E-B49D-41A9A88963EB}</Project>
-      <Name>Microsoft.Kinect.Toolkit.FaceTracking</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Kinect.Toolkit\Microsoft.Kinect.Toolkit.csproj">
-      <Project>{C6F9C31B-6130-4443-A5CC-EF0664552ECD}</Project>
-      <Name>Microsoft.Kinect.Toolkit</Name>
-    </ProjectReference>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

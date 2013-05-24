@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media.Media3D;
 
-namespace KinectWPF3D
+namespace SpikeWPF
 {
 	public class Math3D
 	{
@@ -19,10 +19,11 @@ namespace KinectWPF3D
 			// Normalize vectors:
 			lookDirection.Normalize();
 			upDirection.Normalize();
+			double dotProduct = Vector3D.DotProduct(lookDirection, upDirection);
 			// Define vectors, XScale, YScale, and ZScale:
-			double denom = Math.Sqrt(1 - Math.Pow(Vector3D.DotProduct(lookDirection, upDirection), 2));
+			double denom = Math.Sqrt(1 - Math.Pow(dotProduct, 2));
 			Vector3D XScale = Vector3D.CrossProduct(lookDirection, upDirection) / denom;
-			Vector3D YScale = (upDirection - Vector3D.DotProduct(upDirection, lookDirection) * lookDirection) / denom;
+			Vector3D YScale = (upDirection - dotProduct * lookDirection) / denom;
 			Vector3D ZScale = lookDirection;
 
 			// Construct M matrix:
@@ -39,9 +40,9 @@ namespace KinectWPF3D
 			// Define reflect matrix about the Z axis:
 			Matrix3D reflectMatrix = new Matrix3D();
 			reflectMatrix.M33 = -1;
+		
 			// Construct the View matrix:
-			Matrix3D viewMatrix =
-			translateMatrix * M * reflectMatrix;
+			Matrix3D viewMatrix = translateMatrix * M * reflectMatrix;
 			return viewMatrix;
 		}
 

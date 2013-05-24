@@ -2,161 +2,17 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:converters="clr-namespace:KinectWPF3D.Converters"
-		mc:Ignorable="d" x:Class="KinectWPF3D.MainWindow"
+		xmlns:controls="clr-namespace:SpikeWPF.Controls"
+		xmlns:converters="clr-namespace:SpikeWPF.Converters"
+		mc:Ignorable="d" x:Class="SpikeWPF.MainWindow"
     WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
     Name="mWindow" Title="MainWindow" 
 		Loaded="Window_Loaded_1" Closing="Window_Closing_1" Height="580" Width="1075">
 	<Window.Resources>
-		<converters:HeadViewMatrixConverter x:Key="hvmConverter"/>
-		<converters:HeadProjectionMatrixConverter x:Key="hpmConverter"/>
+		<converters:HeadDistanceConverter x:Key="hdConverter"/>
 	</Window.Resources>
 	<Grid>
-		<Viewport3D x:Name="viewport" HorizontalAlignment="Stretch">
-			<Viewport3D.Camera>
-				<MatrixCamera x:Name="mCamera" 
-											ViewMatrix="{Binding ElementName=mWindow, Path=HeadV, Converter={StaticResource ResourceKey=hvmConverter}}"
-											ProjectionMatrix="{Binding ElementName=mWindow, Path=HeadV, Converter={StaticResource ResourceKey=hpmConverter}}"/>
-			</Viewport3D.Camera>
-			<ModelVisual3D>
-				<ModelVisual3D.Content>
-					<Model3DGroup x:Name="model3dGroup">
-						<DirectionalLight Color="White" Direction="0.5, -0.5, -1"/>
-						<DirectionalLight Color="White" Direction="-0.5, 0.5, -1"/>
-						<!--<GeometryModel3D x:Name="gm3D">
-							<GeometryModel3D.Geometry>
-
-								<MeshGeometry3D Positions="-0.531,-0.29,  -0.5
-																						0.531,-0.29,  -0.5 
-																					  0.531, 0.29,  -0.5
-																					 -0.531, 0.29,  -0.5
-																					 -0.531,-0.29,   0
-																					  0.531,-0.29,   0
-																					  0.531, 0.29,   0
-																					 -0.531, 0.29,   0" 
-													TriangleIndices="0 1 2 2 3 0
-																					 5 6 2 2 1 5
-																					 4 0 3 3 7 4
-																					 7 3 2 2 6 7
-																					 0 4 5 5 1 0"/>
-							</GeometryModel3D.Geometry>
-							<GeometryModel3D.Material>
-								<DiffuseMaterial Brush="Yellow"/>
-							</GeometryModel3D.Material>
-							<GeometryModel3D.BackMaterial>
-								<DiffuseMaterial Brush="Blue"/>
-							</GeometryModel3D.BackMaterial>
-						</GeometryModel3D>-->
-						<GeometryModel3D>
-							<GeometryModel3D.Geometry>
-								<MeshGeometry3D Positions="0.182,-0.29, -0.5
-																					 0.33,-0.29, -0.5
-																					 0.33,-0.165,-0.5
-																					 0.182,-0.165,-0.5
-																					 0.182,-0.29, -0.304
-																					 0.33,-0.29, -0.304
-																					 0.33,-0.165,-0.304
-																					 0.182,-0.165,-0.304" 
-													TriangleIndices="0 1 2 2 3 0
-																					 5 6 2 2 1 5
-																					 4 0 3 3 7 4
-																					 7 3 2 2 6 7
-																					 0 4 5 5 1 0
-																					 4 7 6 6 5 4"/>
-							</GeometryModel3D.Geometry>
-							<GeometryModel3D.Material>
-								<DiffuseMaterial Brush="Transparent"/>
-							</GeometryModel3D.Material>
-							<GeometryModel3D.BackMaterial>
-								<DiffuseMaterial Brush="Yellow"/>
-							</GeometryModel3D.BackMaterial>
-						</GeometryModel3D>
-						<GeometryModel3D>
-							<GeometryModel3D.Geometry>
-								<MeshGeometry3D Positions="0.382,-0.29, -0.5
-																					 0.530,-0.29, -0.5
-																					 0.530,-0.165,-0.5
-																					 0.382,-0.165,-0.5
-																					 0.382,-0.29, -0.304
-																					 0.530,-0.29, -0.304
-																					 0.530,-0.165,-0.304
-																					 0.382,-0.165,-0.304" 
-													TriangleIndices="0 1 2 2 3 0
-																					 5 6 2 2 1 5
-																					 4 0 3 3 7 4
-																					 7 3 2 2 6 7
-																					 0 4 5 5 1 0
-																					 4 7 6 6 5 4"/>
-							</GeometryModel3D.Geometry>
-							<GeometryModel3D.Material>
-								<DiffuseMaterial Brush="GreenYellow"/>
-							</GeometryModel3D.Material>
-							<GeometryModel3D.BackMaterial>
-								<DiffuseMaterial Brush="GreenYellow"/>
-							</GeometryModel3D.BackMaterial>
-						</GeometryModel3D>
-					</Model3DGroup>
-				</ModelVisual3D.Content>
-			</ModelVisual3D>
-		</Viewport3D>
-		<StackPanel Orientation="Vertical">
-			<StackPanel Name="spViewMatrix" Orientation="Vertical" Width="400" HorizontalAlignment="Left">
-				<StackPanel Orientation="Horizontal">
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M11, FallbackValue=1}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M12, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M13, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M14, FallbackValue=0}"/>
-				</StackPanel>
-				<StackPanel Orientation="Horizontal">
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M21, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M22, FallbackValue=1}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M23, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M24, FallbackValue=0}"/>
-				</StackPanel>
-				<StackPanel Orientation="Horizontal">
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M31, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M32, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M33, FallbackValue=1}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M34, FallbackValue=0}"/>
-				</StackPanel>
-				<StackPanel Orientation="Horizontal">
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.OffsetX, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.OffsetY, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.OffsetZ, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ViewMatrix.M44, FallbackValue=1}"/>
-				</StackPanel>
-			</StackPanel>
-			<StackPanel Name="spProjectionMatrix" Orientation="Vertical" Margin="0,50" Width="400" HorizontalAlignment="Left">
-				<StackPanel Orientation="Horizontal">
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M11, FallbackValue=1}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M12, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M13, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M14, FallbackValue=0}"/>
-				</StackPanel>
-				<StackPanel Orientation="Horizontal">
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M21, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M22, FallbackValue=1}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M23, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M24, FallbackValue=0}"/>
-				</StackPanel>
-				<StackPanel Orientation="Horizontal">
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M31, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M32, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M33, FallbackValue=1}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M34, FallbackValue=0}"/>
-				</StackPanel>
-				<StackPanel Orientation="Horizontal">
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.OffsetX, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.OffsetY, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.OffsetZ, FallbackValue=0}"/>
-					<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mCamera, Path=ProjectionMatrix.M44, FallbackValue=1}"/>
-				</StackPanel>
-			</StackPanel>
-			<StackPanel Orientation="Horizontal" Margin="0,50" Width="300" HorizontalAlignment="Left">
-				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mWindow, Path=HeadV.X, FallbackValue=0}"/>
-				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mWindow, Path=HeadV.Y, FallbackValue=0}"/>
-				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=mWindow, Path=HeadV.Z, FallbackValue=0}"/>
-			</StackPanel>
-		</StackPanel>
+		<controls:SpatialAlignControl HeadV="{Binding ElementName=mWindow, Path=HeadV}"/>
+		<!--<controls:TransparencyControl Distance ="{Binding ElementName=mWindow, Path=HeadV, Converter={StaticResource ResourceKey=hdConverter}}"/>-->
 	</Grid>
 </Window>
