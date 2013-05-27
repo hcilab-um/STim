@@ -16,11 +16,13 @@ namespace SpikeWPF.Converters
 			double distance = (double) value;
 			string param = (string) parameter;
 			byte colorIntensity = 0;
+			
 			if (distance < Settings.Default.NotificationZoneConstrain)
 			{
 				double distanceRatio = 1 - distance / Settings.Default.NotificationZoneConstrain;
 				colorIntensity = (byte)(MAX_INTENSITY * distanceRatio);
 			}
+
 			if (param.Equals("black"))
 				colorIntensity = (byte)(MAX_INTENSITY - colorIntensity);
 			Brush color = new SolidColorBrush(Color.FromArgb(255, colorIntensity, colorIntensity, colorIntensity));

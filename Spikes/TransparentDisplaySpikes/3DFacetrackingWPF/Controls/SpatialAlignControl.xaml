@@ -9,15 +9,20 @@
 	<UserControl.Resources>
 		<converters:HeadViewMatrixConverter x:Key="hvmConverter"/>
 		<converters:HeadProjectionMatrixConverter x:Key="hpmConverter"/>
-		<converters:HeadConeLocationConverter x:Key="hclConverter"/>
+		<converters:DistanceColorConverter x:Key="dcConverter"/>
 	</UserControl.Resources>
-	<Grid Background="Black">
+	<Grid Background="{Binding ElementName=saControl, Path=Distance, Converter={StaticResource ResourceKey=dcConverter}, ConverterParameter=white}">
 		<Grid.Resources>
-			<local:SphereGeometry3D x:Key="Sphere"/>
+			<local:BigPlanet x:Key="SphereSource1"/>
+			<local:SmallPlanet x:Key="SphereSource2"/>
+			
+			<MeshGeometry3D x:Key="SphereGeometry1" 
+											Positions="{Binding Source={StaticResource ResourceKey=SphereSource1}, Path=Points}"
+											TriangleIndices="{Binding Source={StaticResource ResourceKey=SphereSource1}, Path=TriangleIndices}"/>
+			<MeshGeometry3D x:Key="SphereGeometry2" 
+											Positions="{Binding Source={StaticResource ResourceKey=SphereSource2}, Path=Points}"
+											TriangleIndices="{Binding Source={StaticResource ResourceKey=SphereSource2}, Path=TriangleIndices}"/>
 		</Grid.Resources>
-		<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-			<Ellipse Name="eCone" Fill="White" Width="200" Height="200" Canvas.Left="{Binding ElementName=saControl, Path=HeadV, Converter={StaticResource ResourceKey=hclConverter}, ConverterParameter=Left}" Canvas.Top="{Binding ElementName=saControl, Path=HeadV, Converter={StaticResource ResourceKey=hclConverter}, ConverterParameter=Top}"/>
-		</Canvas>
 		<Viewport3D x:Name="viewport" HorizontalAlignment="Stretch">
 			<Viewport3D.Camera>
 				<MatrixCamera x:Name="mCamera" 
@@ -27,8 +32,50 @@
 			<ModelVisual3D>
 				<ModelVisual3D.Content>
 					<Model3DGroup x:Name="model3dGroup">
-						<DirectionalLight Color="White" Direction="0.5, -0.5, -1"/>
-						<DirectionalLight Color="White" Direction="-0.5, 0.5, -1"/>
+						<SpotLight Color="White" Direction="0,0,-1" Position="0,-0.05,0" InnerConeAngle="120" OuterConeAngle="120" Range="10"/>
+						<SpotLight Color="White" Direction="0,1,0" Position="0,-0.29,-0.402" InnerConeAngle="120" OuterConeAngle="120" Range="10"/>
+						<SpotLight Color="White" Direction="1,0,0" Position="-0.53,-0.05,-0.402" InnerConeAngle="120" OuterConeAngle="120" Range="10"/>
+						<SpotLight Color="White" Direction="-1,0,0" Position="0.53,-0.05,-0.402" InnerConeAngle="120" OuterConeAngle="120" Range="10"/>
+						
+						<GeometryModel3D Geometry="{StaticResource ResourceKey=SphereGeometry1}">
+							<GeometryModel3D.Transform>
+								<TranslateTransform3D OffsetX="0" OffsetY="-0.112" OffsetZ="-0.402"/>
+							</GeometryModel3D.Transform>
+							<GeometryModel3D.Material>
+								<MaterialGroup>
+									<DiffuseMaterial>
+										<DiffuseMaterial.Brush>
+											<SolidColorBrush Color="White"/>
+										</DiffuseMaterial.Brush>
+									</DiffuseMaterial>
+								</MaterialGroup>
+							</GeometryModel3D.Material>
+						</GeometryModel3D>
+						
+						<GeometryModel3D Geometry="{StaticResource ResourceKey=SphereGeometry2}">
+							<GeometryModel3D.Transform>
+								<TranslateTransform3D OffsetX="0" OffsetY="-0.112" OffsetZ="-0.402"/>
+							</GeometryModel3D.Transform>
+							<GeometryModel3D.Material>
+								<MaterialGroup>
+									<DiffuseMaterial>
+										<DiffuseMaterial.Brush>
+											<SolidColorBrush Color="Transparent"/>
+										</DiffuseMaterial.Brush>
+									</DiffuseMaterial>
+								</MaterialGroup>
+							</GeometryModel3D.Material>
+							<GeometryModel3D.BackMaterial>
+								<MaterialGroup>
+									<DiffuseMaterial>
+										<DiffuseMaterial.Brush>
+											<SolidColorBrush Color="Transparent"/>
+										</DiffuseMaterial.Brush>
+									</DiffuseMaterial>
+								</MaterialGroup>
+							</GeometryModel3D.BackMaterial>
+						</GeometryModel3D>
+						
 						<!--<GeometryModel3D x:Name="gm3D">
 							<GeometryModel3D.Geometry>
 								<MeshGeometry3D Positions="-0.531,-0.29,  -0.5
@@ -52,7 +99,35 @@
 								<DiffuseMaterial Brush="Blue"/>
 							</GeometryModel3D.BackMaterial>
 						</GeometryModel3D>-->
-						<GeometryModel3D>
+						
+						
+						<!--<GeometryModel3D x:Name="gmCenterCube">
+							<GeometryModel3D.Geometry>
+								<MeshGeometry3D Positions="-0.074,-0.165, -0.5
+																					 0.074,-0.165, -0.5
+																					 0.074,-0.040,-0.5
+																					 -0.074,-0.040,-0.5
+																					 -0.074,-0.165, -0.304
+																					 0.074,-0.165, -0.304
+																					 0.074,-0.040,-0.304
+																					 -0.074,-0.040,-0.304" 
+													TriangleIndices="0 1 2 2 3 0
+																					 5 6 2 2 1 5
+																					 4 0 3 3 7 4
+																					 7 3 2 2 6 7
+																					 0 4 5 5 1 0
+																					 4 7 6 6 5 4"/>
+							</GeometryModel3D.Geometry>
+							<GeometryModel3D.Material>
+								<DiffuseMaterial Brush="White"/>
+							</GeometryModel3D.Material>
+							<GeometryModel3D.BackMaterial>
+								<DiffuseMaterial Brush="White"/>
+							</GeometryModel3D.BackMaterial>
+						</GeometryModel3D>-->
+						
+						
+						<!--<GeometryModel3D >
 							<GeometryModel3D.Geometry>
 								<MeshGeometry3D Positions="-0.074,-0.29, -0.5
 																					 0.074,-0.29, -0.5
@@ -70,13 +145,15 @@
 																					 4 7 6 6 5 4"/>
 							</GeometryModel3D.Geometry>
 							<GeometryModel3D.Material>
-								<DiffuseMaterial Brush="Transparent"/>
+								<DiffuseMaterial Brush="Green"/>
 							</GeometryModel3D.Material>
 							<GeometryModel3D.BackMaterial>
-								<DiffuseMaterial Brush="Transparent"/>
+								<DiffuseMaterial Brush="Green"/>
 							</GeometryModel3D.BackMaterial>
-						</GeometryModel3D>
-						<GeometryModel3D>
+						</GeometryModel3D>-->
+						
+						
+						<!--<GeometryModel3D>
 							<GeometryModel3D.Geometry>
 								<MeshGeometry3D Positions="0.382,-0.29, -0.5
 																					 0.530,-0.29, -0.5
@@ -94,16 +171,20 @@
 																					 4 7 6 6 5 4"/>
 							</GeometryModel3D.Geometry>
 							<GeometryModel3D.Material>
-								<DiffuseMaterial Brush="Transparent"/>
+								<DiffuseMaterial Brush="White"/>
 							</GeometryModel3D.Material>
 							<GeometryModel3D.BackMaterial>
-								<DiffuseMaterial Brush="Transparent"/>
+								<DiffuseMaterial Brush="White"/>
 							</GeometryModel3D.BackMaterial>
-						</GeometryModel3D>
+						</GeometryModel3D>-->
+						
+						
 					</Model3DGroup>
 				</ModelVisual3D.Content>
 			</ModelVisual3D>
 		</Viewport3D>
+		
+		
 		<!--<StackPanel Orientation="Vertical">
 			<StackPanel Name="spViewMatrix" Orientation="Vertical" Width="400" HorizontalAlignment="Left">
 				<StackPanel Orientation="Horizontal">

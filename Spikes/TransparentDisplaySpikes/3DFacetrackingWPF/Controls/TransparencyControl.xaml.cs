@@ -32,5 +32,6 @@ namespace SpikeWPF.Controls
 			Distance = 2;
 			InitializeComponent();
 		}
+
 	}
 }

@@ -140,7 +140,7 @@ namespace SpikeWPF
 			}
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
 
-			if (head != null)
+			if (head != null && head.TrackingState == JointTrackingState.Tracked)
 				HeadV = new Vector3D(head.Position.X, head.Position.Y + 0.39, head.Position.Z);
 		}
 

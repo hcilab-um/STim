@@ -26,17 +26,25 @@ namespace SpikeWPF.Controls
 		private static readonly Point3D startH = new Point3D(-0.530, -0.29, -0.5);
 		private static readonly Point3D endH = new Point3D(0.530, -0.29, -0.5);
 
+		public static readonly DependencyProperty DistanceProperty = DependencyProperty.Register("Distance", typeof(double), typeof(SpatialAlignControl));
 		public static readonly DependencyProperty HeadVProperty = DependencyProperty.Register("HeadV", typeof(Vector3D), typeof(SpatialAlignControl));
+
+		public double Distance
+		{
+			get { return (double)GetValue(DistanceProperty); }
+			set { SetValue(DistanceProperty, value); }
+		}
 
 		public Vector3D HeadV
 		{
 			get { return (Vector3D)GetValue(HeadVProperty); }
 			set { SetValue(HeadVProperty, value); }
 		}
+
 		public SpatialAlignControl()
 		{
 			InitializeComponent();
-			drawGrid();
+			//drawGrid();
 		}
 
 		private void drawGrid()
@@ -81,9 +89,6 @@ namespace SpikeWPF.Controls
 
 			viewport.Children.Add(normal0Wire);
 		}
-		protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-		{
-			base.OnPropertyChanged(e);
-		}
+
 	}
 }

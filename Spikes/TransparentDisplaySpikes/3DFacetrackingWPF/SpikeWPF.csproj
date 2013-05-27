@@ -59,8 +59,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters\HeadConeLocationConverter.cs" />
+    <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="DiscGeometry3D.cs" />
+    <Compile Include="Planets.cs" />
     <Compile Include="RoundMesh3D.cs" />
     <Compile Include="SkeletonDrawer.cs" />
     <Compile Include="SphereGeometry3D.cs" />

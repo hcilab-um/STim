@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="NotificationZoneConstrain" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">4</Value>
+      <Value Profile="(Default)">3</Value>
     </Setting>
   </Settings>
 </SettingsFile>

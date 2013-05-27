@@ -10,7 +10,7 @@ namespace SpikeWPF
 	/// <summary>
 	/// Resource from: http://www.codeproject.com/Articles/14414/Generating-a-sphere-mesh-in-XAML
 	/// </summary>
-	class SphereGeometry3D : RoundMesh3D
+	public class SphereGeometry3D : RoundMesh3D
 	{
 		protected override void CalculateGeometry()
 		{
