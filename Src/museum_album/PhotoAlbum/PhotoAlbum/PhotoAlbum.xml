@@ -8,10 +8,10 @@ instructions.
   <Application>
     <Title>100 Masters Art Album</Title>
     <Description>Album</Description>
-    <ExecutableFile>C:\Users\surface\Desktop\PhotoAlbum\PhotoAlbum\bin\debug\PhotoAlbum.exe</ExecutableFile>
+    <ExecutableFile>C:\Users\hci\Documents\GitHub\STim\Src\museum_album\PhotoAlbum\PhotoAlbum\bin\debug\PhotoAlbum.exe</ExecutableFile>
     <Arguments>
     </Arguments>
-    <IconImageFile>C:\Users\surface\Desktop\PhotoAlbum\PhotoAlbum\Resources\100M.jpg</IconImageFile>
+    <IconImageFile>C:\Users\hci\Documents\GitHub\STim\Src\museum_album\PhotoAlbum\PhotoAlbum\Resources\icon.jpg</IconImageFile>
     <Tags>
       <!--
       If your application uses tagged objects, please uncomment this section to register the tags with the Shell. 

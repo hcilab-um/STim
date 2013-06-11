@@ -108,6 +108,8 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\WoodBackground1.png" />
+    <Resource Include="Resources\WoodBackground2.png" />
     <Resource Include="Resources\100M.jpg" />
     <Content Include="Resources\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
