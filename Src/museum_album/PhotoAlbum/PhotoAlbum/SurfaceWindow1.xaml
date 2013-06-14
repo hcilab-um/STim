@@ -1,0 +1,21 @@
+﻿<s:SurfaceWindow x:Class="PhotoAlbum.SurfaceWindow1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="http://schemas.microsoft.com/surface/2008"
+    Title="PhotoAlbum" WindowStyle="None">
+    <s:SurfaceWindow.Background>
+        <ImageBrush ImageSource="Resources/WoodBackground1.png"/>
+    </s:SurfaceWindow.Background>
+    <Grid>
+        <s:ScatterView x:Name="ScatterContainer"/>
+        <Label x:Name="TextLabel" Foreground="Black" Content="sdfd" Visibility="Hidden"  />
+        <s:SurfaceButton Background="Transparent" x:Name="LoadButton" Width="122" Height="118" Click="LoadButton_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,28,82">
+            <s:SurfaceButton.Content>
+
+                <Image Source="/PhotoAlbum;component/Resources/uploadimg2.png">
+    
+                </Image>
+            </s:SurfaceButton.Content>
+        </s:SurfaceButton>
+    </Grid>
+</s:SurfaceWindow>
