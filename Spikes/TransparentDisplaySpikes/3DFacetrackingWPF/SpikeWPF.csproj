@@ -59,10 +59,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AttentionEstimator.cs" />
+    <Compile Include="ColorImageReadyArgs.cs" />
     <Compile Include="Controls\AttentionTrackingControl.xaml.cs">
       <DependentUpon>AttentionTrackingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanVisibilityConverter.cs" />
+    <Compile Include="Core.cs" />
     <Compile Include="DiscGeometry3D.cs" />
     <Compile Include="Planets.cs" />
     <Compile Include="RoundMesh3D.cs" />

@@ -19,9 +19,22 @@ namespace SpikeWPF.Controls
 	/// </summary>
 	public partial class AttentionTrackingControl : UserControl
 	{
+		public Core CoreInstance 
+		{
+			get { return Core.Instance; }
+		}
 		public AttentionTrackingControl()
 		{
 			InitializeComponent();
+			CoreInstance.ColorImageReady += new EventHandler<ColorImageReadyArgs>(CoreInstance_ColorImageReady);
+		}
+
+		void CoreInstance_ColorImageReady(object sender, ColorImageReadyArgs e)
+		{
+			ImageSource colorFrame = e.Frame;
+			if (colorFrame == null)
+				return;
+			iAttentionInfo.Source = colorFrame;
 		}
 	}
 }

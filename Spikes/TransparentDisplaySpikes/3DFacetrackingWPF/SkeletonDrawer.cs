@@ -62,7 +62,7 @@ namespace SpikeWPF
 
 		public void DrawFullSkeleton(Skeleton skeleton, DrawingContext drawingContext)
 		{
-			if (skeleton == null)
+			if (skeleton == null || skeleton.TrackingState != SkeletonTrackingState.Tracked)
 				return;
 
 			// Render Torso

@@ -7,7 +7,7 @@
              d:DesignHeight="600" d:DesignWidth="1200">
 	<StackPanel Orientation="Horizontal">
 		<StackPanel Width="600">
-			<Image x:Name="attentionInfoImage" HorizontalAlignment="Stretch"/>
+			<Image x:Name="iAttentionInfo" HorizontalAlignment="Stretch"/>
 		</StackPanel>
 		<Grid Width="600">
 			<Grid.ColumnDefinitions>

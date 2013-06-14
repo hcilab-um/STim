@@ -7,19 +7,20 @@
 		mc:Ignorable="d" x:Class="SpikeWPF.MainWindow"
     WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
     Name="mWindow" Title="MainWindow" 
-		Loaded="Window_Loaded_1" Closing="Window_Closing_1" Height="580" Width="1075">
+		Height="580" Width="1075">
 	<Window.Resources>
 		<converters:HeadDistanceConverter x:Key="hdConverter"/>
 		<converters:BooleanVisibilityConverter x:Key="bvConverter"/>
 	</Window.Resources>
 	<Grid>
-		<controls:SpatialAlignControl HeadV="{Binding ElementName=mWindow, Path=HeadV}" 
-																	Distance ="{Binding ElementName=mWindow, Path=HeadV, Converter={StaticResource ResourceKey=hdConverter}}"
+		<controls:SpatialAlignControl HeadV="{Binding ElementName=mWindow, Path=CorenInstance.HeadV}" 
+																	Distance ="{Binding ElementName=mWindow, Path=CoreInstance.HeadV, Converter={StaticResource ResourceKey=hdConverter}}"
 																	Visibility="{Binding ElementName=cbiSpatial, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
-		<controls:TransparencyControl Distance ="{Binding ElementName=mWindow, Path=HeadV, Converter={StaticResource ResourceKey=hdConverter}}" 
+		<controls:TransparencyControl Distance ="{Binding ElementName=mWindow, Path=CoreInstance.HeadV, Converter={StaticResource ResourceKey=hdConverter}}" 
 																	Visibility="{Binding ElementName=cbiDistanceTransparency, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
 		<controls:AttentionTrackingControl 
 																	Visibility="{Binding ElementName=cbiAttention, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
+		
 		<ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="150">
 			<ComboBoxItem Name="cbiAttention" Content="Attention Tracking" IsSelected="True"/>
 			<ComboBoxItem Name="cbiSpatial" Content="Spatial Align" IsSelected="False"/>
