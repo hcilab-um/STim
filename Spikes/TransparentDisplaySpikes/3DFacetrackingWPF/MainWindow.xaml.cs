@@ -83,19 +83,19 @@ namespace SpikeWPF
 		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
 
-			//using (ColorImageFrame colorImageFrame = e.OpenColorImageFrame())
-			//{
-			//  if (colorImageFrame == null)
-			//    return;
-			//  colorImageFrame.CopyPixelDataTo(this.colorImage);
-			//}
+			using (ColorImageFrame colorImageFrame = e.OpenColorImageFrame())
+			{
+				if (colorImageFrame == null)
+					return;
+				colorImageFrame.CopyPixelDataTo(this.colorImage);
+			}
 
-			//using (DepthImageFrame depthImageFrame = e.OpenDepthImageFrame())
-			//{
-			//  if (depthImageFrame == null)
-			//    return;
-			//  depthImageFrame.CopyPixelDataTo(this.depthImage);
-			//}
+			using (DepthImageFrame depthImageFrame = e.OpenDepthImageFrame())
+			{
+				if (depthImageFrame == null)
+					return;
+				depthImageFrame.CopyPixelDataTo(this.depthImage);
+			}
 
 			using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
 			{

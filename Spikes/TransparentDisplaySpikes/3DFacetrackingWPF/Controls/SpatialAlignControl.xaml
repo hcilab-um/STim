@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 						 xmlns:converters="clr-namespace:SpikeWPF.Converters"
 						 xmlns:local="clr-namespace:SpikeWPF" 
-						 x:Name="saControl" mc:Ignorable="d">
+						 x:Name="saControl" mc:Ignorable="d" 
+						 d:DesignHeight="600" d:DesignWidth="1200">
 	<UserControl.Resources>
 		<converters:HeadViewMatrixConverter x:Key="hvmConverter"/>
 		<converters:HeadProjectionMatrixConverter x:Key="hpmConverter"/>

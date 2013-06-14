@@ -18,8 +18,11 @@
 																	Visibility="{Binding ElementName=cbiSpatial, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
 		<controls:TransparencyControl Distance ="{Binding ElementName=mWindow, Path=HeadV, Converter={StaticResource ResourceKey=hdConverter}}" 
 																	Visibility="{Binding ElementName=cbiDistanceTransparency, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
+		<controls:AttentionTrackingControl 
+																	Visibility="{Binding ElementName=cbiAttention, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
 		<ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="150">
-			<ComboBoxItem Name="cbiSpatial" Content="Spatial Align" IsSelected="True"/>
+			<ComboBoxItem Name="cbiAttention" Content="Attention Tracking" IsSelected="True"/>
+			<ComboBoxItem Name="cbiSpatial" Content="Spatial Align" IsSelected="False"/>
 			<ComboBoxItem Name="cbiDistanceTransparency" Content="Distance Transparency" IsSelected="False"/>
 		</ComboBox>
 	</Grid>

@@ -59,12 +59,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\AttentionTrackingControl.xaml.cs">
+      <DependentUpon>AttentionTrackingControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="DiscGeometry3D.cs" />
     <Compile Include="Planets.cs" />
     <Compile Include="RoundMesh3D.cs" />
     <Compile Include="SkeletonDrawer.cs" />
     <Compile Include="SphereGeometry3D.cs" />
+    <Page Include="Controls\AttentionTrackingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SpatialAlignControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
