@@ -104,6 +104,7 @@ namespace STimWPF
 					KinectSensor.DepthStream.Enable();
 					KinectSensor.ColorStream.Enable();
 					KinectSensor.SkeletonStream.Enable();
+					KinectSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
 					KinectSensor.Start();
 					KinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - KinectSensor.ElevationAngle);
@@ -329,7 +330,7 @@ namespace STimWPF
 			using (DrawingContext drawingContext = dgColorImageAndSkeleton.Open())
 			{
 				InitializeColorImage(colorFrame, drawingContext);
-				skeletonDrawer.DrawFullSkeleton(skeleton, drawingContext);
+				skeletonDrawer.DrawUpperSkeleton(skeleton, drawingContext);
 			}
 
 			//Make sure the image remains within the defined width and height
