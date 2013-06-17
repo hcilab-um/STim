@@ -23,6 +23,9 @@ namespace SpikeWPF
 
 		private Vector3D headV = new Vector3D(0, 0, Settings.Default.NotificationZoneConstrain);
 
+		private List<Skeleton> skeletons;
+		private Dictionary<Skeleton, double> skeletonAttentionList;
+
 		public Vector3D HeadV
 		{
 			get { return headV; }
@@ -32,6 +35,8 @@ namespace SpikeWPF
 				OnPropertyChanged("HeadV");
 			}
 		}
+
+		public AttentionEstimator AttentionE { get; set; }
 
 		public bool IsKinectConnected { get; set; }
 
@@ -65,6 +70,7 @@ namespace SpikeWPF
 				}
 				else
 				{
+					skeletonAttentionList = new Dictionary<Skeleton, double>();
 					IsKinectConnected = true;
 					kinectSensor.ColorStream.Enable();
 					kinectSensor.SkeletonStream.Enable();
@@ -76,27 +82,31 @@ namespace SpikeWPF
 
 		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
-			Skeleton[] skeletons = null;
+			Skeleton[] rawSkeletons = null;
 			using(SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
 			{
 				if (skeletonFrame != null)
 				{
-					skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
-					skeletonFrame.CopySkeletonDataTo(skeletons);
+					rawSkeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
+					skeletonFrame.CopySkeletonDataTo(rawSkeletons);
 				}
 			}
 
-			ProcessSkeleton(skeletons);
-
+			if (rawSkeletons != null)
+			{
+				skeletons = rawSkeletons.Where(temp => temp.TrackingState == SkeletonTrackingState.Tracked).ToList();
+				ProcessSkeleton(skeletons);
+			}
 
 			using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
 			{
 				if (colorFrame != null)
 				{
-					DrawingImage imageCanvas = DrawImage(colorFrame, skeletons);
+					DrawingImage imageCanvas = DrawImage(colorFrame, rawSkeletons);
 					ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
 				}
 			}
+
 		}
 
 		private const float RenderWidth = 640.0f;
@@ -116,6 +126,8 @@ namespace SpikeWPF
 					foreach (Skeleton skeleton in skeletons)
 					{
 						skeletonDrawer.DrawFullSkeleton(skeleton, drawingContext);
+						//FormattedText
+						//drawingContext.DrawText(
 					}
 				}
  			}
@@ -125,17 +137,25 @@ namespace SpikeWPF
 			return drawingImage;
 		}
 
-		private void ProcessSkeleton(Skeleton[] skeletons)
+		private void ProcessSkeleton(List<Skeleton> skeletons)
 		{
-			if (skeletons == null || skeletons[0] == null)
+			if (skeletons.Count ==0)
 				return;
+
 			Skeleton skeleton = skeletons[0];
+			
+			foreach (Skeleton skel in skeletons)
+			{
+				double attention = AttentionE.CalculateAttention(skel, skeletons);
+				skeletonAttentionList.Add(skel, attention);
+			}
 
 			if (skeleton == null)
 			{
 				HeadV = new Vector3D(0, 0, 10);
 				return;
 			}
+
 			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
 
 			if (head != null && head.TrackingState == JointTrackingState.Tracked)
