@@ -60,6 +60,28 @@ namespace SpikeWPF
 			}
 		}
 
+		public void DrawUpperSkeleton(Skeleton skeleton, DrawingContext drawingContext)
+		{
+			if (skeleton == null)
+				return;
+
+			// Render Torso
+			this.DrawBone(skeleton, drawingContext, JointType.Head, JointType.ShoulderCenter);
+			this.DrawBone(skeleton, drawingContext, JointType.ShoulderCenter, JointType.ShoulderLeft);
+			this.DrawBone(skeleton, drawingContext, JointType.ShoulderCenter, JointType.ShoulderRight);
+
+			// Left Arm
+			this.DrawBone(skeleton, drawingContext, JointType.ShoulderLeft, JointType.ElbowLeft);
+			this.DrawBone(skeleton, drawingContext, JointType.ElbowLeft, JointType.WristLeft);
+			this.DrawBone(skeleton, drawingContext, JointType.WristLeft, JointType.HandLeft);
+
+			// Right Arm
+			this.DrawBone(skeleton, drawingContext, JointType.ShoulderRight, JointType.ElbowRight);
+			this.DrawBone(skeleton, drawingContext, JointType.ElbowRight, JointType.WristRight);
+			this.DrawBone(skeleton, drawingContext, JointType.WristRight, JointType.HandRight);
+
+		}
+
 		public void DrawFullSkeleton(Skeleton skeleton, DrawingContext drawingContext)
 		{
 			if (skeleton == null || skeleton.TrackingState != SkeletonTrackingState.Tracked)
@@ -159,6 +181,7 @@ namespace SpikeWPF
 
 			drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
 		}
+
 		#endregion
 
 		#region skeletonPoint to 2D point translation
@@ -167,7 +190,7 @@ namespace SpikeWPF
 		/// </summary>
 		/// <param name="skelpoint">point to map</param>
 		/// <returns>mapped point</returns>
-		private Point SkeletonPointToScreen(SkeletonPoint skelpoint)
+		public Point SkeletonPointToScreen(SkeletonPoint skelpoint)
 		{
 			// Convert point to depth space.  
 			// We are not using depth directly, but we do want the points in our 640x480 output resolution.

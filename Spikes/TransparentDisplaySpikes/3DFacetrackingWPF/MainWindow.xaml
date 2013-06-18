@@ -13,7 +13,7 @@
 		<converters:BooleanVisibilityConverter x:Key="bvConverter"/>
 	</Window.Resources>
 	<Grid>
-		<controls:SpatialAlignControl HeadV="{Binding ElementName=mWindow, Path=CorenInstance.HeadV}" 
+		<controls:SpatialAlignControl HeadV="{Binding ElementName=mWindow, Path=CoreInstance.HeadV}" 
 																	Distance ="{Binding ElementName=mWindow, Path=CoreInstance.HeadV, Converter={StaticResource ResourceKey=hdConverter}}"
 																	Visibility="{Binding ElementName=cbiSpatial, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
 		<controls:TransparencyControl Distance ="{Binding ElementName=mWindow, Path=CoreInstance.HeadV, Converter={StaticResource ResourceKey=hdConverter}}" 

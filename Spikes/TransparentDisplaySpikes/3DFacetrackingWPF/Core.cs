@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.ComponentModel;
 using SpikeWPF.Properties;
+using System.Globalization;
 
 namespace SpikeWPF
 {
@@ -71,6 +72,8 @@ namespace SpikeWPF
 				else
 				{
 					skeletonAttentionList = new Dictionary<Skeleton, double>();
+					skeletons = new List<Skeleton>();
+					AttentionE = new AttentionEstimator();
 					IsKinectConnected = true;
 					kinectSensor.ColorStream.Enable();
 					kinectSensor.SkeletonStream.Enable();
@@ -102,7 +105,7 @@ namespace SpikeWPF
 			{
 				if (colorFrame != null)
 				{
-					DrawingImage imageCanvas = DrawImage(colorFrame, rawSkeletons);
+					DrawingImage imageCanvas = DrawImage(colorFrame, skeletons);
 					ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
 				}
 			}
@@ -112,7 +115,7 @@ namespace SpikeWPF
 		private const float RenderWidth = 640.0f;
 		private const float RenderHeight = 480.0f;
 		
-		private DrawingImage DrawImage(ColorImageFrame colorFrame, Skeleton [] skeletons)
+		private DrawingImage DrawImage(ColorImageFrame colorFrame, List<Skeleton> skeletons)
 		{
 			DrawingGroup dgColorImageAndSkeleton = new DrawingGroup();
 			DrawingImage drawingImage = new DrawingImage(dgColorImageAndSkeleton);
@@ -121,13 +124,20 @@ namespace SpikeWPF
 			using (DrawingContext drawingContext = dgColorImageAndSkeleton.Open())
 			{
 				InitializeDrawingImage(colorFrame, drawingContext);
-				if (skeletons != null)
+				if (skeletons.Count != 0)
 				{
 					foreach (Skeleton skeleton in skeletons)
 					{
-						skeletonDrawer.DrawFullSkeleton(skeleton, drawingContext);
+						skeletonDrawer.DrawUpperSkeleton(skeleton, drawingContext);
+						Joint head = skeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.Head);
+						Point headP = skeletonDrawer.SkeletonPointToScreen(head.Position);
+						headP.Y -= 50;
 						//FormattedText
-						//drawingContext.DrawText(
+						drawingContext.DrawText( 
+							new FormattedText(skeletonAttentionList[skeleton].ToString(), CultureInfo.GetCultureInfo("en-us"),
+																FlowDirection.LeftToRight, new Typeface("Verdana"),
+																20, System.Windows.Media.Brushes.Yellow),
+							headP);
 					}
 				}
  			}
@@ -142,12 +152,30 @@ namespace SpikeWPF
 			if (skeletons.Count ==0)
 				return;
 
-			Skeleton skeleton = skeletons[0];
+			//double attention = AttentionE.CalculateSocialEffect(null, skeletons);
 			
 			foreach (Skeleton skel in skeletons)
 			{
 				double attention = AttentionE.CalculateAttention(skel, skeletons);
-				skeletonAttentionList.Add(skel, attention);
+				//double attention = AttentionE.CalculateOrientationAngle(skel);
+				//double attention = AttentionE.CalculateSocialEffect(skel, skeletons);
+				skeletonAttentionList.Add(skel, Math.Round(attention, 2));
+			}
+
+			Skeleton skeleton = null;
+
+			//find closest skeleton and playerIndex. 
+			//Idea from: http://stackoverflow.com/questions/13847046/getuserpixels-alternative-in-official-kinect-sdk/13849204#13849204
+			foreach (Skeleton skel in skeletons)
+			{
+					if (skeleton == null)
+					{
+						skeleton  = skel;
+					}
+					else if (skeleton.Position.Z > skel.Position.Z)
+					{
+						skeleton  = skel;
+					}
 			}
 
 			if (skeleton == null)
