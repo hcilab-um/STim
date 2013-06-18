@@ -24,9 +24,6 @@ namespace SpikeWPF
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		const double SCREEN_WIDTH = 1.02;
-		const double SCREEN_HEIGHT = 0.58;
-		
 		public Core CoreInstance
 		{
 			get { return Core.Instance; }

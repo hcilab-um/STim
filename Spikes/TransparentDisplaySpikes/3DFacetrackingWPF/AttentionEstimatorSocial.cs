@@ -7,12 +7,33 @@ using System.Windows;
 
 namespace SpikeWPF
 {
-	public class AttentionEstimator
+	public class AttentionEstimatorSocial
 	{
 		private const double ORIENTATION_PARAMETER = 0.5;
 		private const double BOTHER_PARAMETER = 6.0;
 		private const double TRACKING_DISTANCE = 5.0;
-		
+
+		public AttentionSocial CalculateAttention(Skeleton userSkeleton, List<Skeleton> skeletons)
+		{
+			//Calculate Social Function: Bother effect
+			double socialEffect = CalculateSocialEffect(userSkeleton, skeletons);
+
+			double orientationAngleAlpha = CalculateOrientationAngle(userSkeleton);
+			double orientationEffect = 1 - Math.Pow(orientationAngleAlpha / 180, 0.5);
+
+			double distanceEffect = TRACKING_DISTANCE / userSkeleton.Position.Z;
+
+			double attention = orientationEffect * distanceEffect * socialEffect;
+			AttentionSocial attentionSocial = new AttentionSocial()
+			{
+				DistanceEffect = distanceEffect,
+				SocialEffect = socialEffect,
+				OrientationEffect = orientationEffect,
+				AttentionValue = attention
+			};
+			return attentionSocial;
+		}
+
 		public double CalculateBotherAngleBeta(Skeleton userSkeleton, Skeleton botherSkeleton)
 		{
 			Point userPoint = new Point(userSkeleton.Position.X, userSkeleton.Position.Z);
@@ -49,38 +70,20 @@ namespace SpikeWPF
 
 		public double CalculateSocialEffect(Skeleton userSkeleton, List<Skeleton> skeletons)
 		{
-			double botherAngleBeta = 180;
-			double minBotherEffect = 0;
+			double minBotherEffect = Math.Tanh((180 - 45) * BOTHER_PARAMETER * Math.PI / 180 / 2) + 0.5;
 			List<double> botherList = new List<double>();
 			foreach (Skeleton skel in skeletons)
 			{
 				if (skel == userSkeleton)
 					continue;
-				botherAngleBeta = CalculateBotherAngleBeta(userSkeleton, skel);
+				double botherAngleBeta = CalculateBotherAngleBeta(userSkeleton, skel);
 				double botherEffect = Math.Tanh((botherAngleBeta - 45) * BOTHER_PARAMETER * Math.PI / 180 / 2) + 0.5;
 				botherList.Add(botherEffect);
-				//botherList.Add(botherAngleBeta);
 			}
 
-			if (botherList.Count != 0)
+			if (botherList.Count > 0)
 				minBotherEffect = botherList.Min();
 			return minBotherEffect;
-		}
-
-		public double CalculateAttention(Skeleton userSkeleton, List<Skeleton> skeletons)
-		{
-			double orientationAngleAlpha = 0;
-			
-			//Calculate Social Function: Bother effect
-			double socialEffect = CalculateSocialEffect(userSkeleton, skeletons);
-			
-			orientationAngleAlpha = CalculateOrientationAngle(userSkeleton);
-			double orientationEffect = 1 - Math.Pow(orientationAngleAlpha / 180, 0.5);
-
-			double distanceEffect = TRACKING_DISTANCE / userSkeleton.Position.Z;
-
-			double attention = orientationEffect * distanceEffect * socialEffect;
-			return attention;
 		}
 
 	}

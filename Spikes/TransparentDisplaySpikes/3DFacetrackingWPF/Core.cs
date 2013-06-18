@@ -15,6 +15,8 @@ namespace SpikeWPF
 {
 	public class Core : INotifyPropertyChanged
 	{
+		const int MINIMUM_JOINT_THRESHOLD = 7;
+
 		private static KinectSensor kinectSensor;
 
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
@@ -25,8 +27,8 @@ namespace SpikeWPF
 		private Vector3D headV = new Vector3D(0, 0, Settings.Default.NotificationZoneConstrain);
 
 		private List<Skeleton> skeletons;
-		private Dictionary<Skeleton, double> skeletonAttentionList;
-
+		private Dictionary<int, AttentionSocial> skeletonAttentionSocialList;
+		private Dictionary<int, AttentionSimple> skeletonAttentionSimpleList;
 		public Vector3D HeadV
 		{
 			get { return headV; }
@@ -37,7 +39,8 @@ namespace SpikeWPF
 			}
 		}
 
-		public AttentionEstimator AttentionE { get; set; }
+		public AttentionEstimatorSocial AttentionEstimatorSocial { get; set; }
+		public AttentionEstimatorSimple AttentionEstimatorSimple { get; set; }
 
 		public bool IsKinectConnected { get; set; }
 
@@ -71,14 +74,29 @@ namespace SpikeWPF
 				}
 				else
 				{
-					skeletonAttentionList = new Dictionary<Skeleton, double>();
-					skeletons = new List<Skeleton>();
-					AttentionE = new AttentionEstimator();
 					IsKinectConnected = true;
 					kinectSensor.ColorStream.Enable();
-					kinectSensor.SkeletonStream.Enable();
+					TransformSmoothParameters smoothParameters = new TransformSmoothParameters()
+					{
+						Smoothing = 0.7f,
+						Correction = 0.1f,
+						Prediction = 0.1f,
+						JitterRadius = 0.05f,
+						MaxDeviationRadius = 0.04f
+					};
+
+					kinectSensor.SkeletonStream.Enable(smoothParameters);
+					kinectSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
 					kinectSensor.Start();
+	
 					kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
+
+					skeletonAttentionSocialList = new Dictionary<int, AttentionSocial>();
+					skeletonAttentionSimpleList = new Dictionary<int, AttentionSimple>();
+					skeletons = new List<Skeleton>();
+
+					AttentionEstimatorSocial = new AttentionEstimatorSocial();
+					AttentionEstimatorSimple = new AttentionEstimatorSimple();
 				}
 			}
 		}
@@ -97,8 +115,8 @@ namespace SpikeWPF
 
 			if (rawSkeletons != null)
 			{
-				skeletons = rawSkeletons.Where(temp => temp.TrackingState == SkeletonTrackingState.Tracked).ToList();
-				ProcessSkeleton(skeletons);
+				skeletons = ExtractValidSkeletons(rawSkeletons);
+				ProcessSkeletons(skeletons);
 			}
 
 			using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
@@ -109,11 +127,53 @@ namespace SpikeWPF
 					ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
 				}
 			}
-
 		}
 
-		private const float RenderWidth = 640.0f;
-		private const float RenderHeight = 480.0f;
+		private List<Skeleton> ExtractValidSkeletons(Skeleton[] rawSkeletons)
+		{
+			
+			var skList = rawSkeletons.Where(skeleton => skeleton.TrackingState == SkeletonTrackingState.Tracked);
+			skList = skList.Where(skeleton => skeleton.Joints.Count(joint => joint.TrackingState == JointTrackingState.Tracked) > MINIMUM_JOINT_THRESHOLD);
+			return skList.ToList();
+		}
+
+		private void ProcessSkeletons(List<Skeleton> skeletons)
+		{
+			if (skeletons.Count == 0)
+				return;
+
+			foreach (Skeleton skel in skeletons)
+			{
+				AttentionSocial attentionSocial = AttentionEstimatorSocial.CalculateAttention(skel, skeletons);
+				if (skeletonAttentionSocialList.ContainsKey(skel.TrackingId))
+					skeletonAttentionSocialList[skel.TrackingId] = attentionSocial;
+				else
+					skeletonAttentionSocialList.Add(skel.TrackingId, attentionSocial);
+
+				AttentionSimple attentionSimple = AttentionEstimatorSimple.CalculateAttention(skel);
+				if (skeletonAttentionSimpleList.ContainsKey(skel.TrackingId))
+					skeletonAttentionSimpleList[skel.TrackingId] = attentionSimple;
+				else
+					skeletonAttentionSimpleList.Add(skel.TrackingId, attentionSimple);
+			}
+
+			//find closest skeleton and playerIndex. 
+			skeletons.Sort((x, y) => (int)(x.Position.Z - y.Position.Z));
+			Skeleton closestSkeleton = skeletons.FirstOrDefault();
+
+			if (closestSkeleton == null)
+			{
+				HeadV = new Vector3D(0, 0, 10);
+				return;
+			}
+
+			Joint head = closestSkeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
+			if (head != null && head.TrackingState == JointTrackingState.Tracked)
+				HeadV = new Vector3D(head.Position.X, head.Position.Y + 0.39, head.Position.Z);
+		}
+
+		private const float RENDER_WIDTH = 640.0f;
+		private const float RENDER_HEIGHT = 480.0f;
 		
 		private DrawingImage DrawImage(ColorImageFrame colorFrame, List<Skeleton> skeletons)
 		{
@@ -131,63 +191,29 @@ namespace SpikeWPF
 						skeletonDrawer.DrawUpperSkeleton(skeleton, drawingContext);
 						Joint head = skeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.Head);
 						Point headP = skeletonDrawer.SkeletonPointToScreen(head.Position);
-						headP.Y -= 50;
+						Point socialDataP = headP;
+						socialDataP.Y = headP.Y - 50;
+
+						Point simpleDataP = headP;
+						simpleDataP.Y = headP.Y - 90;
+
 						//FormattedText
 						drawingContext.DrawText( 
-							new FormattedText(skeletonAttentionList[skeleton].ToString(), CultureInfo.GetCultureInfo("en-us"),
+							new FormattedText(skeletonAttentionSocialList[skeleton.TrackingId].ToString(), CultureInfo.GetCultureInfo("en-us"),
 																FlowDirection.LeftToRight, new Typeface("Verdana"),
-																20, System.Windows.Media.Brushes.Yellow),
-							headP);
+																20, System.Windows.Media.Brushes.Green),
+							socialDataP);
+						drawingContext.DrawText(
+							new FormattedText(skeletonAttentionSimpleList[skeleton.TrackingId].ToString(), CultureInfo.GetCultureInfo("en-us"),
+										FlowDirection.LeftToRight, new Typeface("Verdana"), 20, System.Windows.Media.Brushes.Green),
+							simpleDataP);
 					}
 				}
  			}
 
 			//Make sure the image remains within the defined width and height
-			dgColorImageAndSkeleton.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+			dgColorImageAndSkeleton.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RENDER_WIDTH, RENDER_HEIGHT));
 			return drawingImage;
-		}
-
-		private void ProcessSkeleton(List<Skeleton> skeletons)
-		{
-			if (skeletons.Count ==0)
-				return;
-
-			//double attention = AttentionE.CalculateSocialEffect(null, skeletons);
-			
-			foreach (Skeleton skel in skeletons)
-			{
-				double attention = AttentionE.CalculateAttention(skel, skeletons);
-				//double attention = AttentionE.CalculateOrientationAngle(skel);
-				//double attention = AttentionE.CalculateSocialEffect(skel, skeletons);
-				skeletonAttentionList.Add(skel, Math.Round(attention, 2));
-			}
-
-			Skeleton skeleton = null;
-
-			//find closest skeleton and playerIndex. 
-			//Idea from: http://stackoverflow.com/questions/13847046/getuserpixels-alternative-in-official-kinect-sdk/13849204#13849204
-			foreach (Skeleton skel in skeletons)
-			{
-					if (skeleton == null)
-					{
-						skeleton  = skel;
-					}
-					else if (skeleton.Position.Z > skel.Position.Z)
-					{
-						skeleton  = skel;
-					}
-			}
-
-			if (skeleton == null)
-			{
-				HeadV = new Vector3D(0, 0, 10);
-				return;
-			}
-
-			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
-
-			if (head != null && head.TrackingState == JointTrackingState.Tracked)
-				HeadV = new Vector3D(head.Position.X, head.Position.Y + 0.39, head.Position.Z);
 		}
 
 		private static void InitializeDrawingImage(ColorImageFrame colorFrame, DrawingContext drawingContext)
@@ -199,12 +225,12 @@ namespace SpikeWPF
 				int stride = colorFrame.Width * 4;
 
 				ImageSource imageBackground = BitmapSource.Create(640, 480, 96, 96, PixelFormats.Bgr32, null, cbyte, stride);
-				drawingContext.DrawImage(imageBackground, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+				drawingContext.DrawImage(imageBackground, new Rect(0.0, 0.0, RENDER_WIDTH, RENDER_HEIGHT));
 			}
 			else
 			{
 				// Draw a transparent background to set the render size
-				drawingContext.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+				drawingContext.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RENDER_WIDTH, RENDER_HEIGHT));
 			}
 		}
 
