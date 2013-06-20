@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media.Media3D;
 
-namespace SpikeWPF
+namespace SpikeWPF.Graphic3D
 {
 	public class Math3D
 	{

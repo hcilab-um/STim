@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 using System.Windows.Media.Media3D;
+using SpikeWPF.Graphic3D;
 
 namespace SpikeWPF.Converters
 {

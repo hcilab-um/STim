@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SpikeWPF
+namespace SpikeWPF.Graphic3D
 {
 	public class BigPlanet : SphereGeometry3D
 	{

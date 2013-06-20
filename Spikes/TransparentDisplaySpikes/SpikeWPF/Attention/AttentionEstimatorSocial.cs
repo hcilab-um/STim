@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Kinect;
 using System.Windows;
 
-namespace SpikeWPF
+namespace SpikeWPF.Attention
 {
 	public class AttentionEstimatorSocial
 	{
@@ -13,7 +13,7 @@ namespace SpikeWPF
 		private const double BOTHER_PARAMETER = 6.0;
 		private const double TRACKING_DISTANCE = 5.0;
 
-		public AttentionSocial CalculateAttention(Skeleton userSkeleton, List<Skeleton> skeletons)
+		public AttentionSocial CalculateAttention(Skeleton userSkeleton, Skeleton [] skeletons)
 		{
 			//Calculate Social Function: Bother effect
 			double socialEffect = CalculateSocialEffect(userSkeleton, skeletons);
@@ -68,7 +68,7 @@ namespace SpikeWPF
 			return orientationAngle;
 		}
 
-		public double CalculateSocialEffect(Skeleton userSkeleton, List<Skeleton> skeletons)
+		public double CalculateSocialEffect(Skeleton userSkeleton, Skeleton [] skeletons)
 		{
 			double minBotherEffect = Math.Tanh((180 - 45) * BOTHER_PARAMETER * Math.PI / 180 / 2) + 0.5;
 			List<double> botherList = new List<double>();

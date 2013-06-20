@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Kinect;
 using System.Windows;
 
-namespace SpikeWPF
+namespace SpikeWPF.Attention
 {
 	public class AttentionEstimatorSimple
 	{

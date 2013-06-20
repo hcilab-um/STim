@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SpikeWPF
+namespace SpikeWPF.Attention
 {
 	public struct AttentionSimple
 	{
@@ -13,7 +13,7 @@ namespace SpikeWPF
 
 		public override string ToString()
 		{
-			return "Simple(" + SimpleOrientationEffect.ToString(".00") + ", " + SimpleDistanceEffect.ToString(".00") + ") = " + SimpleAttentionValue.ToString(".00");
+			return String.Format("Simple({0},{1}) = {2}", SimpleOrientationEffect.ToString(".00"), SimpleDistanceEffect.ToString(".00"), SimpleAttentionValue.ToString(".00"));
 		}
 	}
 }

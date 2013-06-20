@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 						 xmlns:converters="clr-namespace:SpikeWPF.Converters"
-						 xmlns:local="clr-namespace:SpikeWPF" 
+						 xmlns:graphic3d="clr-namespace:SpikeWPF.Graphic3D" 
 						 x:Name="saControl" mc:Ignorable="d" 
 						 d:DesignHeight="600" d:DesignWidth="1200">
 	<UserControl.Resources>
@@ -14,8 +14,8 @@
 	</UserControl.Resources>
 	<Grid Background="{Binding ElementName=saControl, Path=Distance, Converter={StaticResource ResourceKey=dcConverter}, ConverterParameter=white}">
 		<Grid.Resources>
-			<local:BigPlanet x:Key="SphereSource1"/>
-			<local:SmallPlanet x:Key="SphereSource2"/>
+			<graphic3d:BigPlanet x:Key="SphereSource1"/>
+			<graphic3d:SmallPlanet x:Key="SphereSource2"/>
 			
 			<MeshGeometry3D x:Key="SphereGeometry1" 
 											Positions="{Binding Source={StaticResource ResourceKey=SphereSource1}, Path=Points}"
