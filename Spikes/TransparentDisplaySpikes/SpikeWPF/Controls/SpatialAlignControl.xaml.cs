@@ -44,7 +44,7 @@ namespace SpikeWPF.Controls
 		public SpatialAlignControl()
 		{
 			InitializeComponent();
-			//drawGrid();
+			drawGrid();
 		}
 
 		private void drawGrid()
