@@ -62,6 +62,33 @@ namespace STimWPF
 			}
 		}
 
+		public void DrawUpperSkeleton(Skeleton skeleton, DrawingContext drawingContext)
+		{
+			if (skeleton == null)
+				return;
+
+			// Render Torso
+			this.DrawBone(skeleton, drawingContext, JointType.Head, JointType.ShoulderCenter);
+			this.DrawBone(skeleton, drawingContext, JointType.ShoulderCenter, JointType.ShoulderLeft);
+			this.DrawBone(skeleton, drawingContext, JointType.ShoulderCenter, JointType.ShoulderRight);
+
+			// Left Arm
+			this.DrawBone(skeleton, drawingContext, JointType.ShoulderLeft, JointType.ElbowLeft);
+			this.DrawBone(skeleton, drawingContext, JointType.ElbowLeft, JointType.WristLeft);
+			this.DrawBone(skeleton, drawingContext, JointType.WristLeft, JointType.HandLeft);
+
+			// Right Arm
+			this.DrawBone(skeleton, drawingContext, JointType.ShoulderRight, JointType.ElbowRight);
+			this.DrawBone(skeleton, drawingContext, JointType.ElbowRight, JointType.WristRight);
+			this.DrawBone(skeleton, drawingContext, JointType.WristRight, JointType.HandRight);
+
+			// Render Joints
+			foreach (Joint joint in skeleton.Joints)
+			{
+				RenderAJoint(drawingContext, joint);
+			}
+		}
+
 		public void DrawFullSkeleton(Skeleton skeleton, DrawingContext drawingContext)
 		{
 			if (skeleton == null)
