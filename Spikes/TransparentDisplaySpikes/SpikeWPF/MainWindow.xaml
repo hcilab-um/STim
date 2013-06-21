@@ -13,16 +13,20 @@
 		<converters:BooleanVisibilityConverter x:Key="bvConverter"/>
 	</Window.Resources>
 	<Grid>
-		<controls:SpatialAlignControl HeadV="{Binding ElementName=mWindow, Path=CoreInstance.HeadV}" 
-																	Distance ="{Binding ElementName=mWindow, Path=CoreInstance.HeadV, Converter={StaticResource ResourceKey=hdConverter}}"
+		<controls:SpatialAlignControl HeadLocationV="{Binding ElementName=mWindow, Path=CoreInstance.HeadLocationV}" 
+																	Distance ="{Binding ElementName=mWindow, Path=CoreInstance.HeadLocationV, Converter={StaticResource ResourceKey=hdConverter}}"
 																	Visibility="{Binding ElementName=cbiSpatial, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
-		<controls:TransparencyControl Distance ="{Binding ElementName=mWindow, Path=CoreInstance.HeadV, Converter={StaticResource ResourceKey=hdConverter}}" 
+		<controls:TransparencyControl Distance ="{Binding ElementName=mWindow, Path=CoreInstance.HeadLocationV, Converter={StaticResource ResourceKey=hdConverter}}" 
 																	Visibility="{Binding ElementName=cbiDistanceTransparency, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
 		<controls:AttentionTrackingControl 
 																	Visibility="{Binding ElementName=cbiAttention, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
-		
+		<controls:VisualDirectionControl HeadLocationV="{Binding ElementName=mWindow, Path=CoreInstance.HeadLocationV}" 
+																		 HeadOrientationV="{Binding ElementName=mWindow, Path=CoreInstance.HeadOrientationV}" 
+																		 Visibility="{Binding ElementName=cbiView, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
+																		 
 		<ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="150">
-			<ComboBoxItem Name="cbiAttention" Content="Attention Tracking" IsSelected="True"/>
+			<ComboBoxItem Name="cbiView" Content="ViewDirection" IsSelected="True"/>
+			<ComboBoxItem Name="cbiAttention" Content="Attention Tracking" IsSelected="False"/>
 			<ComboBoxItem Name="cbiSpatial" Content="Spatial Align" IsSelected="False"/>
 			<ComboBoxItem Name="cbiDistanceTransparency" Content="Distance Transparency" IsSelected="False"/>
 		</ComboBox>

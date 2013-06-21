@@ -5,5 +5,11 @@
     <Setting Name="NotificationZoneConstrain" Type="System.Double" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
+    <Setting Name="DisplayWidthInMeters" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1.06</Value>
+    </Setting>
+    <Setting Name="DisplayHeightInMeters" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.58</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

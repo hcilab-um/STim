@@ -6,30 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1200">
 	<StackPanel Orientation="Horizontal">
-		<StackPanel Width="900">
 			<Image x:Name="iAttentionInfo" HorizontalAlignment="Stretch"/>
-		</StackPanel>
-		<Grid Width="600">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-		</Grid>
 	</StackPanel>
 </UserControl>

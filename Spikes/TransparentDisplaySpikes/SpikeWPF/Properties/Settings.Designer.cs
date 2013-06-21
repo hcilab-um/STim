@@ -34,5 +34,29 @@ namespace SpikeWPF.Properties {
                 this["NotificationZoneConstrain"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1.06")]
+        public double DisplayWidthInMeters {
+            get {
+                return ((double)(this["DisplayWidthInMeters"]));
+            }
+            set {
+                this["DisplayWidthInMeters"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.58")]
+        public double DisplayHeightInMeters {
+            get {
+                return ((double)(this["DisplayHeightInMeters"]));
+            }
+            set {
+                this["DisplayHeightInMeters"] = value;
+            }
+        }
     }
 }
