@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="SpikeWPF.Controls.VisualDirectionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+						 xmlns:converters="clr-namespace:SpikeWPF.Converters"
+             mc:Ignorable="d" Name="vdControl"
+             d:DesignHeight="500" d:DesignWidth="1000" >
+	<UserControl.Resources>
+		<converters:LocationOrientationViewConverter x:Key="lovConverter"/>
+	</UserControl.Resources>
+	<Grid>
+		<Canvas Name="cvViewDirection" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+			<Ellipse Name="eVisual" Fill="Green" Width="200" Height="200">
+				<Ellipse.Margin>
+					<MultiBinding Converter="{StaticResource ResourceKey=lovConverter}">
+						<Binding ElementName="vdControl" Path="HeadLocationV"/>
+						<Binding ElementName="vdControl" Path="HeadOrientationV"/>
+					</MultiBinding>
+				</Ellipse.Margin>
+			</Ellipse>
+		</Canvas>
+		<Label Content="{Binding ElementName=vdControl, Path=HeadOrientationV}" FontSize="30" Width="1000" Height="200"/>
+	</Grid>
+</UserControl>

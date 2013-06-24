@@ -17,7 +17,16 @@ namespace SpikeWPF
 {
 	public class Core : INotifyPropertyChanged
 	{
-		const int MINIMUM_JOINT_THRESHOLD = 15;
+		private const int MINIMUM_JOINT_THRESHOLD = 7;
+		private const float RENDER_WIDTH = 640.0f;
+		private const float RENDER_HEIGHT = 480.0f;
+
+		private const int EYE_PLANE_LEFT_TOP = 14;
+		private const int EYE_PLANE_RIGHT_TOP = 29;
+		private const int EYE_PLANE_LEFT_BOTTOM = 47;
+		private const int EYE_PLANE_RIGHT_BOTTOM = 62;
+
+		private const double KINECT_DISPLAY_CENTER_DISTANCE_Y = 0.39;
 
 		private static KinectSensor kinectSensor;
 		private static Core instance;
@@ -32,20 +41,32 @@ namespace SpikeWPF
 		private byte[] colorImage;
 		private short[] depthImage;
 
-		private Vector3D headV = new Vector3D(0, 0, Settings.Default.NotificationZoneConstrain);
+		private Vector3D headLocationV = new Vector3D(0, 0, Settings.Default.NotificationZoneConstrain);
+		private Vector3D headOrientationV = new Vector3D(0, 0, 0);
 
-		private Skeleton[] skeletons;
+		private Skeleton[] skeletons = null;
 		private Dictionary<int, AttentionSocial> skeletonAttentionSocialList;
 		private Dictionary<int, AttentionSimple> skeletonAttentionSimpleList;
 
-		public Vector3D HeadV
+		public Vector3D HeadLocationV
 		{
-			get { return headV; }
+			get { return headLocationV; }
 			set
 			{
-				headV = value;
-				OnPropertyChanged("HeadV");
+				headLocationV = value;
+				OnPropertyChanged("HeadLocationV");
 			}
+		}
+
+		public Vector3D HeadOrientationV
+		{
+			get { return headOrientationV; }
+			set
+			{
+				headOrientationV = value;
+				OnPropertyChanged("HeadOrientationV");
+			}
+ 
 		}
 
 		public AttentionEstimatorSocial AttentionEstimatorSocial { get; set; }
@@ -97,14 +118,13 @@ namespace SpikeWPF
 					kinectSensor.SkeletonStream.Enable(smoothParameters);
 					kinectSensor.DepthStream.Enable();
 					kinectSensor.ColorStream.Enable();
-					kinectSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
+					kinectSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
 					kinectSensor.Start();
 
 					kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 
 					skeletonAttentionSocialList = new Dictionary<int, AttentionSocial>();
 					skeletonAttentionSimpleList = new Dictionary<int, AttentionSimple>();
-					skeletons = null;
 
 					AttentionEstimatorSocial = new AttentionEstimatorSocial();
 					AttentionEstimatorSimple = new AttentionEstimatorSimple();
@@ -151,7 +171,7 @@ namespace SpikeWPF
 				}
 			}
 
-			if (skeletons == null)
+			if (skeletons == null || colorImage == null || depthImage == null)
 				return;
 
 			// Update the list of trackers and the trackers with the current frame information
@@ -161,7 +181,7 @@ namespace SpikeWPF
 				if (!this.faceTrackers.ContainsKey(skeleton.TrackingId))
 				{
 					this.faceTrackers.Add(skeleton.TrackingId, new FaceTracker(kinectSensor));
-					
+
 				}
 
 				FaceTrackFrame faceFrame = null;
@@ -218,7 +238,7 @@ namespace SpikeWPF
 
 			if (closestSkeleton == null)
 			{
-				HeadV = new Vector3D(0, 0, 10);
+				HeadLocationV = new Vector3D(0, 0, 5);
 				return;
 			}
 
@@ -226,19 +246,25 @@ namespace SpikeWPF
 			if (this.faceFrames.TryGetValue(closestSkeleton.TrackingId, out closestFace) && closestFace.TrackSuccessful)
 			{
 				var FacePoints = closestFace.Get3DShape();
-				Vector3DF leftEyeInner = FacePoints[FeaturePoint.InnerCornerLeftEye];
-				Vector3DF leftEyeOuter = FacePoints[FeaturePoint.OuterCornerOfLeftEye];
-				HeadV = new Vector3D((leftEyeInner.X + leftEyeOuter.X) / 2, (leftEyeInner.Y + leftEyeOuter.Y) / 2 + 0.39, (leftEyeInner.Z + leftEyeOuter.Z) / 2);
-				return;
+
+				Vector3DF eyeTopLeft = FacePoints[EYE_PLANE_LEFT_TOP];
+				Vector3DF eyeTopRight = FacePoints[EYE_PLANE_LEFT_BOTTOM];
+				Vector3DF eyeBottomLeft = FacePoints[EYE_PLANE_RIGHT_TOP];
+				Vector3DF eyeBottomRight = FacePoints[EYE_PLANE_RIGHT_BOTTOM];
+
+				Vector3D FacePlaneV1 = new Vector3D(eyeTopLeft.X - eyeBottomRight.X, eyeTopLeft.Y - eyeBottomRight.Y, eyeTopLeft.Z - eyeBottomRight.Z);
+				Vector3D FacePlaneV2 = new Vector3D(eyeTopRight.X - eyeBottomLeft.X, eyeTopRight.Y - eyeBottomLeft.Y, eyeTopRight.Z - eyeBottomLeft.Z);
+
+				HeadOrientationV = Vector3D.CrossProduct(FacePlaneV1, FacePlaneV2);
+				HeadOrientationV.Normalize();
+				if (HeadOrientationV.Z > 0)
+					throw new Exception("Right hand rule violation");
 			}
 
 			Joint head = closestSkeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
 			if (head != null && head.TrackingState == JointTrackingState.Tracked)
-				HeadV = new Vector3D(head.Position.X, head.Position.Y + 0.39, head.Position.Z);
+				HeadLocationV = new Vector3D(head.Position.X, head.Position.Y + KINECT_DISPLAY_CENTER_DISTANCE_Y, head.Position.Z);
 		}
-
-		private const float RENDER_WIDTH = 640.0f;
-		private const float RENDER_HEIGHT = 480.0f;
 
 		private DrawingImage DrawImage(ColorImageFrame colorFrame, Skeleton[] skeletons)
 		{
@@ -255,7 +281,7 @@ namespace SpikeWPF
 				{
 					foreach (Skeleton skeleton in skeletons)
 					{
-						skeletonDrawer.DrawFullSkeleton(skeleton, drawingContext);
+						skeletonDrawer.DrawUpperSkeleton(skeleton, drawingContext);
 						Joint head = skeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.Head);
 						System.Windows.Point headP = skeletonDrawer.SkeletonPointToScreen(head.Position);
 						System.Windows.Point socialDataP = headP;

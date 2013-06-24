@@ -27,7 +27,7 @@ namespace SpikeWPF.Controls
 		private static readonly Point3D endH = new Point3D(0.530, -0.29, -0.5);
 
 		public static readonly DependencyProperty DistanceProperty = DependencyProperty.Register("Distance", typeof(double), typeof(SpatialAlignControl));
-		public static readonly DependencyProperty HeadVProperty = DependencyProperty.Register("HeadV", typeof(Vector3D), typeof(SpatialAlignControl));
+		public static readonly DependencyProperty HeadLocationVProperty = DependencyProperty.Register("HeadLocationV", typeof(Vector3D), typeof(SpatialAlignControl));
 
 		public double Distance
 		{
@@ -35,10 +35,10 @@ namespace SpikeWPF.Controls
 			set { SetValue(DistanceProperty, value); }
 		}
 
-		public Vector3D HeadV
+		public Vector3D HeadLocationV
 		{
-			get { return (Vector3D)GetValue(HeadVProperty); }
-			set { SetValue(HeadVProperty, value); }
+			get { return (Vector3D)GetValue(HeadLocationVProperty); }
+			set { SetValue(HeadLocationVProperty, value); }
 		}
 
 		public SpatialAlignControl()

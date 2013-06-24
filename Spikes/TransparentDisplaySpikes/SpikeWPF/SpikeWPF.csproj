@@ -71,9 +71,13 @@
     <Compile Include="Controls\AttentionTrackingControl.xaml.cs">
       <DependentUpon>AttentionTrackingControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\VisualDirectionControl.xaml.cs">
+      <DependentUpon>VisualDirectionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="Attention\AttentionEstimatorSimple.cs" />
     <Compile Include="Attention\AttentionSimple.cs" />
+    <Compile Include="Converters\LocationOrientationViewConverter.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Graphic3D\DiscGeometry3D.cs" />
     <Compile Include="Graphic3D\Planets.cs" />
@@ -89,6 +93,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TransparencyControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\VisualDirectionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
