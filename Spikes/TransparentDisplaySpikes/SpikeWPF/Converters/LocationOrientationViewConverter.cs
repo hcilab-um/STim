@@ -15,24 +15,42 @@ namespace SpikeWPF.Converters
 		{
 			Thickness th = new Thickness(){ Left =0, Top = 0};
 			if (values == DependencyProperty.UnsetValue || values[0] == DependencyProperty.UnsetValue
-				|| values[1] == DependencyProperty.UnsetValue)
+				|| values[1] == DependencyProperty.UnsetValue || values[2] == DependencyProperty.UnsetValue 
+				|| values[3] == DependencyProperty.UnsetValue || values[4] == DependencyProperty.UnsetValue
+				|| values[5] == DependencyProperty.UnsetValue)
 				return th;
-			Vector3D headLocation = (Vector3D)values[0];
-			Vector3D headOrientation = (Vector3D)values[1]; 
-			double width = 1920;
-			double height = 1080;
+			Point3D headLocation = (Point3D)values[0];
+			Vector3D headOrientation = (Vector3D)values[1];
 
-			double rational = -headLocation.Z / headOrientation.Z;
+			double width = (double)values[2];
+			double height = (double)values[3];
+			
+			int rowCount = (int)values[4];
+			int colCount = (int)values[5];
+			
+			double rectWidth = width / colCount;
+			double rectHeight = height / rowCount;
 
-			double displayLocationX = headOrientation.X * rational + headLocation.X;
-			double displayLocationY = headOrientation.Y *rational +headLocation.Y - 0.14;
+			double displayPhysicalLocationX = Double.MaxValue;
+			double displayPhysicalLocationY = Double.MaxValue;
+			
+			if (headOrientation.Z != 0)
+			{
+				double rational = -headLocation.Z / headOrientation.Z;
+				displayPhysicalLocationX = headOrientation.X * rational + headLocation.X;
+				displayPhysicalLocationY = headOrientation.Y * rational + headLocation.Y;
+			}
 
-			th.Left = displayLocationX / Settings.Default.DisplayWidthInMeters * width + width / 2 - 100;
-			th.Left = Math.Max(th.Left, 0);
-			th.Left = Math.Min(th.Left, width-100);
-			th.Top = height/2 - displayLocationY / Settings.Default.DisplayHeightInMeters * height;
-			th.Top = Math.Max(th.Top, 0);
-			th.Top = Math.Min(th.Top, height-100);
+			int column = (int)((displayPhysicalLocationX / Settings.Default.DisplayWidthInMeters * width +width/2) / rectWidth);
+			int row = (int)((-displayPhysicalLocationY / Settings.Default.DisplayHeightInMeters * height + height / 2) / rectHeight);
+			
+			column = Math.Max(0, column);
+			column = Math.Min(column, colCount - 1);
+			row = Math.Max(0, row);
+			row = Math.Min(row, rowCount - 1);
+
+			th.Left = column * rectWidth;
+			th.Top = row * rectHeight;
 			return th;
 		}
 

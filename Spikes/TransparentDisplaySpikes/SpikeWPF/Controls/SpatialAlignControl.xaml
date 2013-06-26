@@ -24,11 +24,12 @@
 											Positions="{Binding Source={StaticResource ResourceKey=SphereSource2}, Path=Points}"
 											TriangleIndices="{Binding Source={StaticResource ResourceKey=SphereSource2}, Path=TriangleIndices}"/>
 		</Grid.Resources>
+		
 		<Viewport3D x:Name="viewport" HorizontalAlignment="Stretch">
 			<Viewport3D.Camera>
 				<MatrixCamera x:Name="mCamera" 
-											ViewMatrix="{Binding ElementName=saControl, Path=HeadV, Converter={StaticResource ResourceKey=hvmConverter}}"
-											ProjectionMatrix="{Binding ElementName=saControl, Path=HeadV, Converter={StaticResource ResourceKey=hpmConverter}}"/>
+											ViewMatrix="{Binding ElementName=saControl, Path=HeadLocation, Converter={StaticResource ResourceKey=hvmConverter}}"
+											ProjectionMatrix="{Binding ElementName=saControl, Path=HeadLocation, Converter={StaticResource ResourceKey=hpmConverter}}"/>
 			</Viewport3D.Camera>
 			<ModelVisual3D>
 				<ModelVisual3D.Content>
@@ -240,9 +241,9 @@
 				</StackPanel>
 			</StackPanel>
 			<StackPanel Orientation="Horizontal" Margin="0,50" Width="300" HorizontalAlignment="Left">
-				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=saControl, Path=HeadV.X, FallbackValue=0}"/>
-				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=saControl, Path=HeadV.Y, FallbackValue=0}"/>
-				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=saControl, Path=HeadV.Z, FallbackValue=0}"/>
+				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=saControl, Path=HeadLocation.X, FallbackValue=0}"/>
+				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=saControl, Path=HeadLocation.Y, FallbackValue=0}"/>
+				<Label Width="100" FontSize="20" Foreground="Blue" Content="{Binding ElementName=saControl, Path=HeadLocation.Z, FallbackValue=0}"/>
 			</StackPanel>
 		</StackPanel>-->
 	</Grid>

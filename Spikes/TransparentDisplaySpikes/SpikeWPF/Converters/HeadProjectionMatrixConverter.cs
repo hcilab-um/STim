@@ -15,7 +15,7 @@ namespace SpikeWPF.Converters
 
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			Vector3D CamPos = (Vector3D)value;
+			Point3D CamPos = (Point3D)value;
 			double zn = 0.2;
 			double zf = 100;
 

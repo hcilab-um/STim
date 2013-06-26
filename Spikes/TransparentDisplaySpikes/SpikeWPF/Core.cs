@@ -21,58 +21,17 @@ namespace SpikeWPF
 		private const float RENDER_WIDTH = 640.0f;
 		private const float RENDER_HEIGHT = 480.0f;
 
-		private const int EYE_PLANE_LEFT_TOP = 14;
-		private const int EYE_PLANE_RIGHT_TOP = 29;
-		private const int EYE_PLANE_LEFT_BOTTOM = 47;
-		private const int EYE_PLANE_RIGHT_BOTTOM = 62;
+		private const int FACE_TOP = 35;
+		private const int LEFT_EYE = 19;
+		private const int RIGHT_EYE = 54;
+		private const int FACE_BOTTOM = 43;
 
-		private const double KINECT_DISPLAY_CENTER_DISTANCE_Y = 0.39;
-
-		private static KinectSensor kinectSensor;
-		private static Core instance;
+		private const double KINECT_DISPLAY_CENTER_DISTANCE_Y = 0.58 / 2 + 0.275;
+		private const double KINECT_DISPLAY_CENTER_DISTACE_Z = 0.17;
 
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 
-		private SkeletonDrawer skeletonDrawer;
-
-		private Dictionary<int, FaceTracker> faceTrackers = new Dictionary<int, FaceTracker>();
-		private Dictionary<int, FaceTrackFrame> faceFrames = new Dictionary<int, FaceTrackFrame>();
-
-		private byte[] colorImage;
-		private short[] depthImage;
-
-		private Vector3D headLocationV = new Vector3D(0, 0, Settings.Default.NotificationZoneConstrain);
-		private Vector3D headOrientationV = new Vector3D(0, 0, 0);
-
-		private Skeleton[] skeletons = null;
-		private Dictionary<int, AttentionSocial> skeletonAttentionSocialList;
-		private Dictionary<int, AttentionSimple> skeletonAttentionSimpleList;
-
-		public Vector3D HeadLocationV
-		{
-			get { return headLocationV; }
-			set
-			{
-				headLocationV = value;
-				OnPropertyChanged("HeadLocationV");
-			}
-		}
-
-		public Vector3D HeadOrientationV
-		{
-			get { return headOrientationV; }
-			set
-			{
-				headOrientationV = value;
-				OnPropertyChanged("HeadOrientationV");
-			}
- 
-		}
-
-		public AttentionEstimatorSocial AttentionEstimatorSocial { get; set; }
-		public AttentionEstimatorSimple AttentionEstimatorSimple { get; set; }
-
-		public bool IsKinectConnected { get; set; }
+		private static Core instance;
 
 		public static Core Instance
 		{
@@ -82,6 +41,29 @@ namespace SpikeWPF
 					instance = new Core();
 				return instance;
 			}
+		}
+
+		private static KinectSensor kinectSensor;
+
+		public bool IsKinectConnected { get; set; }
+		private int currentFrame = 0;
+
+		private Matrix3D originTransform;
+
+		private SkeletonDrawer skeletonDrawer;
+		private byte[] colorImage;
+		private short[] depthImage;
+
+		private Dictionary<int, WagSkeleton> currentVisitors = new Dictionary<int, WagSkeleton>();
+		private Dictionary<int, FaceTracker> faceTrackers = new Dictionary<int, FaceTracker>();
+
+		private AttentionEstimatorSimple attentionerSimple = new AttentionEstimatorSimple();
+		private AttentionEstimatorSocial attentionerSocial = new AttentionEstimatorSocial();
+
+		public WagSkeleton ClosestVisitor
+		{
+			get { return currentVisitors.Values.OrderBy<WagSkeleton, double>(skeleton => skeleton.TransformedPosition.Z).FirstOrDefault(); }
+			set { }
 		}
 
 		private Core() { }
@@ -120,21 +102,26 @@ namespace SpikeWPF
 					kinectSensor.ColorStream.Enable();
 					kinectSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
 					kinectSensor.Start();
-
-					kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
-
-					skeletonAttentionSocialList = new Dictionary<int, AttentionSocial>();
-					skeletonAttentionSimpleList = new Dictionary<int, AttentionSimple>();
-
-					AttentionEstimatorSocial = new AttentionEstimatorSocial();
-					AttentionEstimatorSimple = new AttentionEstimatorSimple();
 				}
 			}
+
+			originTransform = SetTransformMatrix(0, KINECT_DISPLAY_CENTER_DISTANCE_Y, KINECT_DISPLAY_CENTER_DISTACE_Z, kinectSensor.ElevationAngle);
+
+			kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
+		}
+
+		private Matrix3D SetTransformMatrix(double offsetX, double offsetY, double offsetZ, int rotateAroundX)
+		{
+			Matrix3D resultMatrix = new Matrix3D();
+			resultMatrix.Rotate(new Quaternion(new Vector3D(10, 0, 0), -rotateAroundX));
+			resultMatrix.Translate(new Vector3D(offsetX, offsetY, -offsetZ));
+			return resultMatrix;
 		}
 
 		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
-			Skeleton[] rawSkeletons = null;
+			currentFrame++;
+			Skeleton[] rawSkeletons = new Skeleton[0];
 
 			using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
 			{
@@ -154,124 +141,140 @@ namespace SpikeWPF
 				}
 			}
 
-			if (rawSkeletons != null)
-			{
-				skeletons = ExtractValidSkeletons(rawSkeletons);
-				ProcessSkeletons(skeletons);
-			}
-
 			using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
 			{
 				if (colorFrame != null)
 				{
 					colorImage = new byte[colorFrame.PixelDataLength];
 					colorFrame.CopyPixelDataTo(colorImage);
-					DrawingImage imageCanvas = DrawImage(colorFrame, skeletons);
+					DrawingImage imageCanvas = DrawImage(colorFrame, currentVisitors.Values.ToArray());
 					ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
 				}
 			}
 
-			if (skeletons == null || colorImage == null || depthImage == null)
+			ExtractValidSkeletons(rawSkeletons);
+
+			if (colorImage == null || depthImage == null)
 				return;
 
-			// Update the list of trackers and the trackers with the current frame information
-			foreach (Skeleton skeleton in this.skeletons)
+			//// Update the list of trackers and the trackers with the current frame information
+			foreach (WagSkeleton skeleton in currentVisitors.Values)
 			{
-				// We want keep a record of any skeleton, tracked or untracked.
-				if (!this.faceTrackers.ContainsKey(skeleton.TrackingId))
-				{
-					this.faceTrackers.Add(skeleton.TrackingId, new FaceTracker(kinectSensor));
-
-				}
-
-				FaceTrackFrame faceFrame = null;
-
-				// Give each tracker the upated frame.
-				FaceTracker faceTracker;
-				if (this.faceTrackers.TryGetValue(skeleton.TrackingId, out faceTracker))
-				{
-					faceFrame = faceTracker.Track(kinectSensor.ColorStream.Format, colorImage, kinectSensor.DepthStream.Format, depthImage, skeleton);
-				}
-
-				if (faceFrame != null)
-				{
-					if (this.faceFrames.ContainsKey(skeleton.TrackingId))
-						this.faceFrames[skeleton.TrackingId] = faceFrame;
-					else
-						this.faceFrames.Add(skeleton.TrackingId, faceFrame);
-				}
+				FaceTracker tracker = faceTrackers[skeleton.TrackingId];
+				skeleton.FaceFrame = tracker.Track(kinectSensor.ColorStream.Format, colorImage, kinectSensor.DepthStream.Format, depthImage, skeleton);
+				skeleton.HeadLocation = CalculateHeadLocation(skeleton);
+				skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
+				skeleton.AttentionSimple = attentionerSimple.CalculateAttention(skeleton);
+				skeleton.AttentionSocial = attentionerSocial.CalculateAttention(skeleton, this.currentVisitors.Values.ToArray());
 			}
 
+			System.GC.Collect();
 		}
 
-		private Skeleton[] ExtractValidSkeletons(Skeleton[] rawSkeletons)
+		private void ExtractValidSkeletons(Skeleton[] rawSkeletons)
 		{
+			var validSkeletons = rawSkeletons.Where(skeleton => skeleton.TrackingState == SkeletonTrackingState.Tracked);
+			validSkeletons = validSkeletons.Where(skeleton => skeleton.Joints.Count(joint => joint.TrackingState == JointTrackingState.Tracked) > MINIMUM_JOINT_THRESHOLD);
 
-			var skList = rawSkeletons.Where(skeleton => skeleton.TrackingState == SkeletonTrackingState.Tracked);
-			skList = skList.Where(skeleton => skeleton.Joints.Count(joint => joint.TrackingState == JointTrackingState.Tracked) > MINIMUM_JOINT_THRESHOLD);
-			return skList.ToArray();
+			foreach (Skeleton skeleton in validSkeletons)
+			{
+				if (currentVisitors.ContainsKey(skeleton.TrackingId))
+					currentVisitors[skeleton.TrackingId].Update(skeleton);
+				else
+				{
+					currentVisitors.Add(skeleton.TrackingId, new WagSkeleton(skeleton));
+					faceTrackers.Add(skeleton.TrackingId, new FaceTracker(kinectSensor));
+				}
+				currentVisitors[skeleton.TrackingId].LastFrameSeen = currentFrame;
+				ApplyTransformations(currentVisitors[skeleton.TrackingId]);
+			}
+
+			var oldSkeletons = currentVisitors.Values.Where(skeleton => skeleton.LastFrameSeen <= (currentFrame - 5)).ToArray();
+			foreach (WagSkeleton skeleton in oldSkeletons)
+			{
+				currentVisitors.Remove(skeleton.TrackingId);
+				faceTrackers.Remove(skeleton.TrackingId);
+			}
+
+			OnPropertyChanged("ClosestVisitor");
 		}
 
-		private void ProcessSkeletons(Skeleton[] skeletons)
+		private void ApplyTransformations(WagSkeleton skeleton)
 		{
-			if (skeletons == null || skeletons.Count() == 0)
-				return;
+			skeleton.TransformedPosition = originTransform.Transform(new Point3D()
+																					{
+																						X = skeleton.Position.X,
+																						Y = skeleton.Position.Y,
+																						Z = skeleton.Position.Z
+																					});
 
-			foreach (Skeleton skel in skeletons)
+			foreach (JointType type in Enum.GetValues(typeof(JointType)))
 			{
-				AttentionSocial attentionSocial = AttentionEstimatorSocial.CalculateAttention(skel, skeletons);
-				if (skeletonAttentionSocialList.ContainsKey(skel.TrackingId))
-					skeletonAttentionSocialList[skel.TrackingId] = attentionSocial;
-				else
-					skeletonAttentionSocialList.Add(skel.TrackingId, attentionSocial);
+				Point3D transformpoint = originTransform.Transform(new Point3D()
+																				{
+																					X = skeleton.Joints[type].Position.X,
+																					Y = skeleton.Joints[type].Position.Y,
+																					Z = skeleton.Joints[type].Position.Z
+																				});
 
-				AttentionSimple attentionSimple = AttentionEstimatorSimple.CalculateAttention(skel);
-				if (skeletonAttentionSimpleList.ContainsKey(skel.TrackingId))
-					skeletonAttentionSimpleList[skel.TrackingId] = attentionSimple;
-				else
-					skeletonAttentionSimpleList.Add(skel.TrackingId, attentionSimple);
+				SkeletonPoint jointPosition = new SkeletonPoint()
+																				{
+																					X = (float)transformpoint.X,
+																					Y = (float)transformpoint.Y,
+																					Z = (float)transformpoint.Z
+																				};
+
+				skeleton.TransformedJoints[type] = new Joint()
+																						{
+																							TrackingState = skeleton.TransformedJoints[type].TrackingState,
+																							Position = jointPosition
+																						};
 			}
+		}
 
-			//find closest skeleton and playerIndex. 
-			skeletons.OrderBy(skeleton => skeleton.Position.Z);
-			Skeleton closestSkeleton = skeletons.FirstOrDefault();
+		private Vector3D CalculateHeadOrientation(WagSkeleton skeleton)
+		{
+			Vector3D headOrientation = new Vector3D(0, 0, -1);
 
-			if (closestSkeleton == null)
-			{
-				HeadLocationV = new Vector3D(0, 0, 5);
-				return;
-			}
+			FaceTrackFrame face = skeleton.FaceFrame;
+			var FacePoints = face.Get3DShape();
 
-			FaceTrackFrame closestFace;
-			if (this.faceFrames.TryGetValue(closestSkeleton.TrackingId, out closestFace) && closestFace.TrackSuccessful)
-			{
-				var FacePoints = closestFace.Get3DShape();
+			Vector3DF eyeLeft = FacePoints[LEFT_EYE];
+			Vector3DF eyeRight = FacePoints[RIGHT_EYE];
+			Vector3DF faceTop = FacePoints[FACE_TOP];
+			Vector3DF faceBottom = FacePoints[FACE_BOTTOM];
 
-				Vector3DF eyeTopLeft = FacePoints[EYE_PLANE_LEFT_TOP];
-				Vector3DF eyeTopRight = FacePoints[EYE_PLANE_LEFT_BOTTOM];
-				Vector3DF eyeBottomLeft = FacePoints[EYE_PLANE_RIGHT_TOP];
-				Vector3DF eyeBottomRight = FacePoints[EYE_PLANE_RIGHT_BOTTOM];
+			Vector3D faceVectorHorizontal = new Vector3D(eyeLeft.X - eyeRight.X, eyeLeft.Y - eyeRight.Y, eyeLeft.Z - eyeRight.Z);
+			Vector3D faceVectorVertical = new Vector3D(faceTop.X - faceBottom.X, faceTop.Y - faceBottom.Y, faceTop.Z - faceBottom.Z);
 
-				Vector3D FacePlaneV1 = new Vector3D(eyeTopLeft.X - eyeBottomRight.X, eyeTopLeft.Y - eyeBottomRight.Y, eyeTopLeft.Z - eyeBottomRight.Z);
-				Vector3D FacePlaneV2 = new Vector3D(eyeTopRight.X - eyeBottomLeft.X, eyeTopRight.Y - eyeBottomLeft.Y, eyeTopRight.Z - eyeBottomLeft.Z);
+			headOrientation = Vector3D.CrossProduct(faceVectorHorizontal, faceVectorVertical);
+			headOrientation = originTransform.Transform(headOrientation);
+			headOrientation.Normalize();
 
-				HeadOrientationV = Vector3D.CrossProduct(FacePlaneV1, FacePlaneV2);
-				HeadOrientationV.Normalize();
-				if (HeadOrientationV.Z > 0)
-					throw new Exception("Right hand rule violation");
-			}
+			Matrix3D headPointsPointUpMatrix = new Matrix3D();
+			headPointsPointUpMatrix.RotateAt(new Quaternion(new Vector3D(1, 0, 0), -20), skeleton.TransformedJoints[JointType.Head].Position.ToPoint3D());
+			Vector3D lowered = headPointsPointUpMatrix.Transform(headOrientation);
 
-			Joint head = closestSkeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.Head);
+			if (headOrientation.Z > 0)
+				throw new Exception("Right hand rule violation");
+
+			return lowered;
+		}
+
+		private Point3D CalculateHeadLocation(WagSkeleton skeleton)
+		{
+			Point3D headLocation = new Point3D(0, 0, 0);
+			Joint head = skeleton.TransformedJoints[JointType.Head];
 			if (head != null && head.TrackingState == JointTrackingState.Tracked)
-				HeadLocationV = new Vector3D(head.Position.X, head.Position.Y + KINECT_DISPLAY_CENTER_DISTANCE_Y, head.Position.Z);
+				headLocation = new Point3D(head.Position.X, head.Position.Y, head.Position.Z);
+			return headLocation;
 		}
 
-		private DrawingImage DrawImage(ColorImageFrame colorFrame, Skeleton[] skeletons)
+		private DrawingImage DrawImage(ColorImageFrame colorFrame, WagSkeleton[] skeletons)
 		{
 			DrawingGroup dgColorImageAndSkeleton = new DrawingGroup();
 			DrawingImage drawingImage = new DrawingImage(dgColorImageAndSkeleton);
 			skeletonDrawer = new SkeletonDrawer(kinectSensor);
-
 
 			using (DrawingContext drawingContext = dgColorImageAndSkeleton.Open())
 			{
@@ -279,7 +282,7 @@ namespace SpikeWPF
 
 				if (skeletons != null && skeletons.Count() > 0)
 				{
-					foreach (Skeleton skeleton in skeletons)
+					foreach (WagSkeleton skeleton in skeletons)
 					{
 						skeletonDrawer.DrawUpperSkeleton(skeleton, drawingContext);
 						Joint head = skeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.Head);
@@ -292,12 +295,12 @@ namespace SpikeWPF
 
 						//FormattedText
 						drawingContext.DrawText(
-							new FormattedText(skeletonAttentionSocialList[skeleton.TrackingId].ToString(), CultureInfo.GetCultureInfo("en-us"),
-																FlowDirection.LeftToRight, new Typeface("Verdana"),
-																20, System.Windows.Media.Brushes.Green),
+							new FormattedText(skeleton.AttentionSocial.ToString(), CultureInfo.GetCultureInfo("en-us"),
+										FlowDirection.LeftToRight, new Typeface("Verdana"), 20, System.Windows.Media.Brushes.Green),
 							socialDataP);
+
 						drawingContext.DrawText(
-							new FormattedText(skeletonAttentionSimpleList[skeleton.TrackingId].ToString(), CultureInfo.GetCultureInfo("en-us"),
+							new FormattedText(skeleton.AttentionSimple.ToString(), CultureInfo.GetCultureInfo("en-us"),
 										FlowDirection.LeftToRight, new Typeface("Verdana"), 20, System.Windows.Media.Brushes.Green),
 							simpleDataP);
 					}

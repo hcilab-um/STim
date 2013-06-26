@@ -13,16 +13,16 @@
 		<converters:BooleanVisibilityConverter x:Key="bvConverter"/>
 	</Window.Resources>
 	<Grid>
-		<controls:SpatialAlignControl HeadLocationV="{Binding ElementName=mWindow, Path=CoreInstance.HeadLocationV}" 
-																	Distance ="{Binding ElementName=mWindow, Path=CoreInstance.HeadLocationV, Converter={StaticResource ResourceKey=hdConverter}}"
-																	Visibility="{Binding ElementName=cbiSpatial, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
-		<controls:TransparencyControl Distance ="{Binding ElementName=mWindow, Path=CoreInstance.HeadLocationV, Converter={StaticResource ResourceKey=hdConverter}}" 
-																	Visibility="{Binding ElementName=cbiDistanceTransparency, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
-		<controls:AttentionTrackingControl 
-																	Visibility="{Binding ElementName=cbiAttention, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
-		<controls:VisualDirectionControl HeadLocationV="{Binding ElementName=mWindow, Path=CoreInstance.HeadLocationV}" 
-																		 HeadOrientationV="{Binding ElementName=mWindow, Path=CoreInstance.HeadOrientationV}" 
+		<controls:VisualDirectionControl HeadLocation="{Binding ElementName=mWindow, Path=CoreInstance.ClosestVisitor.HeadLocation}" 
+																		 HeadOrientation="{Binding ElementName=mWindow, Path=CoreInstance.ClosestVisitor.HeadOrientation}" 
 																		 Visibility="{Binding ElementName=cbiView, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
+		<controls:AttentionTrackingControl Visibility="{Binding ElementName=cbiAttention, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
+		<controls:SpatialAlignControl HeadLocation="{Binding ElementName=mWindow, Path=CoreInstance.ClosestVisitor.HeadLocation}" 
+																	Distance ="{Binding ElementName=mWindow, Path=CoreInstance.ClosestVisitor.HeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"
+																	Visibility="{Binding ElementName=cbiSpatial, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
+		<controls:TransparencyControl Distance ="{Binding ElementName=mWindow, Path=CoreInstance.ClosestVisitor.HeadLocation, Converter={StaticResource ResourceKey=hdConverter}}" 
+																	Visibility="{Binding ElementName=cbiDistanceTransparency, Path=IsSelected, Converter={StaticResource ResourceKey=bvConverter}}"/>
+		
 																		 
 		<ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="150">
 			<ComboBoxItem Name="cbiView" Content="ViewDirection" IsSelected="True"/>

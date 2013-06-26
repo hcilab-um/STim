@@ -11,8 +11,8 @@ namespace SpikeWPF.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			Vector3D headV = (Vector3D)value;
-			return headV.Z;
+			Point3D HeadLocation = (Point3D)value;
+			return HeadLocation.Z;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

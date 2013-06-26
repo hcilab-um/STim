@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Kinect;
 using System.Windows;
 
 namespace SpikeWPF.Attention
@@ -13,7 +12,7 @@ namespace SpikeWPF.Attention
 		private const double BOTHER_PARAMETER = 6.0;
 		private const double TRACKING_DISTANCE = 5.0;
 
-		public AttentionSocial CalculateAttention(Skeleton userSkeleton, Skeleton [] skeletons)
+		public AttentionSocial CalculateAttention(WagSkeleton userSkeleton, WagSkeleton [] skeletons)
 		{
 			//Calculate Social Function: Bother effect
 			double socialEffect = CalculateSocialEffect(userSkeleton, skeletons);
@@ -21,7 +20,7 @@ namespace SpikeWPF.Attention
 			double orientationAngleAlpha = CalculateOrientationAngle(userSkeleton);
 			double orientationEffect = 1 - Math.Pow(orientationAngleAlpha / 180, 0.5);
 
-			double distanceEffect = TRACKING_DISTANCE / userSkeleton.Position.Z;
+			double distanceEffect = TRACKING_DISTANCE / userSkeleton.TransformedPosition.Z;
 
 			double attention = orientationEffect * distanceEffect * socialEffect;
 			AttentionSocial attentionSocial = new AttentionSocial()
@@ -34,11 +33,29 @@ namespace SpikeWPF.Attention
 			return attentionSocial;
 		}
 
-		public double CalculateBotherAngleBeta(Skeleton userSkeleton, Skeleton botherSkeleton)
+		private double CalculateSocialEffect(WagSkeleton userSkeleton, WagSkeleton[] skeletons)
 		{
-			Point userPoint = new Point(userSkeleton.Position.X, userSkeleton.Position.Z);
+			double minBotherEffect = Math.Tanh((180 - 45) * BOTHER_PARAMETER * Math.PI / 180 / 2) + 0.5;
+			List<double> botherList = new List<double>();
+			foreach (WagSkeleton skel in skeletons)
+			{
+				if (skel == userSkeleton)
+					continue;
+				double botherAngleBeta = CalculateBotherAngleBeta(userSkeleton, skel);
+				double botherEffect = Math.Tanh((botherAngleBeta - 45) * BOTHER_PARAMETER * Math.PI / 180 / 2) + 0.5;
+				botherList.Add(botherEffect);
+			}
 
-			Point botherPoint = new Point(botherSkeleton.Position.X, botherSkeleton.Position.Z);
+			if (botherList.Count > 0)
+				minBotherEffect = botherList.Min();
+			return minBotherEffect;
+		}
+
+		private double CalculateBotherAngleBeta(WagSkeleton userSkeleton, WagSkeleton botherSkeleton)
+		{
+			Point userPoint = new Point(userSkeleton.TransformedPosition.X, userSkeleton.TransformedPosition.Z);
+
+			Point botherPoint = new Point(botherSkeleton.TransformedPosition.X, botherSkeleton.TransformedPosition.Z);
 
 			//Point userPoint = new Point(-5, 20);
 			//Point botherPoint = new Point(0, 1);
@@ -49,10 +66,10 @@ namespace SpikeWPF.Attention
 			return botherAngleBeta;
 		}
 
-		public double CalculateOrientationAngle(Skeleton userSkeleton)
+		private double CalculateOrientationAngle(WagSkeleton userSkeleton)
 		{
-			Joint shoulderLeft = userSkeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.ShoulderLeft);
-			Joint shoulderRight = userSkeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.ShoulderRight);
+			Microsoft.Kinect.Joint shoulderLeft = userSkeleton.TransformedJoints.SingleOrDefault(temp => temp.JointType == Microsoft.Kinect.JointType.ShoulderLeft);
+			Microsoft.Kinect.Joint shoulderRight = userSkeleton.TransformedJoints.SingleOrDefault(temp => temp.JointType == Microsoft.Kinect.JointType.ShoulderRight);
 			
 			Point shoulderRightP = new Point(shoulderRight.Position.X, shoulderRight.Position.Z);
 			Point shoulderLeftP = new Point(shoulderLeft.Position.X, shoulderLeft.Position.Z);
@@ -68,23 +85,7 @@ namespace SpikeWPF.Attention
 			return orientationAngle;
 		}
 
-		public double CalculateSocialEffect(Skeleton userSkeleton, Skeleton [] skeletons)
-		{
-			double minBotherEffect = Math.Tanh((180 - 45) * BOTHER_PARAMETER * Math.PI / 180 / 2) + 0.5;
-			List<double> botherList = new List<double>();
-			foreach (Skeleton skel in skeletons)
-			{
-				if (skel == userSkeleton)
-					continue;
-				double botherAngleBeta = CalculateBotherAngleBeta(userSkeleton, skel);
-				double botherEffect = Math.Tanh((botherAngleBeta - 45) * BOTHER_PARAMETER * Math.PI / 180 / 2) + 0.5;
-				botherList.Add(botherEffect);
-			}
 
-			if (botherList.Count > 0)
-				minBotherEffect = botherList.Min();
-			return minBotherEffect;
-		}
 
 	}
 }

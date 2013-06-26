@@ -15,8 +15,8 @@ namespace SpikeWPF.Converters
 
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			Vector3D CamPos = (Vector3D)value;
-			return Math3D.SetViewMatrix((Point3D)CamPos, LOOK_DIR, UP_DIR);
+			Point3D CamPos = (Point3D)value;
+			return Math3D.SetViewMatrix(CamPos, LOOK_DIR, UP_DIR);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

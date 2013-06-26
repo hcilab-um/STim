@@ -15,7 +15,7 @@ namespace SpikeWPF.Attention
 		private const double TRACKING_DISTANCE = 5.0;
 		private const double VISUAL_FIELD = 120;
 
-		public AttentionSimple CalculateAttention(Skeleton userSkeleton)
+		public AttentionSimple CalculateAttention(WagSkeleton userSkeleton)
 		{
 			double orientationEffect = 0;
 			double orientationAngle = CalculateOrientationAngle(userSkeleton);
@@ -23,7 +23,7 @@ namespace SpikeWPF.Attention
 			if (orientationAngleAbs <= VISUAL_FIELD / 2)
 				orientationEffect = (1 - orientationAngleAbs / (VISUAL_FIELD / 2)) * 100;
 
-			double distanceEffect = (1 - userSkeleton.Position.Z / TRACKING_DISTANCE) * 100;
+			double distanceEffect = (1 - userSkeleton.TransformedPosition.Z / TRACKING_DISTANCE) * 100;
 
 			double attention = orientationEffect * ORIENTATION_PARAMETER + distanceEffect * DISTANCE_PARAMETER;
 			
@@ -37,23 +37,10 @@ namespace SpikeWPF.Attention
 			return attentionSimple;
 		}
 
-		//public double CalculateBotherAngleBeta(Skeleton userSkeleton, Skeleton botherSkeleton)
-		//{
-		//  Point userPoint = new Point(userSkeleton.Position.X, userSkeleton.Position.Z);
-
-		//  Point botherPoint = new Point(botherSkeleton.Position.X, botherSkeleton.Position.Z);
-
-		//  Vector userBotherVector = new Vector(botherPoint.X - userPoint.X, botherPoint.Y - userPoint.Y);
-		//  Vector userDisplayVector = -(Vector)userPoint;
-			
-		//  double botherAngleBeta = Math.Abs(Vector.AngleBetween(userBotherVector, userDisplayVector));
-		//  return botherAngleBeta;
-		//}
-
-		public double CalculateOrientationAngle(Skeleton userSkeleton)
+		private double CalculateOrientationAngle(WagSkeleton userSkeleton)
 		{
-			Joint shoulderLeft = userSkeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.ShoulderLeft);
-			Joint shoulderRight = userSkeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.ShoulderRight);
+			Joint shoulderLeft = userSkeleton.TransformedJoints.SingleOrDefault(temp => temp.JointType == JointType.ShoulderLeft);
+			Joint shoulderRight = userSkeleton.TransformedJoints.SingleOrDefault(temp => temp.JointType == JointType.ShoulderRight);
 			
 			Point shoulderRightP = new Point(shoulderRight.Position.X, shoulderRight.Position.Z);
 			Point shoulderLeftP = new Point(shoulderLeft.Position.X, shoulderLeft.Position.Z);
