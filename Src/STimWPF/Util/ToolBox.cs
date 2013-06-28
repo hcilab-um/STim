@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Kinect;
+using System.Windows;
 using System.Windows.Media.Media3D;
 
 namespace STimWPF.Util
 {
-	public class ToolBox
+	public static class ToolBox
 	{
-		internal static Vector3D GetDisplacementVector(Vector3D lastPos, Vector3D currentPos)
+		public static Point3D ToPoint3D(this SkeletonPoint skelPoint)
 		{
-			Vector3D displacement = new Vector3D(0, 0, 0);
-			if (lastPos.Length == 0)
-				return displacement;
+			return new Point3D() { X = skelPoint.X, Y = skelPoint.Y, Z = skelPoint.Z };
+		}
 
+		internal static Vector GetMovementVector(Point3D lastPos, Point3D currentPos)
+		{
+			Vector displacement = new Vector(0, 0);
 			displacement.X = currentPos.X - lastPos.X;
 			displacement.Y = currentPos.Y - lastPos.Y;
-			displacement.Z = currentPos.Z - lastPos.Z;
 			return displacement;
 		}
 

@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Media;
 using Microsoft.Kinect;
-using System.Windows;
-
 
 namespace STimWPF
 {
-
 	class SkeletonDrawer
 	{
 		private const float RenderWidth = 640.0f;
@@ -32,12 +30,12 @@ namespace STimWPF
 			this.DrawBone(skeleton, drawingContext, JointType.ShoulderRight, JointType.ElbowRight);
 			this.DrawBone(skeleton, drawingContext, JointType.ElbowRight, JointType.WristRight);
 			this.DrawBone(skeleton, drawingContext, JointType.WristRight, JointType.HandRight);
-			
+
 			Joint shoulderR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.ShoulderRight);
 			Joint elbowR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.ElbowRight);
 			Joint wristR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.WristRight);
 			Joint handR = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == JointType.HandRight);
-			
+
 			RenderAJoint(drawingContext, shoulderR);
 			RenderAJoint(drawingContext, elbowR);
 			RenderAJoint(drawingContext, wristR);
@@ -82,16 +80,11 @@ namespace STimWPF
 			this.DrawBone(skeleton, drawingContext, JointType.ElbowRight, JointType.WristRight);
 			this.DrawBone(skeleton, drawingContext, JointType.WristRight, JointType.HandRight);
 
-			// Render Joints
-			foreach (Joint joint in skeleton.Joints)
-			{
-				RenderAJoint(drawingContext, joint);
-			}
 		}
 
 		public void DrawFullSkeleton(Skeleton skeleton, DrawingContext drawingContext)
 		{
-			if (skeleton == null)
+			if (skeleton == null || skeleton.TrackingState != SkeletonTrackingState.Tracked)
 				return;
 
 			// Render Torso
@@ -188,6 +181,7 @@ namespace STimWPF
 
 			drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
 		}
+
 		#endregion
 
 		#region skeletonPoint to 2D point translation
@@ -196,7 +190,7 @@ namespace STimWPF
 		/// </summary>
 		/// <param name="skelpoint">point to map</param>
 		/// <returns>mapped point</returns>
-		private Point SkeletonPointToScreen(SkeletonPoint skelpoint)
+		public Point SkeletonPointToScreen(SkeletonPoint skelpoint)
 		{
 			// Convert point to depth space.  
 			// We are not using depth directly, but we do want the points in our 640x480 output resolution.

@@ -20,53 +20,8 @@ namespace STimWPF
     /// </summary>
     public partial class ContentWindow : Window, INotifyPropertyChanged
     {
-        private MainPage mainPageLeft;
-        private DetailWFPage detailPageLeft;
-
-        private MainPage mainPageRight;
-        private DetailWFPage detailPageRight;
 
         public App AppInstance { get; set; }
-
-        public MainPage MainPageLeft
-        {
-            get { return mainPageLeft; }
-            set
-            {
-                mainPageLeft = value;
-                OnPropertyChanged("MainPageLeft");
-            }
-        }
-
-        public DetailWFPage DetailPageLeft
-        {
-            get { return detailPageLeft; }
-            set
-            {
-                detailPageLeft = value;
-                OnPropertyChanged("DetailPageLeft");
-            }
-        }
-
-        public MainPage MainPageRight
-        {
-            get { return mainPageRight; }
-            set
-            {
-                mainPageRight = value;
-                OnPropertyChanged("MainPageRight");
-            }
-        }
-
-        public DetailWFPage DetailPageRight
-        {
-            get { return detailPageRight; }
-            set
-            {
-                detailPageRight = value;
-                OnPropertyChanged("DetailPageRight");
-            }
-        }
 
         public Core CoreInstance
         {
@@ -83,19 +38,6 @@ namespace STimWPF
         {
             AppInstance.CloseApp(this);
         }
-
-        private void ContentWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            //CoreInstance.DepthImageReady += new EventHandler<DepthImageReadyArgs>(CoreInstance_DepthImageReady);
-        }
-
-				//void CoreInstance_DepthImageReady(object sender, DepthImageReadyArgs e)
-				//{
-				//    if (this.iKinectDepthBig.IsVisible)
-				//        this.iKinectDepthBig.Source = e.Frame;
-				//    if (this.iKinectDepthSmall.IsVisible)
-				//        this.iKinectDepthSmall.Source = e.Frame;
-				//}
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(String name)

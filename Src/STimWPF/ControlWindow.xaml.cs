@@ -31,23 +31,10 @@ namespace STimWPF
 
 		private App appInstance = null;
 		private Dispatcher uiDispatcher = null;
-		private String filePath = String.Empty;
-		private String initialPlaybackFolder = Settings.Default.DestFolder;
 
 		public Core CoreInstance
 		{
 			get { return Core.Instance; }
-		}
-
-		public String FilePath
-		{
-			get { return filePath; }
-			set
-			{
-				filePath = value;
-				OnPropertyChanged("FilePath");
-
-			}
 		}
 
 		public ControlWindow(App appInst)
@@ -55,56 +42,6 @@ namespace STimWPF
 			InitializeComponent();
 			appInstance = appInst;
 			uiDispatcher = Dispatcher;
-		}
-
-
-		private void bBrowse_Click(object sender, RoutedEventArgs e)
-		{
-			OpenFileDialog ofdForm = new OpenFileDialog();
-			ofdForm.Filter = "Skeleton Record (*.kr)|*.kr|All Files|*.*";
-			ofdForm.FilterIndex = 1;
-			ofdForm.InitialDirectory = initialPlaybackFolder;
-			if (ofdForm.ShowDialog().Value)
-			{
-				FilePath = ofdForm.FileName;
-				initialPlaybackFolder = new FileInfo(FilePath).DirectoryName;
-			}
-		}
-
-		private void cbUseFile_Checked(object sender, RoutedEventArgs e)
-		{
-			if (cbUseFile.IsChecked == true)
-			{
-				if (!File.Exists(FilePath))
-				{
-					cbUseFile.IsChecked = false;
-					return;
-				}
-			}
-		}
-
-		private void bStartPlay_click(object sender, RoutedEventArgs e)
-		{
-			if (cbUseFile.IsChecked == true)
-				CoreInstance.PlayBack(tbFilePath.Text, Player_PlaybackFinished, true);
-		}
-
-		//start recording skeleton frame
-		private void bRecordStart_Click(object sender, RoutedEventArgs e)
-		{
-			CoreInstance.Recorder.Start();
-		}
-
-		//stop recording skeleton frame
-		private void bRecordPlayStop_Click(object sender, RoutedEventArgs e)
-		{
-			FilePath = CoreInstance.Recorder.Stop(true, false);
-			CoreInstance.PlayBackFromFile = false;
-		}
-
-		public void Player_PlaybackFinished(object sender, EventArgs e)
-		{
-			CoreInstance.PlayBackFromFile = false;
 		}
 
 		private void OnPropertyChanged(String name)
@@ -130,14 +67,6 @@ namespace STimWPF
 				return;
 
 			iSource.Source = colorFrame;
-			//if (CoreInstance.Recorder.IsRecording && CoreInstance.Recorder.TotalTime >= 10)
-			//  FilePath = CoreInstance.Recorder.Stop(true, false);
 		}
-
-		private void bReset_Click(object sender, RoutedEventArgs e)
-		{
-			CoreInstance.SkeletonF.Reset();
-		}
-
 	}
 }

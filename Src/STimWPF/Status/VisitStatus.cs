@@ -15,14 +15,14 @@ namespace STimWPF.Status
 		public int SkeletonId { get; set; }
 		public DateTime VisitInit { get; set; }
 		public Zone Zone { get; set; }
-		public Vector3D Location { get; set; }
-		public Vector3D MovementDirection { get; set; }
-		public double MovementDistance { get; set; }
-		public Vector3D ViewDirection { get; set; }
-		public double ViewAngle { get; set; }
 		public bool IsControlling { get; set; }
 		public bool WasControlling { get; set; }
-		public string Page { get; set; }
+
+		public Point3D HeadLocation { get; set; }
+		public double MovementDistance { get; set; }
+		public Vector MovementDirection { get; set; }
+		public double BodyAngle { get; set; }
+		public Vector3D HeadDirection { get; set; }
 
 		public VisitStatus() { }
 

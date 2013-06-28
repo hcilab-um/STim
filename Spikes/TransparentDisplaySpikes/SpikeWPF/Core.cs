@@ -26,10 +26,16 @@ namespace SpikeWPF
 		private const int RIGHT_EYE = 54;
 		private const int FACE_BOTTOM = 43;
 
-		private const double KINECT_DISPLAY_CENTER_DISTANCE_Y = 0.58 / 2 + 0.275;
+		private static readonly double KinectDisplayCenterDistanceY = 0.58 / 2 + 0.275;
 		private const double KINECT_DISPLAY_CENTER_DISTACE_Z = 0.17;
 
-		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
+		private Dictionary<int, WagSkeleton> currentVisitors = new Dictionary<int, WagSkeleton>();
+		private Dictionary<int, FaceTracker> faceTrackers = new Dictionary<int, FaceTracker>();
+
+		private AttentionEstimatorSimple attentionerSimple = new AttentionEstimatorSimple();
+		private AttentionEstimatorSocial attentionerSocial = new AttentionEstimatorSocial();
+
+		private bool showColorImage;
 
 		private static Core instance;
 
@@ -54,17 +60,24 @@ namespace SpikeWPF
 		private byte[] colorImage;
 		private short[] depthImage;
 
-		private Dictionary<int, WagSkeleton> currentVisitors = new Dictionary<int, WagSkeleton>();
-		private Dictionary<int, FaceTracker> faceTrackers = new Dictionary<int, FaceTracker>();
-
-		private AttentionEstimatorSimple attentionerSimple = new AttentionEstimatorSimple();
-		private AttentionEstimatorSocial attentionerSocial = new AttentionEstimatorSocial();
+		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 
 		public WagSkeleton ClosestVisitor
 		{
 			get { return currentVisitors.Values.OrderBy<WagSkeleton, double>(skeleton => skeleton.TransformedPosition.Z).FirstOrDefault(); }
 			set { }
 		}
+
+		public bool ShowColorImage
+		{
+			get { return showColorImage; }
+			set
+			{
+				showColorImage = value;
+				OnPropertyChanged("ShowColorImage");
+			}
+		}
+
 
 		private Core() { }
 
@@ -105,7 +118,9 @@ namespace SpikeWPF
 				}
 			}
 
-			originTransform = SetTransformMatrix(0, KINECT_DISPLAY_CENTER_DISTANCE_Y, KINECT_DISPLAY_CENTER_DISTACE_Z, kinectSensor.ElevationAngle);
+			ShowColorImage = true;
+
+			originTransform = SetTransformMatrix(0, KinectDisplayCenterDistanceY, KINECT_DISPLAY_CENTER_DISTACE_Z, kinectSensor.ElevationAngle);
 
 			kinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 		}
@@ -148,7 +163,9 @@ namespace SpikeWPF
 					colorImage = new byte[colorFrame.PixelDataLength];
 					colorFrame.CopyPixelDataTo(colorImage);
 					DrawingImage imageCanvas = DrawImage(colorFrame, currentVisitors.Values.ToArray());
-					ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
+					
+					if(ShowColorImage)
+						ColorImageReady(this, new ColorImageReadyArgs() { Frame = imageCanvas });
 				}
 			}
 

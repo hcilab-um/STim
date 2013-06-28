@@ -2,13 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="STimWPF.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="DestFolder" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\zSpace\Desktop\</Value>
-    </Setting>
     <Setting Name="SkeletonBufferSize" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">10</Value>
-    </Setting>
-    <Setting Name="PlayerBufferSize" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="DecimalPrecision" Type="System.Int32" Scope="User">
@@ -23,17 +17,11 @@
     <Setting Name="NotificationZoneConstrain" Type="System.Double" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="Kinect_DisplayDistance" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.81</Value>
-    </Setting>
     <Setting Name="BlockPercentBufferSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="UploadPeriod" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1000</Value>
-    </Setting>
-    <Setting Name="StatusUriString" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://localhost:8080/console/visitStatus/save.json</Value>
     </Setting>
     <Setting Name="ImageFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Users\zSpace\Dropbox\STimStatus\Image\</Value>
@@ -44,8 +32,11 @@
     <Setting Name="DateTimeLogFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">yyMMdd-HH:mm:ss</Value>
     </Setting>
-    <Setting Name="KinectDeviceHeight" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">3.65</Value>
+    <Setting Name="DisplayWidthInMeters" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1.06</Value>
+    </Setting>
+    <Setting Name="DisplayHeightInMeters" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.58</Value>
     </Setting>
   </Settings>
 </SettingsFile>

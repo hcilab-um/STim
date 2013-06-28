@@ -5,8 +5,8 @@ using System.Text;
 using System.ComponentModel;
 using Microsoft.Kinect;
 using System.Windows.Media.Media3D;
-using STimWPF.Util;
 using STimWPF.Properties;
+using STimWPF.Util;
 
 namespace STimWPF.Interaction
 {
@@ -15,7 +15,7 @@ namespace STimWPF.Interaction
 		//If there is a displacement of at least the value below of in the dimension of the push then the values
 		// on the two other dimensions are blocked.
 		const int CLOSE_PERCENT_CONSTRAIN = 60;
-        
+
 		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0, 0, 1);
 		private static readonly Vector3D kinectLocation = new Vector3D(0, 0, 0);
 		private Vector3D headLocation;
@@ -70,8 +70,8 @@ namespace STimWPF.Interaction
 			get { return interactZone; }
 			set
 			{
-                if (interactZone == value)
-                    return;
+				if (interactZone == value)
+					return;
 				interactZone = value;
 				OnPropertyChanged("Zone");
 			}
@@ -87,24 +87,7 @@ namespace STimWPF.Interaction
 			IsSimulating = false;
 		}
 
-		public double DetectSkeletonDistance(Skeleton skeleton)
-		{
-			if (skeleton == null)
-				throw new Exception("in DetectSkeletonDistance, skeleton can not be null.");
-
-			Head = JointType.Head;
-			Joint head = skeleton.Joints.SingleOrDefault(tmp => tmp.JointType == Head);
-			headLocation = new Vector3D(head.Position.X, head.Position.Y, head.Position.Z);
-			double currentAngleRadian = ToolBox.AngleToRadian(Vector3D.AngleBetween(STANDARD_VECTOR, headLocation));
-			double headDistance = ToolBox.GetDisplacementVector((Vector3D)headLocation, (Vector3D)kinectLocation).Length;
-
-			if (headLocation.Y < 0)
-				return Math.Sin(StandardAngleInRadian - currentAngleRadian) * headDistance - Settings.Default.Kinect_DisplayDistance;
-
-			return Math.Sin(StandardAngleInRadian + currentAngleRadian) * headDistance - Settings.Default.Kinect_DisplayDistance;
-		}
-
-		private double DetectUserPosition(Skeleton skeleton)
+		private double DetectUserPosition(WagSkeleton skeleton)
 		{
 			if (ClosePercent > CLOSE_PERCENT_CONSTRAIN)
 			{
@@ -113,38 +96,38 @@ namespace STimWPF.Interaction
 
 			if (skeleton != null)
 			{
-				return DetectSkeletonDistance(skeleton);
+				return skeleton.TransformedJoints[JointType.Head].Position.Z;
 			}
 
 			return Settings.Default.NotificationZoneConstrain;
 		}
 
-		public void DetectZone(Skeleton skeleton)
+		public void DetectZone(WagSkeleton skeleton)
 		{
 			if (!IsSimulating)
 			{
 				UserDisplayDistance = DetectUserPosition(skeleton);
 			}
 
-            if (UserDisplayDistance < Settings.Default.CloseZoneConstrain)
+			if (UserDisplayDistance < Settings.Default.CloseZoneConstrain)
 			{
 				Zone = Zone.Close;
 				return;
 			}
 
-            if (UserDisplayDistance >= Settings.Default.CloseZoneConstrain && userDisplayDistance < Settings.Default.InteractionZoneConstrain)
+			if (UserDisplayDistance >= Settings.Default.CloseZoneConstrain && userDisplayDistance < Settings.Default.InteractionZoneConstrain)
 			{
 				Zone = Zone.Interaction;
 				return;
 			}
 
-            if (UserDisplayDistance >= Settings.Default.InteractionZoneConstrain && userDisplayDistance < Settings.Default.NotificationZoneConstrain)
+			if (UserDisplayDistance >= Settings.Default.InteractionZoneConstrain && userDisplayDistance < Settings.Default.NotificationZoneConstrain)
 			{
 				Zone = Zone.Notification;
 				return;
 			}
 
-            if (UserDisplayDistance >= Settings.Default.NotificationZoneConstrain)
+			if (UserDisplayDistance >= Settings.Default.NotificationZoneConstrain)
 			{
 				Zone = Zone.Ambient;
 				return;

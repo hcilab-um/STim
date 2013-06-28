@@ -4,39 +4,5 @@
 	    xmlns:converters="clr-namespace:STimWPF.Converters"
         xmlns:controls="clr-namespace:STimWPF.Controls"
 				WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
-				Title="WAG - ContentWindow" Width="1366" Height="768" Closed="contentW_Closed" Loaded="ContentWindow_Loaded">
-	<Window.Resources>
-		<converters:SelectionMethodConverter x:Key="smConverter"/>
-		<converters:MethodVisibilityConverter x:Key="vConverter"/>
-		<converters:NegateVisibilityConverter x:Key="nvConverter"/>
-		<converters:BoolVisibilityConverter x:Key="bvConverter"/>
-		<converters:ZoneVisibilityConverter x:Key="zvConverter"/>
-	</Window.Resources>
-
-	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="{Binding ElementName=contentW, 
-	    	Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction-Notification-Ambient}">
-
-		<!--<Image Name="iKinectDepthSmall" HorizontalAlignment="Right" Margin="0,0,20,20" VerticalAlignment="Bottom" Height="100"
-					 Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, 
-                     Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}" />-->
-
-		<controls:ContentControl x:Name="contentCtrl" Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, 
-                            Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Interaction}"
-														KinectSensor="{Binding ElementName=contentW, Path=CoreInstance.KinectSensor}"
-														VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-
-		<!--<controls:AnimationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"
-							Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, 
-                            Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Ambient-Notification}" 
-							NotificationDistance="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.UserDisplayDistance}"/>-->
-		<Image Name="iKinectDepthBig" HorizontalAlignment="Stretch" Margin="20"
-					 Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, 
-           Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Notification}"/>
-		
-		<controls:AmbientNotificationControl Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, 
-                            Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Ambient-Notification}"
-                            UserDisplayDistance="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.UserDisplayDistance}"
-                            Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}"/>
-
-	</Grid>
+				Title="WAG - ContentWindow" Width="1366" Height="768" >
 </Window>

@@ -52,18 +52,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Jayrock.Json">
-      <HintPath>..\SharedLib\Jayrock.Json.dll</HintPath>
+    <Reference Include="3DTools">
+      <HintPath>..\SharedLib\3DTools.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharedLib\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Kinect, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Kinect.Toolkit">
-      <HintPath>..\FaceTrackingLib\Microsoft.Kinect.Toolkit.dll</HintPath>
+    <Reference Include="Microsoft.Kinect.Toolkit, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\Microsoft.Kinect.Toolkit.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Kinect.Toolkit.FaceTracking">
-      <HintPath>..\FaceTrackingLib\Microsoft.Kinect.Toolkit.FaceTracking.dll</HintPath>
+    <Reference Include="Microsoft.Kinect.Toolkit.FaceTracking, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\Microsoft.Kinect.Toolkit.FaceTracking.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -84,84 +87,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AnimationStatus.cs" />
-    <Compile Include="Controls\AmbientNotificationControl.xaml.cs">
-      <DependentUpon>AmbientNotificationControl.xaml</DependentUpon>
+    <Compile Include="Attention\AttentionEstimatorSimple.cs" />
+    <Compile Include="Attention\AttentionEstimatorSocial.cs" />
+    <Compile Include="Attention\AttentionSimple.cs" />
+    <Compile Include="Attention\AttentionSocial.cs" />
+    <Compile Include="Converters\DivisionConverter.cs" />
+    <Compile Include="Converters\LocationOrientationViewConverter.cs" />
+    <Compile Include="Util\CircularList.cs" />
+    <Compile Include="Controls\VisualDirectionControl.xaml.cs">
+      <DependentUpon>VisualDirectionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\AnimatedRectControl.xaml.cs">
-      <DependentUpon>AnimatedRectControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\AnimationControl.xaml.cs">
-      <DependentUpon>AnimationControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ContentControl.xaml.cs">
-      <DependentUpon>ContentControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MouseAnimationControl.xaml.cs">
-      <DependentUpon>MouseAnimationControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CircularList.cs" />
-    <Compile Include="Converters\AndConverter.cs" />
-    <Compile Include="Converters\BoolVisibilityConverter.cs" />
-    <Compile Include="Converters\DetailLAPageVisibilityConverter.cs" />
-    <Compile Include="Converters\DetailMenuVisibilityConverter.cs" />
-    <Compile Include="Converters\DistanceVideoPositionConverter.cs" />
-    <Compile Include="Converters\MainPageBackgroundConverter.cs" />
-    <Compile Include="Converters\MainPageVisibilityConverter.cs" />
-    <Compile Include="Converters\DetailWFPageVisibilityConverter.cs" />
-    <Compile Include="Converters\DistanceRectSizeConverter.cs" />
-    <Compile Include="Converters\LocationMarginConverter.cs" />
-    <Compile Include="Converters\MethodVisibilityConverter.cs" />
-    <Compile Include="Converters\NegateVisibilityConverter.cs" />
-    <Compile Include="Converters\OrConverter.cs" />
-    <Compile Include="Converters\SelectionMethodConverter.cs" />
-    <Compile Include="Converters\TimerLocationConverter.cs" />
-    <Compile Include="Converters\ZoneVisibilityConverter.cs" />
     <Compile Include="DepthImageReadyArgs.cs" />
-    <Compile Include="DepthPercentFilter.cs" />
-    <Compile Include="Interaction\DetailLAPage.cs" />
-    <Compile Include="Interaction\MainPage.cs" />
-    <Compile Include="Interaction\DetailWFPage.cs" />
+    <Compile Include="Util\DepthPercentFilter.cs" />
     <Compile Include="Interaction\VisitorController.cs" />
     <Compile Include="ContentWindow.xaml.cs">
       <DependentUpon>ContentWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IUIInformer.cs" />
     <Compile Include="Status\StatusController.cs" />
-    <Compile Include="Util\ExtendedPropertyChangedEventArgs.cs" />
-    <Compile Include="Interaction\GestureRecognizer.cs" />
-    <Compile Include="Interaction\InteractionController.cs" />
     <Compile Include="Interaction\Zone.cs" />
-    <Compile Include="Interaction\SelectionMethod.cs" />
-    <Compile Include="Interaction\TimerState.cs" />
-    <Compile Include="Interaction\InteractionGesture.cs" />
-    <Compile Include="Playback\PlayerSkeletonFrameReadyEventArgs.cs" />
-    <Compile Include="SkeletonCapture.cs" />
     <Compile Include="SkeletonDrawer.cs" />
-    <Compile Include="SkeletonFilter.cs" />
-    <Compile Include="Playback\SkeletonRecorder.cs" />
-    <Compile Include="Playback\SkeletonPlayer.cs" />
     <Compile Include="Util\ToolBox.cs" />
     <Compile Include="Status\VisitStatus.cs" />
-    <Page Include="Controls\AmbientNotificationControl.xaml">
-      <SubType>Designer</SubType>
+    <Compile Include="WagJointCollection.cs" />
+    <Compile Include="WagSkeleton.cs" />
+    <Page Include="Controls\VisualDirectionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\AnimatedRectControl.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\AnimationControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ContentControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\MouseAnimationControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ControlWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -230,40 +181,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Image\BerlinWall.jpg" />
-    <Resource Include="Image\Informing.jpg" />
-    <Resource Include="Image\Insourcing.jpg" />
-    <Resource Include="Image\logitech_logo.jpg" />
-    <Resource Include="Image\netscape.png" />
-    <Resource Include="Image\OffShoring.jpg" />
-    <Resource Include="Image\outsourcing.gif" />
-    <Resource Include="Image\Steroids.jpg" />
-    <Resource Include="Image\supply_chain.jpg" />
-    <Resource Include="Image\thomas_friedman.jpg" />
-    <Resource Include="Image\uploading.png" />
-    <Resource Include="Image\Workflow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Image\fullArray.png" />
-    <Resource Include="Image\gamingSoftware.png" />
-    <Resource Include="Image\plugPlay.png" />
-    <Resource Include="Image\Symmetric.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Image\startFullScreenButton.jpg" />
-    <Content Include="Video\montage-audio-march13.mov" />
-    <Content Include="Video\notificationVideo.mp4" />
-    <Content Include="Video\theWorldIsFlat.mp4" />
-    <Resource Include="Image\playbutton.gif" />
-    <Content Include="Video\LogitechAttack3.mp4" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Microsoft.Kinect.Toolkit.Controls\Microsoft.Kinect.Toolkit.Controls.csproj">
-      <Project>{4508C4D1-85BB-4F3F-9E3B-CC93D231C65D}</Project>
-      <Name>Microsoft.Kinect.Toolkit.Controls</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
