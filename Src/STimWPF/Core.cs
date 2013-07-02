@@ -147,9 +147,9 @@ namespace STimWPF
 					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - KinectSensor.ElevationAngle);
 					StatusCtr = new StatusController(uploadPeriod);
 				}
-			}
 
-			originTransform = SetTransformMatrix(0, KinectDisplayCenterDistanceY, KINECT_DISPLAY_CENTER_DISTACE_Z, KinectSensor.ElevationAngle);
+				originTransform = SetTransformMatrix(0, KinectDisplayCenterDistanceY, KINECT_DISPLAY_CENTER_DISTACE_Z, KinectSensor.ElevationAngle);
+			}
 		
 		}
 
@@ -357,8 +357,8 @@ namespace STimWPF
 
 		private double CalculateBodyOrientationAngle(WagSkeleton userSkeleton)
 		{
-			Microsoft.Kinect.Joint shoulderLeft = userSkeleton.TransformedJoints.SingleOrDefault(temp => temp.JointType == Microsoft.Kinect.JointType.ShoulderLeft);
-			Microsoft.Kinect.Joint shoulderRight = userSkeleton.TransformedJoints.SingleOrDefault(temp => temp.JointType == Microsoft.Kinect.JointType.ShoulderRight);
+			Microsoft.Kinect.Joint shoulderLeft = userSkeleton.TransformedJoints[JointType.ShoulderLeft];
+			Microsoft.Kinect.Joint shoulderRight = userSkeleton.TransformedJoints[JointType.ShoulderRight];
 
 			System.Windows.Point shoulderRightP = new System.Windows.Point(shoulderRight.Position.X, shoulderRight.Position.Z);
 			System.Windows.Point shoulderLeftP = new System.Windows.Point(shoulderLeft.Position.X, shoulderLeft.Position.Z);

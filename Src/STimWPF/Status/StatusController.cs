@@ -28,7 +28,7 @@ namespace STimWPF.Status
 
 		private int visitCounter = 0;
 
-		DrawingImage depthImageSource;
+		DrawingImage imageSource;
 
 		private Timer Trigger { get; set; }
 		private VisitorController VisitorContr { get; set; }
@@ -64,13 +64,14 @@ namespace STimWPF.Status
 		/// <param name="state"></param>
 		public void TimerCallback(Object state)
 		{
-			if (depthImageSource != null)
-				SaveDrawingImage(depthImageSource);
+			if (imageSource != null)
+				SaveDrawingImage(imageSource);
 
 			lock (monitor)
 			{
 				Object[] logObjects = null;
 				currentVisits = new List<VisitStatus>();
+
 				GenerateVisitStatus();
 
 				if (currentVisits.Count == 0)
@@ -91,6 +92,7 @@ namespace STimWPF.Status
 						"-",				
 						"-"
 					};
+
 					LogVisitStatus(logObjects);
 				}
 				else
@@ -124,6 +126,7 @@ namespace STimWPF.Status
 							status.MovementDistance,						
 							status.BodyAngle								
 						};
+
 						LogVisitStatus(logObjects);
 					}
 				}																					
@@ -151,7 +154,7 @@ namespace STimWPF.Status
 		/// </summary>
 		/// <param name="skeleton"></param>
 		/// <param name="deltaMilliseconds"></param>
-		public void LoadNewSkeletonData(WagSkeleton[] skeletons, WagSkeleton userSkeleton, DrawingImage dIS)
+		public void LoadNewSkeletonData(WagSkeleton[] skeletons, WagSkeleton userSkeleton, DrawingImage drawingImage)
 		{
 			lock (monitor)
 			{
@@ -162,8 +165,8 @@ namespace STimWPF.Status
 					return;
 				}
 
-				depthImageSource = dIS;
-				currentSkeletons = skeletons.Where(temp => temp.TrackingState == SkeletonTrackingState.Tracked).ToList();
+				imageSource = drawingImage;
+				currentSkeletons = skeletons.ToList();
 				currentUserSkeletonId = userSkeleton.TrackingId;
 				currentDateTime = DateTime.Now;
 			}
@@ -225,8 +228,8 @@ namespace STimWPF.Status
 					lastSkeleton = lastSkeletons.SingleOrDefault(tmp => tmp.TrackingId == skeleton.TrackingId);
 				if (lastSkeleton != null)
 				{
-					Point3D lastHeadV = lastSkeleton.HeadLocation;
-					movementDirection = ToolBox.GetMovementVector(lastHeadV, headP);
+					Point3D lastHeadP = lastSkeleton.HeadLocation;
+					movementDirection = ToolBox.GetMovementVector(lastHeadP, headP);
 				}
 				else
 					movementDirection = new Vector();
@@ -245,7 +248,6 @@ namespace STimWPF.Status
 					MovementDistance = movementDistance,
 					MovementDirection = movementDirection,
 					BodyAngle = skeleton.BodyOrientationAngle,
-					
 				};
 
 				currentVisits.Add(status);
