@@ -18,14 +18,13 @@ namespace STimWPF.Interaction
 
 		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0, 0, 1);
 		private static readonly Vector3D kinectLocation = new Vector3D(0, 0, 0);
-		private Vector3D headLocation;
 		private double userDisplayDistance;
 		private double standardAngleInRadian;
 		private Zone interactZone;
 		private bool isSimulating;
-		private int closePercent;
 
-		public int ClosePercent
+		private double closePercent;
+		public double ClosePercent
 		{
 			get { return closePercent; }
 			set
@@ -102,37 +101,22 @@ namespace STimWPF.Interaction
 			return Settings.Default.NotificationZoneConstrain;
 		}
 
-		public void DetectZone(WagSkeleton skeleton)
+		public Zone DetectZone(WagSkeleton skeleton)
 		{
+			Zone calculatedZone = Zone.Ambient;
 			if (!IsSimulating)
-			{
 				UserDisplayDistance = DetectUserPosition(skeleton);
-			}
 
 			if (UserDisplayDistance < Settings.Default.CloseZoneConstrain)
-			{
-				Zone = Zone.Close;
-				return;
-			}
+				calculatedZone = Zone.Close;
+			else if (UserDisplayDistance >= Settings.Default.CloseZoneConstrain && userDisplayDistance < Settings.Default.InteractionZoneConstrain)
+				calculatedZone = Zone.Interaction;
+			else if (UserDisplayDistance >= Settings.Default.InteractionZoneConstrain && userDisplayDistance < Settings.Default.NotificationZoneConstrain)
+				calculatedZone = Zone.Notification;
+			else if (UserDisplayDistance >= Settings.Default.NotificationZoneConstrain)
+				calculatedZone = Zone.Ambient;
 
-			if (UserDisplayDistance >= Settings.Default.CloseZoneConstrain && userDisplayDistance < Settings.Default.InteractionZoneConstrain)
-			{
-				Zone = Zone.Interaction;
-				return;
-			}
-
-			if (UserDisplayDistance >= Settings.Default.InteractionZoneConstrain && userDisplayDistance < Settings.Default.NotificationZoneConstrain)
-			{
-				Zone = Zone.Notification;
-				return;
-			}
-
-			if (UserDisplayDistance >= Settings.Default.NotificationZoneConstrain)
-			{
-				Zone = Zone.Ambient;
-				return;
-			}
-
+			return calculatedZone;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

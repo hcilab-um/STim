@@ -7,14 +7,14 @@ namespace STimWPF.Util
 {
 	public class DepthPercentFilter
 	{
-		private CircularList<int> PercentageBuffer { get; set; }
+		private CircularList<double> PercentageBuffer { get; set; }
 		
 		public DepthPercentFilter(int bufferSize)
 		{
-			PercentageBuffer = new CircularList<int>(bufferSize);
+			PercentageBuffer = new CircularList<double>(bufferSize);
 		}
 
-		public int ProcessNewPercentageData(int newPercentage)
+		public double ProcessNewPercentageData(double newPercentage)
 		{
 			PercentageBuffer.Value = newPercentage;
 			PercentageBuffer.Next();

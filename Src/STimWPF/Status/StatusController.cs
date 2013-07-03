@@ -14,48 +14,38 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Windows.Threading;
 using STimWPF.Util;
+using System.Diagnostics;
 
 namespace STimWPF.Status
 {
 	public class StatusController
 	{
-		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger("statusLogger");
+		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger("StatusLogger");
 
 		private const float RenderWidth = 640.0f;
 		private const float RenderHeight = 480.0f;
 
-		Object monitor = new Object();
-
-		private int visitCounter = 0;
-
-		DrawingImage imageSource;
-
+		private EventWaitHandle waitHandle = new EventWaitHandle(true, EventResetMode.AutoReset);
 		private Timer Trigger { get; set; }
-		private VisitorController VisitorContr { get; set; }
 
-		List<VisitStatus> lastVisits = null;
-		List<VisitStatus> currentVisits = null;
+		private Dictionary<int, Point3D> lastPositions = null;
+		private List<WagSkeleton> currentSkeletons = null;
 
-		List<WagSkeleton> lastSkeletons = null;
-		List<WagSkeleton> currentSkeletons = null;
-		VisitStatus status;
+		private byte[] imageSource;
 
-		bool wasControlling;
-		bool isControlling;
-		int lastUserSkeletonId;
-		int currentUserSkeletonId;
+		private int controllerId;
+		private int lastControllerId;
+		private int visitCounter = 0;
+		private List<VisitStatus> lastVisits = null;
+		public VisitorController VisitorContr { get; set; }
 
-		Vector movementDirection;
-		double movementDistance;
-
-		DateTime currentDateTime;
+		private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
 
 		public StatusController(int period)
 		{
-			lastUserSkeletonId = -1;
-			currentDateTime = DateTime.Now;
+			lastControllerId = -1;
 			Trigger = new Timer(new TimerCallback(TimerCallback), null, 0, period);
-			VisitorContr = new VisitorController();
+			lastPositions = new Dictionary<int, Point3D>();
 		}
 
 		/// <summary>
@@ -64,78 +54,150 @@ namespace STimWPF.Status
 		/// <param name="state"></param>
 		public void TimerCallback(Object state)
 		{
-			if (imageSource != null)
+			waitHandle.WaitOne();
+
+			if (imageSource != null && imageSource.Length != 0)
 				SaveDrawingImage(imageSource);
 
-			lock (monitor)
+			waitHandle.Set();
+		}
+
+		private void SaveDrawingImage(byte[] image)
+		{
+			if (image == null || image.Length == 0)
+				return;
+
+			try
 			{
-				Object[] logObjects = null;
-				currentVisits = new List<VisitStatus>();
-
-				GenerateVisitStatus();
-
-				if (currentVisits.Count == 0)
+				String skeletonIdInfo = "";
+				//"DDMMYY-HHmmss-milliseconds-SK1-SK2..."
+				foreach (WagSkeleton wagSkeleton in currentSkeletons)
 				{
+					skeletonIdInfo += String.Format("-{0}", wagSkeleton.TrackingId);
+				}
+
+				String qualifiedName = String.Format("{0}{1}{2}.jpg", DateTime.Now.ToString(Settings.Default.DateTimeFileNameFormat), DateTime.Now.Millisecond.ToString(), skeletonIdInfo);
+				using (var stream = new FileStream(Settings.Default.ImageFolder + qualifiedName, FileMode.Create))
+				{
+					stream.Write(image, 0, image.Length);
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
+		}
+
+		/// <summary>
+		/// Every new frame this gets called
+		/// </summary>
+		/// <param name="skeleton"></param>
+		/// <param name="deltaMilliseconds"></param>
+		public void LoadNewSkeletonData(List<WagSkeleton> skeletons, WagSkeleton controllerSkeleton, byte[] drawingImage)
+		{
+			waitHandle.WaitOne();
+
+			imageSource = drawingImage;
+
+			if (skeletons == null || skeletons.Count == 0 || controllerSkeleton == null)
+			{
+				currentSkeletons = null;
+				controllerId = -1;
+			}
+			else
+			{
+				currentSkeletons = skeletons;
+				controllerId = controllerSkeleton.TrackingId;
+
+				Object[] logObjects = null;
+				List<VisitStatus> currentVisits = CreateVisitStatus();
+
+				foreach (VisitStatus status in currentVisits)
+				{
+					//Visitors.Count
+					//ImageFile
 					logObjects = new Object[]
-					{
-						DateTime.Now.ToString(Settings.Default.DateTimeLogFormat),
-						currentVisits.Count,
-						"-",				
-						"-",				
-						"-",				
-						"-",				
-						"-",				
-						"-",				
-						"-",				
-						"-",					
-						"-",					
-						"-",				
-						"-"
-					};
+						{
+							status.VisitInit.ToString(Settings.Default.DateTimeLogFormat),
+							currentVisits.Count,
+							status.VisitId,
+							status.Zone,
+							status.IsControlling,
+							status.WasControlling,
+							status.HeadLocation.X,							
+							status.HeadLocation.Y,							
+							status.HeadLocation.Z,
+							status.HeadDirection.X,
+							status.HeadDirection.Y,
+							status.HeadDirection.Z,
+							status.MovementDirection.X,
+							status.MovementDirection.Y,					
+							status.MovementDistance,
+							status.BodyAngle,
+							//BasedOnSkeleton == true || false if coming from a distance percentage
+							status.AttentionSimple.SimpleAttentionValue,
+							status.AttentionSocial.SocialAttentionValue,
+							status.TouchInteraction,
+							status.GestureInteraction
+						};
 
 					LogVisitStatus(logObjects);
 				}
-				else
-				{
 
-					foreach (VisitStatus status in currentVisits)
-					{
-						bool existedBefore = false;
-
-						if (lastVisits != null)
-							existedBefore = lastVisits.Exists(tmp => tmp.SkeletonId == status.SkeletonId);
-
-						if (!existedBefore)
-							status.VisitId = ++visitCounter;
-						else
-							status.VisitId = lastVisits.Single(tmp => tmp.SkeletonId == status.SkeletonId).VisitId;
-
-						logObjects = new Object[]
-						{
-							status.VisitInit.ToString(Settings.Default.DateTimeLogFormat),
-							currentVisits.Count,								
-							status.VisitId,											
-							status.Zone,												
-							status.IsControlling,								
-							status.WasControlling,							
-							status.HeadLocation.X,							
-							status.HeadLocation.Y,							
-							status.HeadLocation.Z,							
-							status.MovementDirection.X,					
-							status.MovementDirection.Y,					
-							status.MovementDistance,						
-							status.BodyAngle								
-						};
-
-						LogVisitStatus(logObjects);
-					}
-				}																					
-
-				lastUserSkeletonId = currentUserSkeletonId;
+				lastControllerId = controllerId;
 				lastVisits = currentVisits;
-				lastSkeletons = currentSkeletons;
+
+				lastPositions.Clear();
+				if (currentSkeletons == null)
+					return;
+				foreach (WagSkeleton wagSkel in currentSkeletons)
+					lastPositions.Add(wagSkel.TrackingId, wagSkel.TransformedPosition);
+			}
+			waitHandle.Set();
+		}
+
+		private List<VisitStatus> CreateVisitStatus()
+		{
+
+			List<VisitStatus> currentVisits = new List<VisitStatus>();
+
+			if (currentSkeletons == null || currentSkeletons.Count == 0)
+				return currentVisits;
+
+			DateTime currentDateTime = DateTime.Now;
+			foreach (WagSkeleton skeleton in currentSkeletons)
+			{
+				Vector movementDirection = new Vector();
+				if (lastPositions.ContainsKey(skeleton.TrackingId))
+					movementDirection = ToolBox.GetMovementVector(lastPositions[skeleton.TrackingId], skeleton.TransformedPosition);
+				double movementDistance = movementDirection.Length;
+
+				VisitStatus lastStatus = null;
+				if (lastVisits != null)
+					lastStatus = lastVisits.FirstOrDefault(visit => visit.SkeletonId == skeleton.TrackingId);
+
+				VisitStatus status = new VisitStatus()
+				{
+					SkeletonId = skeleton.TrackingId,
+					VisitId = lastStatus != null ? lastStatus.VisitId : ++visitCounter,
+					VisitInit = lastStatus != null ? lastStatus.VisitInit : currentDateTime,
+					Zone = VisitorContr.DetectZone(skeleton),
+					IsControlling = controllerId == skeleton.TrackingId ? true : false,
+					WasControlling = lastControllerId == skeleton.TrackingId ? true : false,
+
+					HeadLocation = skeleton.HeadLocation,
+					MovementDistance = movementDistance,
+					MovementDirection = movementDirection,
+					BodyAngle = skeleton.BodyOrientationAngle,
+					AttentionSimple = skeleton.AttentionSimple,
+					AttentionSocial = skeleton.AttentionSocial,
+					TouchInteraction = false,
+					GestureInteraction = false
+				};
+				currentVisits.Add(status);
 			}
 
+			return currentVisits;
 		}
 
 		private void LogVisitStatus(Object[] logObjects)
@@ -149,110 +211,6 @@ namespace STimWPF.Status
 			logger.Info(statusLog);
 		}
 
-		/// <summary>
-		/// Every new frame this gets called
-		/// </summary>
-		/// <param name="skeleton"></param>
-		/// <param name="deltaMilliseconds"></param>
-		public void LoadNewSkeletonData(WagSkeleton[] skeletons, WagSkeleton userSkeleton, DrawingImage drawingImage)
-		{
-			lock (monitor)
-			{
-				if (skeletons == null || skeletons.Length == 0 || userSkeleton == null)
-				{
-					currentSkeletons = null;
-					currentUserSkeletonId = -1;
-					return;
-				}
-
-				imageSource = drawingImage;
-				currentSkeletons = skeletons.ToList();
-				currentUserSkeletonId = userSkeleton.TrackingId;
-				currentDateTime = DateTime.Now;
-			}
-		}
-
-		private void SaveDrawingImage(DrawingImage image)
-		{
-			image.Dispatcher.Invoke(DispatcherPriority.Render, (Action)delegate()
-			{
-				try
-				{
-					DrawingVisual drawingVisual = new DrawingVisual();
-					DrawingContext drawingContext = drawingVisual.RenderOpen();
-					drawingContext.DrawImage(image, new Rect(0, 0, RenderWidth, RenderHeight));
-					drawingContext.Close();
-
-					RenderTargetBitmap bmp = new RenderTargetBitmap((int)RenderWidth, (int)RenderHeight, 96, 96, PixelFormats.Pbgra32);
-					bmp.Render(drawingVisual);
-					String qualifiedName = String.Format("{0}.png", DateTime.Now.ToString(Settings.Default.DateTimeFileNameFormat));
-					PngBitmapEncoder encoder = new PngBitmapEncoder();
-					encoder.Frames.Add(BitmapFrame.Create(bmp));
-					using (var stream = new FileStream(Settings.Default.ImageFolder + qualifiedName, FileMode.Create))
-					{
-						encoder.Save(stream);
-					}
-				}
-				catch (Exception e)
-				{
-					Console.WriteLine(e.Message);
-				}
-			});
-		}
-
-		private void GenerateVisitStatus()
-		{
-			if (currentSkeletons == null || currentSkeletons.Count == 0)
-				return;
-
-			foreach (WagSkeleton skeleton in currentSkeletons)
-			{
-
-				Point3D headP = skeleton.HeadLocation;
-
-				VisitorContr.DetectZone(skeleton);
-
-				if (currentUserSkeletonId == skeleton.TrackingId)
-					isControlling = true;
-				else
-					isControlling = false;
-
-				if (lastUserSkeletonId == skeleton.TrackingId)
-					wasControlling = true;
-				else
-					wasControlling = false;
-
-				//get movement direction
-				WagSkeleton lastSkeleton = null;
-				if (lastSkeletons != null)
-					lastSkeleton = lastSkeletons.SingleOrDefault(tmp => tmp.TrackingId == skeleton.TrackingId);
-				if (lastSkeleton != null)
-				{
-					Point3D lastHeadP = lastSkeleton.HeadLocation;
-					movementDirection = ToolBox.GetMovementVector(lastHeadP, headP);
-				}
-				else
-					movementDirection = new Vector();
-				
-				movementDistance = movementDirection.Length;
-				
-				status = new VisitStatus()
-				{
-					SkeletonId = skeleton.TrackingId,
-					VisitInit = currentDateTime,
-					Zone = VisitorContr.Zone,
-					IsControlling = isControlling,
-					WasControlling = wasControlling,
-
-					HeadLocation = headP,
-					MovementDistance = movementDistance,
-					MovementDirection = movementDirection,
-					BodyAngle = skeleton.BodyOrientationAngle,
-				};
-
-				currentVisits.Add(status);
-			}
-		}
 
 	}
 

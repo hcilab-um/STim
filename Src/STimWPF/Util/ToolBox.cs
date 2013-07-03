@@ -20,6 +20,10 @@ namespace STimWPF.Util
 			Vector displacement = new Vector(0, 0);
 			displacement.X = currentPos.X - lastPos.X;
 			displacement.Y = currentPos.Y - lastPos.Y;
+			if (Math.Abs(displacement.X) < 0.0001)
+				displacement.X = 0;
+			if (Math.Abs(displacement.Y) < 0.0001)
+				displacement.Y = 0;
 			return displacement;
 		}
 

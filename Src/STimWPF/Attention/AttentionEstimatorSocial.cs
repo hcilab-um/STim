@@ -28,7 +28,7 @@ namespace STimWPF.Attention
 				DistanceEffect = distanceEffect,
 				SocialEffect = socialEffect,
 				OrientationEffect = orientationEffect,
-				AttentionValue = attention
+				SocialAttentionValue = attention
 			};
 			return attentionSocial;
 		}

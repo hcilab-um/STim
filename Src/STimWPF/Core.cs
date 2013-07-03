@@ -29,7 +29,7 @@ namespace STimWPF
 		private const float RenderHeight = 480.0f;
 
 		private const int MINIMUM_JOINT_THRESHOLD = 7;
-		
+
 		private const float RENDER_WIDTH = 640.0f;
 		private const float RENDER_HEIGHT = 480.0f;
 
@@ -37,19 +37,13 @@ namespace STimWPF
 		private const int LEFT_EYE = 19;
 		private const int RIGHT_EYE = 54;
 		private const int FACE_BOTTOM = 43;
-	
-		private const double KINECT_DISPLAY_CENTER_DISTACE_Z = 0.17;
 
+		private const double KINECT_DISPLAY_CENTER_DISTACE_Z = 0.17;
 		private static readonly double KinectDisplayCenterDistanceY = 0.58 / 2 + 0.275;
+
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 
-		private long lastUpdate = -1;
-		private int playerIndex = -1;
-		private int currentFrame = 0;
-		private bool showColorImage;
-
 		private static Core instance = null;
-		
 		public static Core Instance
 		{
 			get
@@ -62,6 +56,9 @@ namespace STimWPF
 
 		private SkeletonDrawer skeletonDrawer;
 
+		private int currentFrame = 0;
+		private Matrix3D originTransform;
+
 		private List<VisitStatus> visitStatus = new List<VisitStatus>();
 		private byte[] colorImage;
 		private short[] depthImage;
@@ -72,8 +69,6 @@ namespace STimWPF
 		private AttentionEstimatorSimple attentionerSimple = new AttentionEstimatorSimple();
 		private AttentionEstimatorSocial attentionerSocial = new AttentionEstimatorSocial();
 
-		private Matrix3D originTransform;
-
 		public WagSkeleton ClosestVisitor
 		{
 			get { return currentVisitors.Values.OrderBy<WagSkeleton, double>(skeleton => skeleton.TransformedPosition.Z).FirstOrDefault(); }
@@ -81,12 +76,11 @@ namespace STimWPF
 		}
 
 		public KinectSensor KinectSensor { get; set; }
+		public DepthPercentFilter DepthPercentF { get; set; }
 		public StatusController StatusCtr { get; set; }
 		public VisitorController VisitorCtr { get; set; }
 
-		public bool PlayBackFromFile { get; set; }
-		public bool IsKinectConnected { get; set; }
-		public DepthPercentFilter DepthPercentF { get; set; }
+		private bool showColorImage = false;
 		public bool ShowColorImage
 		{
 			get { return showColorImage; }
@@ -101,26 +95,19 @@ namespace STimWPF
 
 		public void Initialize(int depthPercentBufferSize, int uploadPeriod)
 		{
-			IsKinectConnected = false;
-			PlayBackFromFile = false;
-
 			VisitorCtr = new VisitorController();
 			DepthPercentF = new DepthPercentFilter(depthPercentBufferSize);
+			StatusCtr = new StatusController(uploadPeriod) { VisitorContr = VisitorCtr };
 
-			ShowColorImage = false;
-			
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
-				IsKinectConnected = false;
 				Console.WriteLine("No Kinect found");
 			}
 			else
 			{
-				IsKinectConnected = true;
 				KinectSensor = KinectSensor.KinectSensors[0];
 				if (KinectSensor == null || KinectSensor.Status == KinectStatus.NotPowered)
 				{
-					IsKinectConnected = false;
 					throw new Exception("Kinect Not Connected");
 				}
 				else
@@ -138,22 +125,18 @@ namespace STimWPF
 					KinectSensor.DepthStream.Enable();
 					KinectSensor.ColorStream.Enable();
 					KinectSensor.SkeletonStream.Enable(smoothParameters);
-
 					KinectSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
-					
 					KinectSensor.Start();
-					
+
 					KinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - KinectSensor.ElevationAngle);
-					StatusCtr = new StatusController(uploadPeriod);
-				}
 
-				originTransform = SetTransformMatrix(0, KinectDisplayCenterDistanceY, KINECT_DISPLAY_CENTER_DISTACE_Z, KinectSensor.ElevationAngle);
+					originTransform = CreateOriginMatrix(0, KinectDisplayCenterDistanceY, KINECT_DISPLAY_CENTER_DISTACE_Z, KinectSensor.ElevationAngle);
+				}
 			}
-		
 		}
 
-		private Matrix3D SetTransformMatrix(double offsetX, double offsetY, double offsetZ, int rotateAroundX)
+		private Matrix3D CreateOriginMatrix(double offsetX, double offsetY, double offsetZ, int rotateAroundX)
 		{
 			Matrix3D resultMatrix = new Matrix3D();
 			resultMatrix.Rotate(new Quaternion(new Vector3D(10, 0, 0), -rotateAroundX));
@@ -163,9 +146,8 @@ namespace STimWPF
 
 		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
+			int start = DateTime.Now.Millisecond;
 			currentFrame++;
-			if (PlayBackFromFile)
-				return;
 
 			Skeleton[] rawSkeletons = new Skeleton[0];
 
@@ -178,16 +160,6 @@ namespace STimWPF
 					VisitorCtr.ClosePercent = CloseDepthPercentage(depthFrame);
 					depthImage = new short[depthFrame.PixelDataLength];
 					depthFrame.CopyPixelDataTo(depthImage);
-					
-				}
-			}
-
-			using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
-			{
-				if (skeletonFrame != null)
-				{
-					rawSkeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
-					skeletonFrame.CopySkeletonDataTo(rawSkeletons);
 				}
 			}
 
@@ -203,27 +175,61 @@ namespace STimWPF
 				}
 			}
 
-			ExtractValidSkeletons(rawSkeletons);
-			VisitorCtr.DetectZone(ClosestVisitor);
+			using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
+			{
+				if (skeletonFrame != null)
+				{
+					rawSkeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
+					skeletonFrame.CopySkeletonDataTo(rawSkeletons);
+				}
+			}
 
-			
+			ExtractValidSkeletons(rawSkeletons);
+			VisitorCtr.Zone = VisitorCtr.DetectZone(ClosestVisitor);
+
 			if (colorImage != null && depthImage != null)
 			{
-
 				//// Update the list of trackers and the trackers with the current frame information
 				foreach (WagSkeleton skeleton in currentVisitors.Values)
 				{
-					LoadVisitorDataInOrder(skeleton);
+					//The process below need to be in order
+					FaceTracker tracker = faceTrackers[skeleton.TrackingId];
+					skeleton.FaceFrame = tracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
+					skeleton.HeadLocation = CalculateHeadLocation(skeleton);
+					skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
+					skeleton.BodyOrientationAngle = CalculateBodyOrientationAngle(skeleton);
+					skeleton.AttentionSimple = attentionerSimple.CalculateAttention(skeleton);
+					skeleton.AttentionSocial = attentionerSocial.CalculateAttention(skeleton, this.currentVisitors.Values.ToArray());
 				}
-
-				StatusCtr.LoadNewSkeletonData(currentVisitors.Values.ToArray(), ClosestVisitor, imageCanvas);
 			}
 
+			StatusCtr.LoadNewSkeletonData(currentVisitors.Values.ToList(), ClosestVisitor, GetImageAsArray(imageCanvas, (currentFrame % 32) == 0));
 			CleanOldSkeletons();
-		
 		}
 
-		private int CloseDepthPercentage(DepthImageFrame depthFrame)
+		private byte[] lastImage = new byte[0];
+		private byte[] GetImageAsArray(DrawingImage imageCanvas, bool performConvertion)
+		{
+			if (!performConvertion || currentVisitors.Count == 0)
+				return lastImage;
+
+			DrawingVisual drawingVisual = new DrawingVisual();
+			DrawingContext drawingContext = drawingVisual.RenderOpen();
+			drawingContext.DrawImage(imageCanvas, new System.Windows.Rect(0, 0, RenderWidth, RenderHeight));
+			drawingContext.Close();
+
+			RenderTargetBitmap bmp = new RenderTargetBitmap((int)RenderWidth, (int)RenderHeight, 96, 96, PixelFormats.Pbgra32);
+			bmp.Render(drawingVisual);
+			JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+			encoder.Frames.Add(BitmapFrame.Create(bmp));
+
+			MemoryStream memory = new MemoryStream();
+			encoder.Save(memory);
+			lastImage = memory.ToArray();
+			return lastImage;
+		}
+
+		private double CloseDepthPercentage(DepthImageFrame depthFrame)
 		{
 			DepthImagePixel[] depthPixels;
 
@@ -235,7 +241,7 @@ namespace STimWPF
 			{
 				closePixel += (depthPixels[i].Depth <= constrain ? 1 : 0);
 			}
-			int rawPercent = (int)((double)closePixel / depthPixels.Length * 100);
+			double rawPercent = closePixel / depthPixels.Length * 100;
 			return DepthPercentF.ProcessNewPercentageData(rawPercent);
 		}
 
@@ -256,23 +262,39 @@ namespace STimWPF
 					{
 						skeletonDrawer.DrawUpperSkeleton(skeleton, drawingContext);
 						Joint head = skeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.Head);
+						Joint shoulderCenter = skeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.ShoulderCenter);
 						System.Windows.Point headP = skeletonDrawer.SkeletonPointToScreen(head.Position);
-						System.Windows.Point socialDataP = headP;
-						socialDataP.Y = headP.Y - 50;
+						System.Windows.Point shoulderP = skeletonDrawer.SkeletonPointToScreen(shoulderCenter.Position);
 
-						System.Windows.Point simpleDataP = headP;
-						simpleDataP.Y = headP.Y - 90;
+						double distance = new Vector(headP.X - shoulderP.X, headP.Y - shoulderP.Y).Length/2;
+
+						System.Windows.Point skeletonIdPos = headP;
+						System.Windows.Point socialDataPos = headP;
+						System.Windows.Point simpleDataPos = headP;
+
+
+						socialDataPos.Y = headP.Y - distance;
+						simpleDataPos.Y = socialDataPos.Y - 30;
+
+						skeletonIdPos.X = headP.X - distance;
+						skeletonIdPos.Y = socialDataPos.Y;
+
+						//FormattedText
+						drawingContext.DrawText(
+							new FormattedText(skeleton.TrackingId.ToString(), CultureInfo.GetCultureInfo("en-us"),
+										FlowDirection.LeftToRight, new Typeface("Verdana"), 20, System.Windows.Media.Brushes.Red),
+							skeletonIdPos);
 
 						//FormattedText
 						drawingContext.DrawText(
 							new FormattedText(skeleton.AttentionSocial.ToString(), CultureInfo.GetCultureInfo("en-us"),
-										FlowDirection.LeftToRight, new Typeface("Verdana"), 20, System.Windows.Media.Brushes.Green),
-							socialDataP);
+										FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Green),
+							socialDataPos);
 
 						drawingContext.DrawText(
 							new FormattedText(skeleton.AttentionSimple.ToString(), CultureInfo.GetCultureInfo("en-us"),
-										FlowDirection.LeftToRight, new Typeface("Verdana"), 20, System.Windows.Media.Brushes.Green),
-							simpleDataP);
+										FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Green),
+							simpleDataPos);
 					}
 				}
 
@@ -315,6 +337,7 @@ namespace STimWPF
 					currentVisitors.Add(skeleton.TrackingId, new WagSkeleton(skeleton));
 					faceTrackers.Add(skeleton.TrackingId, new FaceTracker(KinectSensor));
 				}
+
 				currentVisitors[skeleton.TrackingId].LastFrameSeen = currentFrame;
 				ApplyTransformations(currentVisitors[skeleton.TrackingId]);
 			}
@@ -407,18 +430,6 @@ namespace STimWPF
 				throw new Exception("Right hand rule violation");
 
 			return lowered;
-		}
-
-		private void LoadVisitorDataInOrder(WagSkeleton skeleton)
-		{
-			//The process below need to be in order
-			FaceTracker tracker = faceTrackers[skeleton.TrackingId];
-			skeleton.FaceFrame = tracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
-			skeleton.HeadLocation = CalculateHeadLocation(skeleton);
-			skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
-			skeleton.BodyOrientationAngle = CalculateBodyOrientationAngle(skeleton);
-			skeleton.AttentionSimple = attentionerSimple.CalculateAttention(skeleton);
-			skeleton.AttentionSocial = attentionerSocial.CalculateAttention(skeleton, this.currentVisitors.Values.ToArray());
 		}
 
 		private void CleanOldSkeletons()
