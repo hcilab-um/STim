@@ -24,7 +24,7 @@
       <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="ImageFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Users\xiang\Dropbox\STimStatus\Image\</Value>
+      <Value Profile="(Default)">C:\Users\{USERNAME}\Dropbox\STimStatus\Image\</Value>
     </Setting>
     <Setting Name="DateTimeFileNameFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">yyMMdd-HHmmss</Value>

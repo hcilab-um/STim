@@ -399,7 +399,7 @@ namespace STimWPF
 			Point3D headLocation = new Point3D(0, 0, 0);
 			Joint head = skeleton.TransformedJoints[JointType.Head];
 			if (head != null && head.TrackingState == JointTrackingState.Tracked)
-				headLocation = new Point3D(head.Position.X, head.Position.Y, head.Position.Z);
+				headLocation = head.Position.ToPoint3D();
 			return headLocation;
 		}
 
