@@ -38,8 +38,9 @@ namespace STimWPF
 		private const int RIGHT_EYE = 54;
 		private const int FACE_BOTTOM = 43;
 
-		private const double KINECT_DISPLAY_CENTER_DISTACE_Z = 0.17;
-		private static readonly double KinectDisplayCenterDistanceY = 0.58 / 2 + 0.275;
+		private const double KINECT_DISPLAY_CENTER_DISTACE_Z = 0.23;
+		//height should be 0.58
+		private static readonly double KinectDisplayCenterDistanceY = Settings.Default.DisplayHeightInMeters / 2 + 0.30;
 
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 
@@ -129,7 +130,6 @@ namespace STimWPF
 					KinectSensor.Start();
 
 					KinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
-					VisitorCtr.StandardAngleInRadian = ToolBox.AngleToRadian(90 - KinectSensor.ElevationAngle);
 
 					originTransform = CreateOriginMatrix(0, KinectDisplayCenterDistanceY, KINECT_DISPLAY_CENTER_DISTACE_Z, KinectSensor.ElevationAngle);
 				}
@@ -193,13 +193,17 @@ namespace STimWPF
 				foreach (WagSkeleton skeleton in currentVisitors.Values)
 				{
 					//The process below need to be in order
-					FaceTracker tracker = faceTrackers[skeleton.TrackingId];
-					skeleton.FaceFrame = tracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
 					skeleton.HeadLocation = CalculateHeadLocation(skeleton);
-					skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
 					skeleton.BodyOrientationAngle = CalculateBodyOrientationAngle(skeleton);
 					skeleton.AttentionSimple = attentionerSimple.CalculateAttention(skeleton);
 					skeleton.AttentionSocial = attentionerSocial.CalculateAttention(skeleton, this.currentVisitors.Values.ToArray());
+
+					FaceTracker tracker = faceTrackers[skeleton.TrackingId];
+					if (tracker == null)
+						continue;
+
+					skeleton.FaceFrame = tracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
+					skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
 				}
 			}
 
@@ -266,7 +270,7 @@ namespace STimWPF
 						System.Windows.Point headP = skeletonDrawer.SkeletonPointToScreen(head.Position);
 						System.Windows.Point shoulderP = skeletonDrawer.SkeletonPointToScreen(shoulderCenter.Position);
 
-						double distance = new Vector(headP.X - shoulderP.X, headP.Y - shoulderP.Y).Length/2;
+						double distance = new Vector(headP.X - shoulderP.X, headP.Y - shoulderP.Y).Length / 2;
 
 						System.Windows.Point skeletonIdPos = headP;
 						System.Windows.Point socialDataPos = headP;
@@ -333,9 +337,19 @@ namespace STimWPF
 				if (currentVisitors.ContainsKey(skeleton.TrackingId))
 					currentVisitors[skeleton.TrackingId].Update(skeleton);
 				else
-				{
 					currentVisitors.Add(skeleton.TrackingId, new WagSkeleton(skeleton));
-					faceTrackers.Add(skeleton.TrackingId, new FaceTracker(KinectSensor));
+
+				try
+				{
+					if (!faceTrackers.ContainsKey(skeleton.TrackingId))
+						faceTrackers.Add(skeleton.TrackingId, new FaceTracker(KinectSensor));
+				}
+				catch (InvalidOperationException)
+				{
+					//Try/Catch code and comment taken from the SDK project 
+					// During some shutdown scenarios the FaceTracker is unable to be instantiated.  Catch that exception
+					// and don't track a face.
+					Console.WriteLine("ExtractValidSkeletons - creating a new FaceTracker threw an InvalidOperationException");
 				}
 
 				currentVisitors[skeleton.TrackingId].LastFrameSeen = currentFrame;
@@ -434,9 +448,11 @@ namespace STimWPF
 
 		private void CleanOldSkeletons()
 		{
-			var oldSkeletons = currentVisitors.Values.Where(skeleton => skeleton.LastFrameSeen <= (currentFrame - 5)).ToArray();
+			var oldSkeletons = currentVisitors.Values.Where(skeleton => skeleton.LastFrameSeen <= (currentFrame - 100)).ToArray();
 			foreach (WagSkeleton skeleton in oldSkeletons)
 			{
+				if (VisitorCtr.IsBlocked && ClosestVisitor.TrackingId == skeleton.TrackingId)
+					continue;
 				currentVisitors.Remove(skeleton.TrackingId);
 				faceTrackers.Remove(skeleton.TrackingId);
 			}

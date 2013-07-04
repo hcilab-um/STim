@@ -20,7 +20,8 @@ namespace STimWPF.Status
 {
 	public class StatusController
 	{
-		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger("StatusLogger");
+		private static readonly log4net.ILog visitlogger = log4net.LogManager.GetLogger("VisitLogger");
+		private static readonly log4net.ILog statuslogger = log4net.LogManager.GetLogger("StatusLogger");
 
 		private const float RenderWidth = 640.0f;
 		private const float RenderHeight = 480.0f;
@@ -55,32 +56,48 @@ namespace STimWPF.Status
 		public void TimerCallback(Object state)
 		{
 			waitHandle.WaitOne();
+			DateTime currentTime = DateTime.Now;
+			String qualifiedName = "No_Skeleton";
 
-			if (imageSource != null && imageSource.Length != 0)
-				SaveDrawingImage(imageSource);
-
-			waitHandle.Set();
-		}
-
-		private void SaveDrawingImage(byte[] image)
-		{
-			if (image == null || image.Length == 0)
-				return;
-
-			try
+			String skeletonIdInfo = "";
+			int totalVisits = 0;
+			//"DDMMYY-HHmmss-milliseconds-SK1-SK2..."
+			if (currentSkeletons != null)
 			{
-				String skeletonIdInfo = "";
-				//"DDMMYY-HHmmss-milliseconds-SK1-SK2..."
 				foreach (WagSkeleton wagSkeleton in currentSkeletons)
 				{
 					skeletonIdInfo += String.Format("-{0}", wagSkeleton.TrackingId);
 				}
+				qualifiedName = String.Format("{0}{1}.jpg", currentTime.ToString(Settings.Default.DateTimeFileNameFormat), skeletonIdInfo);
+				totalVisits = currentSkeletons.Count;
+				SaveDrawingImage(imageSource, qualifiedName);
+			}
 
-				String qualifiedName = String.Format("{0}{1}{2}.jpg", DateTime.Now.ToString(Settings.Default.DateTimeFileNameFormat), DateTime.Now.Millisecond.ToString(), skeletonIdInfo);
-				using (var stream = new FileStream(Settings.Default.ImageFolder + qualifiedName, FileMode.Create))
+			Object[] logObjects = null;
+			logObjects = new Object[]
+			{
+				currentTime.ToString(Settings.Default.DateTimeFileNameFormat),
+				totalVisits,
+				qualifiedName
+			};
+
+			LogInformation(logObjects, statuslogger);
+
+			waitHandle.Set();
+		}
+
+		private void SaveDrawingImage(byte[] image, String imageName)
+		{
+			if (image == null || image.Length == 0)
+				return;
+			try
+			{
+
+				using (var stream = new FileStream(Settings.Default.ImageFolder + imageName, FileMode.Create))
 				{
 					stream.Write(image, 0, image.Length);
 				}
+
 			}
 			catch (Exception e)
 			{
@@ -141,24 +158,24 @@ namespace STimWPF.Status
 							status.GestureInteraction
 						};
 
-					LogVisitStatus(logObjects);
+					LogInformation(logObjects, visitlogger);
 				}
 
 				lastControllerId = controllerId;
 				lastVisits = currentVisits;
 
 				lastPositions.Clear();
-				if (currentSkeletons == null)
-					return;
-				foreach (WagSkeleton wagSkel in currentSkeletons)
-					lastPositions.Add(wagSkel.TrackingId, wagSkel.TransformedPosition);
+				if (currentSkeletons != null)
+				{
+					foreach (WagSkeleton wagSkel in currentSkeletons)
+						lastPositions.Add(wagSkel.TrackingId, wagSkel.HeadLocation);
+				}
 			}
 			waitHandle.Set();
 		}
 
 		private List<VisitStatus> CreateVisitStatus()
 		{
-
 			List<VisitStatus> currentVisits = new List<VisitStatus>();
 
 			if (currentSkeletons == null || currentSkeletons.Count == 0)
@@ -169,7 +186,7 @@ namespace STimWPF.Status
 			{
 				Vector movementDirection = new Vector();
 				if (lastPositions.ContainsKey(skeleton.TrackingId))
-					movementDirection = ToolBox.GetMovementVector(lastPositions[skeleton.TrackingId], skeleton.TransformedPosition);
+					movementDirection = ToolBox.GetMovementVector(lastPositions[skeleton.TrackingId], skeleton.HeadLocation);
 				double movementDistance = movementDirection.Length;
 
 				VisitStatus lastStatus = null;
@@ -200,7 +217,7 @@ namespace STimWPF.Status
 			return currentVisits;
 		}
 
-		private void LogVisitStatus(Object[] logObjects)
+		private void LogInformation(Object[] logObjects, log4net.ILog logger)
 		{
 			int count = 0;
 			StringBuilder formatSt = new StringBuilder();

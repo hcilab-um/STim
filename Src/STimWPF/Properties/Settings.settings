@@ -27,16 +27,16 @@
       <Value Profile="(Default)">C:\Users\{USERNAME}\Dropbox\STimStatus\Image\</Value>
     </Setting>
     <Setting Name="DateTimeFileNameFormat" Type="System.String" Scope="User">
-      <Value Profile="(Default)">yyMMdd-HHmmss</Value>
+      <Value Profile="(Default)">yyMMdd-HHmmss-fff</Value>
     </Setting>
     <Setting Name="DateTimeLogFormat" Type="System.String" Scope="User">
-      <Value Profile="(Default)">yyMMdd-HH:mm:ss</Value>
+      <Value Profile="(Default)">yyMMdd-HH:mm:ss.fff</Value>
     </Setting>
     <Setting Name="DisplayWidthInMeters" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1.06</Value>
     </Setting>
     <Setting Name="DisplayHeightInMeters" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.58</Value>
+      <Value Profile="(Default)">0.325</Value>
     </Setting>
   </Settings>
 </SettingsFile>

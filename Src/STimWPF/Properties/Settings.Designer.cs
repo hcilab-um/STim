@@ -118,7 +118,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("yyMMdd-HHmmss")]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyMMdd-HHmmss-fff")]
         public string DateTimeFileNameFormat {
             get {
                 return ((string)(this["DateTimeFileNameFormat"]));
@@ -130,7 +130,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("yyMMdd-HH:mm:ss")]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyMMdd-HH:mm:ss.fff")]
         public string DateTimeLogFormat {
             get {
                 return ((string)(this["DateTimeLogFormat"]));
@@ -154,7 +154,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.58")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.325")]
         public double DisplayHeightInMeters {
             get {
                 return ((double)(this["DisplayHeightInMeters"]));

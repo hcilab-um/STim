@@ -14,7 +14,7 @@ namespace STimWPF.Interaction
 	{
 		//If there is a displacement of at least the value below of in the dimension of the push then the values
 		// on the two other dimensions are blocked.
-		const int CLOSE_PERCENT_CONSTRAIN = 60;
+		const int CLOSE_PERCENT_CONSTRAIN = 50;
 
 		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0, 0, 1);
 		private static readonly Vector3D kinectLocation = new Vector3D(0, 0, 0);
@@ -22,8 +22,13 @@ namespace STimWPF.Interaction
 		private double standardAngleInRadian;
 		private Zone interactZone;
 		private bool isSimulating;
-
 		private double closePercent;
+
+		public bool IsBlocked
+		{
+			get { return (closePercent > CLOSE_PERCENT_CONSTRAIN); }
+		}
+
 		public double ClosePercent
 		{
 			get { return closePercent; }
