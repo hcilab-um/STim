@@ -94,8 +94,20 @@
     <Compile Include="Attention\AttentionEstimatorSocial.cs" />
     <Compile Include="Attention\AttentionSimple.cs" />
     <Compile Include="Attention\AttentionSocial.cs" />
+    <Compile Include="Controls\SpatialAlignControl.xaml.cs">
+      <DependentUpon>SpatialAlignControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\DistanceColorConverter.cs" />
     <Compile Include="Converters\DivisionConverter.cs" />
+    <Compile Include="Converters\HeadDistanceConverter.cs" />
+    <Compile Include="Converters\HeadProjectionMatrixConverter.cs" />
+    <Compile Include="Converters\HeadViewMatrixConverter.cs" />
     <Compile Include="Converters\LocationOrientationViewConverter.cs" />
+    <Compile Include="Graphic3D\DiscGeometry3D.cs" />
+    <Compile Include="Graphic3D\Math3D.cs" />
+    <Compile Include="Graphic3D\Planets.cs" />
+    <Compile Include="Graphic3D\RoundMesh3D.cs" />
+    <Compile Include="Graphic3D\SphereGeometry3D.cs" />
     <Compile Include="Util\CircularList.cs" />
     <Compile Include="Controls\VisualDirectionControl.xaml.cs">
       <DependentUpon>VisualDirectionControl.xaml</DependentUpon>
@@ -113,6 +125,10 @@
     <Compile Include="Status\VisitStatus.cs" />
     <Compile Include="WagJointCollection.cs" />
     <Compile Include="WagSkeleton.cs" />
+    <Page Include="Controls\SpatialAlignControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\VisualDirectionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
