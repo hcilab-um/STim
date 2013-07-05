@@ -1,8 +1,30 @@
 ﻿<Window x:Class="STimWPF.ContentWindow" x:Name="contentW"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	    xmlns:converters="clr-namespace:STimWPF.Converters"
-        xmlns:controls="clr-namespace:STimWPF.Controls"
 				WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
 				Title="WAG - ContentWindow" Width="1366" Height="768" >
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<StackPanel Grid.Column="0">
+			<TextBlock HorizontalAlignment="Center" FontSize="32" FontFamily="Arial">Title of the Artwork</TextBlock>
+			<StackPanel Margin="0,60,0,0" Orientation="Horizontal">
+				<TextBlock HorizontalAlignment="Left" FontSize="25" FontFamily="Arial">Author: </TextBlock>
+				<TextBlock Margin="84,0" VerticalAlignment="Center" FontSize="20">This shows all the information about the author.</TextBlock>
+			</StackPanel>
+			<StackPanel Margin="0,50,0,0" Orientation="Horizontal">
+				<TextBlock HorizontalAlignment="Left" FontSize="25" FontFamily="Arial">Description:</TextBlock>
+				<TextBlock Margin="50,0" VerticalAlignment="Center" FontSize="20" TextWrapping="Wrap" Width="490">This shows all the information about the artwork. Including its meaning, shape, size....</TextBlock>
+			</StackPanel>
+			<StackPanel Margin="0,80,0,0" Orientation="Horizontal">
+				<TextBlock HorizontalAlignment="Left" FontSize="25" FontFamily="Arial">Description:</TextBlock>
+				<TextBlock Margin="50,0" VerticalAlignment="Center" FontSize="20" TextWrapping="Wrap" Width="490">This shows all the information about the artwork. Including its meaning, shape, size....</TextBlock>
+			</StackPanel>
+		</StackPanel>
+		<Grid Grid.Column="1">
+			<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50" FontFamily="Arial">Actual ArtWork</TextBlock>
+		</Grid>
+	</Grid>
 </Window>

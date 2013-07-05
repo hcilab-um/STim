@@ -97,9 +97,6 @@
     <Compile Include="Converters\DivisionConverter.cs" />
     <Compile Include="Converters\LocationOrientationViewConverter.cs" />
     <Compile Include="Util\CircularList.cs" />
-    <Compile Include="Controls\VisualDirectionControl.xaml.cs">
-      <DependentUpon>VisualDirectionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DepthImageReadyArgs.cs" />
     <Compile Include="Util\DepthPercentFilter.cs" />
     <Compile Include="Interaction\VisitorController.cs" />
@@ -113,10 +110,6 @@
     <Compile Include="Status\VisitStatus.cs" />
     <Compile Include="WagJointCollection.cs" />
     <Compile Include="WagSkeleton.cs" />
-    <Page Include="Controls\VisualDirectionControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="ControlWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
