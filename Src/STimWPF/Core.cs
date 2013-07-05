@@ -38,9 +38,8 @@ namespace STimWPF
 		private const int RIGHT_EYE = 54;
 		private const int FACE_BOTTOM = 43;
 
-		private const double KINECT_DISPLAY_CENTER_DISTACE_Z = 0.23;
 		//height should be 0.58
-		private static readonly double KinectDisplayCenterDistanceY = Settings.Default.DisplayHeightInMeters / 2 + 0.30;
+		private static readonly double KinectDisplayCenterDistanceY = Settings.Default.DisplayHeightInMeters / 2 + Settings.Default.KinectDistanceY;
 
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 
@@ -131,7 +130,7 @@ namespace STimWPF
 
 					KinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 
-					originTransform = CreateOriginMatrix(0, KinectDisplayCenterDistanceY, KINECT_DISPLAY_CENTER_DISTACE_Z, KinectSensor.ElevationAngle);
+					originTransform = CreateOriginMatrix(0, KinectDisplayCenterDistanceY, Settings.Default.KinectDistanceZ, KinectSensor.ElevationAngle);
 				}
 			}
 		}
@@ -146,7 +145,6 @@ namespace STimWPF
 
 		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
-			int start = DateTime.Now.Millisecond;
 			currentFrame++;
 
 			Skeleton[] rawSkeletons = new Skeleton[0];
@@ -157,7 +155,7 @@ namespace STimWPF
 			{
 				if (depthFrame != null)
 				{
-					VisitorCtr.ClosePercent = CloseDepthPercentage(depthFrame);
+					VisitorCtr.ClosePercent = CalculateBlockPercentage(depthFrame);
 					depthImage = new short[depthFrame.PixelDataLength];
 					depthFrame.CopyPixelDataTo(depthImage);
 				}
@@ -201,9 +199,14 @@ namespace STimWPF
 					FaceTracker tracker = faceTrackers[skeleton.TrackingId];
 					if (tracker == null)
 						continue;
-
 					skeleton.FaceFrame = tracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
-					skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
+					if (skeleton.FaceFrame.TrackSuccessful)
+					{
+						skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
+						Console.WriteLine("HeadOrientation: {0}-{1}-{2}", skeleton.HeadLocation.X, skeleton.HeadLocation.Y, skeleton.HeadLocation.Z);
+					}
+					else
+						Console.WriteLine("FaceTracking Fail!!!!");
 				}
 			}
 
@@ -233,19 +236,19 @@ namespace STimWPF
 			return lastImage;
 		}
 
-		private double CloseDepthPercentage(DepthImageFrame depthFrame)
+		private double CalculateBlockPercentage(DepthImageFrame depthFrame)
 		{
 			DepthImagePixel[] depthPixels;
 
 			depthPixels = new DepthImagePixel[KinectSensor.DepthStream.FramePixelDataLength];
 			depthFrame.CopyDepthImagePixelDataTo(depthPixels);
 			int closePixel = 0;
-			short constrain = (short)(Settings.Default.InteractionZoneConstrain * 1000);
+			short constrain = (short)(Settings.Default.CloseZoneConstrain+Settings.Default.KinectDistanceZ * 1000);
 			for (int i = 0; i < depthPixels.Length; ++i)
 			{
 				closePixel += (depthPixels[i].Depth <= constrain ? 1 : 0);
 			}
-			double rawPercent = closePixel / depthPixels.Length * 100;
+			double rawPercent = (double)(closePixel * 100) / (double)depthPixels.Length;
 			return DepthPercentF.ProcessNewPercentageData(rawPercent);
 		}
 
@@ -435,14 +438,12 @@ namespace STimWPF
 			headOrientation = Vector3D.CrossProduct(faceVectorHorizontal, faceVectorVertical);
 			headOrientation = originTransform.Transform(headOrientation);
 			headOrientation.Normalize();
-
 			Matrix3D headPointsPointUpMatrix = new Matrix3D();
-			headPointsPointUpMatrix.RotateAt(new Quaternion(new Vector3D(1, 0, 0), -20), skeleton.TransformedJoints[JointType.Head].Position.ToPoint3D());
+			headPointsPointUpMatrix.RotateAt(new Quaternion(new Vector3D(int.MaxValue, 0, 0), -20), skeleton.TransformedJoints[JointType.Head].Position.ToPoint3D());
 			Vector3D lowered = headPointsPointUpMatrix.Transform(headOrientation);
 
 			if (headOrientation.Z > 0)
 				throw new Exception("Right hand rule violation");
-
 			return lowered;
 		}
 
@@ -451,10 +452,11 @@ namespace STimWPF
 			var oldSkeletons = currentVisitors.Values.Where(skeleton => skeleton.LastFrameSeen <= (currentFrame - 100)).ToArray();
 			foreach (WagSkeleton skeleton in oldSkeletons)
 			{
-				if (VisitorCtr.IsBlocked && ClosestVisitor.TrackingId == skeleton.TrackingId)
-					continue;
-				currentVisitors.Remove(skeleton.TrackingId);
-				faceTrackers.Remove(skeleton.TrackingId);
+				if (!(VisitorCtr.IsBlocked && ClosestVisitor.TrackingId == skeleton.TrackingId))
+				{
+					currentVisitors.Remove(skeleton.TrackingId);
+					faceTrackers.Remove(skeleton.TrackingId);
+				}
 			}
 			System.GC.Collect();
 		}

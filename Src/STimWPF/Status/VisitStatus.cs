@@ -13,6 +13,7 @@ namespace STimWPF.Status
 	{
 		public int VisitId { get; set; }
 		public int SkeletonId { get; set; }
+
 		public DateTime VisitInit { get; set; }
 		public Zone Zone { get; set; }
 		
@@ -20,13 +21,15 @@ namespace STimWPF.Status
 		public bool WasControlling { get; set; }
 
 		public Point3D HeadLocation { get; set; }
+		public Vector3D HeadDirection { get; set; }
+
 		public double MovementDistance { get; set; }
 		public Vector MovementDirection { get; set; }
 		public double BodyAngle { get; set; }
-		public Vector3D HeadDirection { get; set; }
 		
 		public Attention.AttentionSimple AttentionSimple { get; set; }
 		public Attention.AttentionSocial AttentionSocial { get; set; }
+
 		public bool TouchInteraction { get; set; }
 		public bool GestureInteraction { get; set; }
 

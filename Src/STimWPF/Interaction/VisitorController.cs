@@ -12,9 +12,6 @@ namespace STimWPF.Interaction
 {
 	public class VisitorController : INotifyPropertyChanged
 	{
-		//If there is a displacement of at least the value below of in the dimension of the push then the values
-		// on the two other dimensions are blocked.
-		const int CLOSE_PERCENT_CONSTRAIN = 50;
 
 		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0, 0, 1);
 		private static readonly Vector3D kinectLocation = new Vector3D(0, 0, 0);
@@ -26,7 +23,7 @@ namespace STimWPF.Interaction
 
 		public bool IsBlocked
 		{
-			get { return (closePercent > CLOSE_PERCENT_CONSTRAIN); }
+			get { return (closePercent > Settings.Default.BlockDepthPercent); }
 		}
 
 		public double ClosePercent
@@ -93,7 +90,7 @@ namespace STimWPF.Interaction
 
 		private double DetectUserPosition(WagSkeleton skeleton)
 		{
-			if (ClosePercent > CLOSE_PERCENT_CONSTRAIN)
+			if (ClosePercent > Settings.Default.BlockDepthPercent)
 			{
 				return Settings.Default.CloseZoneConstrain / 2;
 			}

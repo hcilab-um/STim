@@ -138,22 +138,29 @@ namespace STimWPF.Status
 							status.VisitInit.ToString(Settings.Default.DateTimeLogFormat),
 							currentVisits.Count,
 							status.VisitId,
+							status.SkeletonId,
+							
 							status.Zone,
 							status.IsControlling,
 							status.WasControlling,
+
 							status.HeadLocation.X,							
 							status.HeadLocation.Y,							
 							status.HeadLocation.Z,
+
 							status.HeadDirection.X,
 							status.HeadDirection.Y,
 							status.HeadDirection.Z,
+							
 							status.MovementDirection.X,
 							status.MovementDirection.Y,					
 							status.MovementDistance,
+							
 							status.BodyAngle,
-							//BasedOnSkeleton == true || false if coming from a distance percentage
+							
 							status.AttentionSimple.SimpleAttentionValue,
 							status.AttentionSocial.SocialAttentionValue,
+							
 							status.TouchInteraction,
 							status.GestureInteraction
 						};
@@ -195,19 +202,26 @@ namespace STimWPF.Status
 
 				VisitStatus status = new VisitStatus()
 				{
-					SkeletonId = skeleton.TrackingId,
 					VisitId = lastStatus != null ? lastStatus.VisitId : ++visitCounter,
+					SkeletonId = skeleton.TrackingId,
+					
 					VisitInit = lastStatus != null ? lastStatus.VisitInit : currentDateTime,
 					Zone = VisitorContr.DetectZone(skeleton),
+
 					IsControlling = controllerId == skeleton.TrackingId ? true : false,
 					WasControlling = lastControllerId == skeleton.TrackingId ? true : false,
 
 					HeadLocation = skeleton.HeadLocation,
+					HeadDirection = skeleton.HeadOrientation,
+
 					MovementDistance = movementDistance,
 					MovementDirection = movementDirection,
+
 					BodyAngle = skeleton.BodyOrientationAngle,
+
 					AttentionSimple = skeleton.AttentionSimple,
 					AttentionSocial = skeleton.AttentionSocial,
+					
 					TouchInteraction = false,
 					GestureInteraction = false
 				};

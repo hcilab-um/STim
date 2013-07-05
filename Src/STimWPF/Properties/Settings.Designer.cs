@@ -163,5 +163,41 @@ namespace STimWPF.Properties {
                 this["DisplayHeightInMeters"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.23")]
+        public double KinectDistanceZ {
+            get {
+                return ((double)(this["KinectDistanceZ"]));
+            }
+            set {
+                this["KinectDistanceZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.3")]
+        public double KinectDistanceY {
+            get {
+                return ((double)(this["KinectDistanceY"]));
+            }
+            set {
+                this["KinectDistanceY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public double BlockDepthPercent {
+            get {
+                return ((double)(this["BlockDepthPercent"]));
+            }
+            set {
+                this["BlockDepthPercent"] = value;
+            }
+        }
     }
 }
