@@ -68,7 +68,7 @@ namespace STimWPF.Status
 				{
 					skeletonIdInfo += String.Format("-{0}", wagSkeleton.TrackingId);
 				}
-				qualifiedName = String.Format("{0}{1}.jpg", currentTime.ToString(Settings.Default.DateTimeFileNameFormat), skeletonIdInfo);
+				qualifiedName = String.Format("{0}ms{1}.jpg", currentTime.ToString(Settings.Default.DateTimeFileNameFormat), skeletonIdInfo);
 				totalVisits = currentSkeletons.Count;
 				SaveDrawingImage(imageSource, qualifiedName);
 			}

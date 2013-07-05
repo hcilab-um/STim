@@ -201,12 +201,7 @@ namespace STimWPF
 						continue;
 					skeleton.FaceFrame = tracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
 					if (skeleton.FaceFrame.TrackSuccessful)
-					{
 						skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
-						Console.WriteLine("HeadOrientation: {0}-{1}-{2}", skeleton.HeadLocation.X, skeleton.HeadLocation.Y, skeleton.HeadLocation.Z);
-					}
-					else
-						Console.WriteLine("FaceTracking Fail!!!!");
 				}
 			}
 
@@ -217,7 +212,7 @@ namespace STimWPF
 		private byte[] lastImage = new byte[0];
 		private byte[] GetImageAsArray(DrawingImage imageCanvas, bool performConvertion)
 		{
-			if (!performConvertion || currentVisitors.Count == 0)
+			if (!performConvertion || currentVisitors.Count == 0 || imageCanvas == null)
 				return lastImage;
 
 			DrawingVisual drawingVisual = new DrawingVisual();
@@ -233,6 +228,7 @@ namespace STimWPF
 			MemoryStream memory = new MemoryStream();
 			encoder.Save(memory);
 			lastImage = memory.ToArray();
+
 			return lastImage;
 		}
 
@@ -243,7 +239,7 @@ namespace STimWPF
 			depthPixels = new DepthImagePixel[KinectSensor.DepthStream.FramePixelDataLength];
 			depthFrame.CopyDepthImagePixelDataTo(depthPixels);
 			int closePixel = 0;
-			short constrain = (short)(Settings.Default.CloseZoneConstrain+Settings.Default.KinectDistanceZ * 1000);
+			short constrain = (short)(Settings.Default.CloseZoneConstrain + Settings.Default.KinectDistanceZ * 1000);
 			for (int i = 0; i < depthPixels.Length; ++i)
 			{
 				closePixel += (depthPixels[i].Depth <= constrain ? 1 : 0);
