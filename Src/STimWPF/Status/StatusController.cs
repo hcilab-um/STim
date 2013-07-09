@@ -15,7 +15,6 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using STimWPF.Util;
 using System.Diagnostics;
-using STimWPF.Converters;
 
 namespace STimWPF.Status
 {
@@ -34,8 +33,6 @@ namespace STimWPF.Status
 		private List<WagSkeleton> currentSkeletons = null;
 
 		private byte[] imageSource;
-		public double DisplayWidth { get; set; }
-		public double DisplayHeight { get; set; }
 
 		private int controllerId;
 		private int lastControllerId;
@@ -131,18 +128,13 @@ namespace STimWPF.Status
 
 				Object[] logObjects = null;
 				List<VisitStatus> currentVisits = CreateVisitStatus();
-				DateTime loggingTime = DateTime.Now;
-				
 
 				foreach (VisitStatus status in currentVisits)
 				{
-					Point viewInGrid = CalculateView(status);
-
 					//Visitors.Count
 					//ImageFile
 					logObjects = new Object[]
 						{
-							loggingTime.ToString(Settings.Default.DateTimeLogFormat),
 							status.VisitInit.ToString(Settings.Default.DateTimeLogFormat),
 							currentVisits.Count,
 							status.VisitId,
@@ -159,10 +151,7 @@ namespace STimWPF.Status
 							status.HeadDirection.X,
 							status.HeadDirection.Y,
 							status.HeadDirection.Z,
-
-							viewInGrid.X,
-							viewInGrid.Y,
-
+							
 							status.MovementDirection.X,
 							status.MovementDirection.Y,					
 							status.MovementDistance,
@@ -190,24 +179,6 @@ namespace STimWPF.Status
 				}
 			}
 			waitHandle.Set();
-		}
-
-		private Point CalculateView(VisitStatus status)
-		{
-			LocationOrientationViewConverter converter = new LocationOrientationViewConverter();
-
-			Point3D headLocation = status.HeadLocation;
-			Vector3D headOrientation = status.HeadDirection;
-
-			if (headOrientation.Length == 0)
-				return new Point(-1, -1);
-
-			int rowCount = STimWPF.Controls.VisualDirectionControl.ROWS;
-			int colCount = STimWPF.Controls.VisualDirectionControl.COLUMNS;
-
-			Thickness convResult = (Thickness)converter.Convert(new object[] { headLocation, headOrientation, DisplayWidth, DisplayHeight, rowCount, colCount }, null, null, null);
-			Point result = new Point() { X = convResult.Left / (DisplayWidth / colCount), Y = convResult.Top / (DisplayHeight / rowCount) };
-			return result;
 		}
 
 		private List<VisitStatus> CreateVisitStatus()
@@ -270,6 +241,8 @@ namespace STimWPF.Status
 			String statusLog = String.Format(formatSt.ToString(), logObjects);
 			logger.Info(statusLog);
 		}
+
+
 	}
 
 }

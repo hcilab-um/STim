@@ -21,9 +21,6 @@ namespace STimWPF.Controls
 	/// </summary>
 	public partial class VisualDirectionControl : UserControl
 	{
-		public const int ROWS = 4;
-		public const int COLUMNS = 4;
-
 		public static readonly DependencyProperty HeadLocationProperty = DependencyProperty.Register("HeadLocation", typeof(Point3D), typeof(VisualDirectionControl));
 		public static readonly DependencyProperty HeadOrientationProperty = DependencyProperty.Register("HeadOrientation", typeof(Vector3D), typeof(VisualDirectionControl));
 
@@ -39,8 +36,13 @@ namespace STimWPF.Controls
 			set { SetValue(HeadOrientationProperty, value); }
 		}
 
+		public int Rows { get; set; }
+		public int Columns { get; set; }
+
 		public VisualDirectionControl()
 		{
+			Rows = 4;
+			Columns = 4;
 			InitializeComponent();
 		}
 	}

@@ -18,7 +18,7 @@ namespace STimWPF
 	{
 
 		public ControlWindow MainW { get; set; }
-		public ContentWindow ContentW { get; set; }
+		public ContentWindow contentW { get; set; }
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
@@ -32,9 +32,9 @@ namespace STimWPF
 			);
 
 			MainW = new ControlWindow(this);
-			ContentW = new ContentWindow(this);
+			contentW = new ContentWindow(this);
 			MainW.Show();
-			ContentW.Show();
+			contentW.Show();
 		}
 
 		protected override void OnExit(ExitEventArgs e)
@@ -47,8 +47,8 @@ namespace STimWPF
 		{
 			if (sender != MainW)
 				MainW.Close();
-			if (sender != ContentW)
-				ContentW.Close();
+			if (sender != contentW)
+				contentW.Close();
 		}
 
 	}
