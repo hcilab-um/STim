@@ -94,6 +94,7 @@
     <Compile Include="Attention\AttentionEstimatorSocial.cs" />
     <Compile Include="Attention\AttentionSimple.cs" />
     <Compile Include="Attention\AttentionSocial.cs" />
+    <Compile Include="Converters\LocationOrientationViewConverter.cs" />
     <Compile Include="Util\CircularList.cs" />
     <Compile Include="DepthImageReadyArgs.cs" />
     <Compile Include="Util\DepthPercentFilter.cs" />

@@ -1,6 +1,9 @@
 ﻿<Window x:Class="STimWPF.ContentWindow" x:Name="contentW"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				xmlns:converters="clr-namespace:STimWPF.Converters"
 				WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
-				Title="WAG - ContentWindow" Width="1366" Height="768" >
+				Title="WAG - ContentWindow" Width="1366" Height="768" Loaded="contentW_Loaded" SizeChanged="contentW_SizeChanged">
+	<Grid>
+	</Grid>
 </Window>

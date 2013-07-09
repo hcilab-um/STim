@@ -150,7 +150,7 @@ namespace STimWPF
 			Skeleton[] rawSkeletons = new Skeleton[0];
 
 			DrawingImage imageCanvas = null;
-
+			
 			using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
 			{
 				if (depthFrame != null)
