@@ -39,10 +39,10 @@
       <Value Profile="(Default)">0.325</Value>
     </Setting>
     <Setting Name="KinectDistanceZ" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.23</Value>
+      <Value Profile="(Default)">0.18</Value>
     </Setting>
     <Setting Name="KinectDistanceY" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.3</Value>
+      <Value Profile="(Default)">0.265</Value>
     </Setting>
     <Setting Name="BlockDepthPercent" Type="System.Double" Scope="User">
       <Value Profile="(Default)">20</Value>
