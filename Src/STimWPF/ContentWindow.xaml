@@ -9,14 +9,14 @@
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 		<StackPanel Grid.Column="0">
-			<TextBlock HorizontalAlignment="Center" FontSize="32" FontFamily="Arial">Title of the Artwork</TextBlock>
+			<TextBlock HorizontalAlignment="Center" Margin="0,100,0,0" FontSize="50" FontFamily="Arial">Title of the Artwork</TextBlock>
 			<StackPanel Margin="0,60,0,0" Orientation="Horizontal">
-				<TextBlock Margin="10,0" HorizontalAlignment="Left" FontSize="25" FontFamily="Arial">Author: </TextBlock>
-				<TextBlock Margin="84,0" VerticalAlignment="Center" FontSize="20">This shows all the information about the author.</TextBlock>
+				<TextBlock Margin="10,0" HorizontalAlignment="Left" FontSize="35" FontFamily="Arial">Author: </TextBlock>
+				<TextBlock Margin="84,0" VerticalAlignment="Center" FontSize="25" TextWrapping="Wrap">This shows all the information about the author.</TextBlock>
 			</StackPanel>
 			<StackPanel Margin="0,50,0,0" Orientation="Horizontal">
-				<TextBlock Margin="10,0" HorizontalAlignment="Left" FontSize="25" FontFamily="Arial">Description:</TextBlock>
-				<TextBlock Margin="30,0" VerticalAlignment="Center" FontSize="20" TextWrapping="Wrap" Width="488">This shows all the information about the artwork. Including its meaning, shape, size....</TextBlock>
+				<TextBlock Margin="10,0" HorizontalAlignment="Left" FontSize="35" FontFamily="Arial">Description:</TextBlock>
+				<TextBlock Margin="15,0" VerticalAlignment="Center" FontSize="25" TextWrapping="Wrap" Width="680">This shows all the information about the artwork. Including its meaning, shape, size....</TextBlock>
 			</StackPanel>
 		</StackPanel>
 		<Border BorderBrush="Black" BorderThickness="2"/>
