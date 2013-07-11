@@ -19,12 +19,25 @@ namespace STimWPF
 
 		public WagJointCollection TransformedJoints;
 
-		public double BodyOrientationAngle { get; set; }
+		public bool InPeriphery { get; set; }
+
+		private double bodyOrientationAngle;
+
 
 		public Point3D TransformedPosition { get; set; }
 
 		private Point3D headLocation = new Point3D(0, 0, 3);
 		private Vector3D headOrientation = new Vector3D(0, 0, 0);
+
+		public double BodyOrientationAngle
+		{
+			get { return bodyOrientationAngle; }
+			set
+			{
+				bodyOrientationAngle = value;
+				OnPropertyChanged("BodyOrientationAngle");
+			}
+		}
 
 		public Point3D HeadLocation
 		{

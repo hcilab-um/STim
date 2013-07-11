@@ -37,7 +37,7 @@ namespace STimWPF
 		private const int LEFT_EYE = 19;
 		private const int RIGHT_EYE = 54;
 		private const int FACE_BOTTOM = 43;
-
+		private const int PERIPHERY_MAX_ANGLE = 110;
 		//height should be 0.58
 		private static readonly double KinectDisplayCenterDistanceY = Settings.Default.DisplayHeightInMeters / 2 + Settings.Default.KinectDistanceY;
 
@@ -193,6 +193,7 @@ namespace STimWPF
 					//The process below need to be in order
 					skeleton.HeadLocation = CalculateHeadLocation(skeleton);
 					skeleton.BodyOrientationAngle = CalculateBodyOrientationAngle(skeleton);
+					skeleton.InPeriphery = (skeleton.BodyOrientationAngle <= PERIPHERY_MAX_ANGLE);
 					skeleton.AttentionSimple = attentionerSimple.CalculateAttention(skeleton);
 					skeleton.AttentionSocial = attentionerSocial.CalculateAttention(skeleton, this.currentVisitors.Values.ToArray());
 
@@ -396,13 +397,12 @@ namespace STimWPF
 			Microsoft.Kinect.Joint shoulderLeft = userSkeleton.TransformedJoints[JointType.ShoulderLeft];
 			Microsoft.Kinect.Joint shoulderRight = userSkeleton.TransformedJoints[JointType.ShoulderRight];
 
-			System.Windows.Point shoulderRightP = new System.Windows.Point(shoulderRight.Position.X, shoulderRight.Position.Z);
-			System.Windows.Point shoulderLeftP = new System.Windows.Point(shoulderLeft.Position.X, shoulderLeft.Position.Z);
-
-			Vector shoulderVector = new Vector(shoulderRightP.X - shoulderLeftP.X, shoulderRightP.Y - shoulderLeftP.Y);
-			Vector xAxis = new Vector(1, 0);
-
-			double orientationAngle = Vector.AngleBetween(xAxis, shoulderVector);
+			Vector shoulderVector = new Vector(shoulderRight.Position.X - shoulderLeft.Position.X, shoulderRight.Position.Z - shoulderLeft.Position.Z);
+			Matrix matrix = new Matrix();
+			matrix.Rotate(-90);
+			Vector bodyFacingDirection = matrix.Transform(shoulderVector);
+			Vector displayLocation = -new Vector(userSkeleton.HeadLocation.X, userSkeleton.HeadLocation.Z);
+			double orientationAngle = Math.Abs(Vector.AngleBetween(displayLocation, bodyFacingDirection));
 
 			return Math.Abs(orientationAngle);
 		}

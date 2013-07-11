@@ -10,6 +10,7 @@
 	</Window.Resources>
 	<Grid>
 		<controls:SpatialAlignControl HeadLocation="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation}" 
-																	Distance ="{Binding ElementName=mWindow, Path=CoreInstance.ClosestVisitor.HeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"/>
+																	Distance ="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"/>
+		<!--<Label Content="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.BodyOrientationAngle, FallbackValue=0}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
 	</Grid>
 </Window>
