@@ -4,12 +4,12 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
-using STimWPF.Properties;
+using STimAttentionWPF.Properties;
 using System.Xml;
 using System.Reflection;
 using STim;
 
-namespace STimWPF
+namespace STimAttentionWPF
 {
 
 	/// <summary>
@@ -18,8 +18,8 @@ namespace STimWPF
 	public partial class App : Application
 	{
 
-		public ControlWindow MainW { get; set; }
-		public ContentWindow contentW { get; set; }
+		public ControlWindow ControlW { get; set; }
+		public ContentWindow ContentW { get; set; }
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
@@ -41,14 +41,16 @@ namespace STimWPF
 				Settings.Default.DisplayHeightInMeters,
 				Settings.Default.KinectDistanceZ,
 				Settings.Default.KinectDistanceY,
+				Settings.Default.ScreenGridRows,
+				Settings.Default.ScreenGridColumns,
 				log4net.LogManager.GetLogger("VisitLogger"),
 				log4net.LogManager.GetLogger("StatusLogger")
 			);
 
-			MainW = new ControlWindow(this);
-			contentW = new ContentWindow(this);
-			MainW.Show();
-			contentW.Show();
+			ControlW = new ControlWindow(this);
+			ContentW = new ContentWindow(this);
+			ControlW.Show();
+			ContentW.Show();
 		}
 
 		protected override void OnExit(ExitEventArgs e)
@@ -59,10 +61,10 @@ namespace STimWPF
 
 		public void CloseApp(Window sender)
 		{
-			if (sender != MainW)
-				MainW.Close();
-			if (sender != contentW)
-				contentW.Close();
+			if (sender != ControlW)
+				ControlW.Close();
+			if (sender != ContentW)
+				ContentW.Close();
 		}
 
 	}

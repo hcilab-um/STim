@@ -8,8 +8,8 @@
     <ProjectGuid>{047A0786-3A92-412B-BB0E-BFB787189F84}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>STimWPF</RootNamespace>
-    <AssemblyName>STimWPF</AssemblyName>
+    <RootNamespace>STimAttentionWPF</RootNamespace>
+    <AssemblyName>STimAttentionWPF</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -84,6 +84,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\DistanceColorConverter.cs" />
+    <Compile Include="Converters\HeadDistanceConverter.cs" />
+    <Compile Include="Converters\HeadProjectionMatrixConverter.cs" />
+    <Compile Include="Converters\HeadViewMatrixConverter.cs" />
+    <Compile Include="Controls\SpatialAlignControl.xaml.cs">
+      <DependentUpon>SpatialAlignControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\DivisionConverter.cs" />
     <Compile Include="Converters\LocationOrientationViewConverter.cs" />
     <Compile Include="Controls\VisualDirectionControl.xaml.cs">
@@ -92,6 +99,10 @@
     <Compile Include="ContentWindow.xaml.cs">
       <DependentUpon>ContentWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\SpatialAlignControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\VisualDirectionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -114,6 +125,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphic3D\DiscGeometry3D.cs" />
+    <Compile Include="Graphic3D\Math3D.cs" />
+    <Compile Include="Graphic3D\Planets.cs" />
+    <Compile Include="Graphic3D\RoundMesh3D.cs" />
+    <Compile Include="Graphic3D\SphereGeometry3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -5,9 +5,9 @@ using System.Text;
 using System.Windows.Data;
 using System.Windows;
 using System.Windows.Media.Media3D;
-using STimWPF.Properties;
+using STimAttentionWPF.Properties;
 
-namespace STimWPF.Converters
+namespace STimAttentionWPF.Converters
 {
 	public class LocationOrientationViewConverter : IMultiValueConverter
 	{

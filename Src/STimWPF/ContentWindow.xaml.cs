@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using STim;
 
-namespace STimWPF
+namespace STimAttentionWPF
 {
     /// <summary>
     /// Interaction logic for TextEntryWindow.xaml
@@ -44,5 +44,17 @@ namespace STimWPF
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
+
+				private void contentW_Loaded(object sender, RoutedEventArgs e)
+				{
+					Core.Instance.StatusCtr.DisplayWidth = ActualWidth;
+					Core.Instance.StatusCtr.DisplayHeight = ActualHeight;
+				}
+
+				private void contentW_SizeChanged(object sender, SizeChangedEventArgs e)
+				{
+					Core.Instance.StatusCtr.DisplayWidth = ActualWidth;
+					Core.Instance.StatusCtr.DisplayHeight = ActualHeight;
+				}
     }
 }

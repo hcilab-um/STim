@@ -19,6 +19,7 @@ namespace STim.Status
 {
 	public class StatusController
 	{
+
 		private log4net.ILog visitLogger;
 		private log4net.ILog statusLogger;
 
@@ -30,6 +31,9 @@ namespace STim.Status
 
 		private Dictionary<int, Point3D> lastPositions = null;
 		private List<WagSkeleton> currentSkeletons = null;
+
+		public double DisplayWidth { get; set; }
+		public double DisplayHeight { get; set; }
 
 		private byte[] imageSource;
 
@@ -130,17 +134,19 @@ namespace STim.Status
 
 				Object[] logObjects = null;
 				List<VisitStatus> currentVisits = CreateVisitStatus();
-
+				DateTime loggingTime = DateTime.Now;
 				foreach (VisitStatus status in currentVisits)
 				{
+					Point viewInGrid = CalculateVision(status);
 					//Visitors.Count
 					//ImageFile
 					logObjects = new Object[]
 						{
-							status.VisitInit.ToString(STimSettings.DateTimeLogFormat),
+							loggingTime.ToString(STimSettings.DateTimeLogFormat),
 							currentVisits.Count,
 							status.VisitId,
 							status.SkeletonId,
+							status.VisitInit.ToString(STimSettings.DateTimeLogFormat),
 							
 							status.Zone,
 							status.IsControlling,
@@ -154,6 +160,9 @@ namespace STim.Status
 							status.HeadDirection.Y,
 							status.HeadDirection.Z,
 							
+							viewInGrid.X,
+							viewInGrid.Y,
+
 							status.MovementDirection.X,
 							status.MovementDirection.Y,					
 							status.MovementDistance,
@@ -183,6 +192,39 @@ namespace STim.Status
 			waitHandle.Set();
 		}
 
+		private Point CalculateVision(VisitStatus status)
+		{
+
+			Point3D headLocation = status.HeadLocation;
+			Vector3D headOrientation = status.HeadDirection;
+
+			if (headOrientation.Length == 0)
+				return new Point(-1, -1);
+
+			double rectWidth = DisplayWidth / STimSettings.ScreenGridColumns;
+			double rectHeight = DisplayHeight / STimSettings.ScreenGridRows;
+
+			double displayPhysicalLocationX = Double.MaxValue;
+			double displayPhysicalLocationY = Double.MaxValue;
+
+			if (headOrientation.Z != 0)
+			{
+				double rational = -headLocation.Z / headOrientation.Z;
+				displayPhysicalLocationX = headOrientation.X * rational + headLocation.X;
+				displayPhysicalLocationY = headOrientation.Y * rational + headLocation.Y;
+			}
+
+			int column = (int)((displayPhysicalLocationX / STimSettings.DisplayWidthInMeters * DisplayWidth + DisplayWidth / 2) / rectWidth);
+			int row = (int)((-displayPhysicalLocationY / STimSettings.DisplayHeightInMeters * DisplayHeight + DisplayHeight / 2) / rectHeight);
+
+			column = Math.Max(0, column);
+			column = Math.Min(column, STimSettings.ScreenGridColumns - 1);
+			row = Math.Max(0, row);
+			row = Math.Min(row, STimSettings.ScreenGridRows - 1);
+
+			return new Point() { X = column, Y = row };
+		}
+
 		private List<VisitStatus> CreateVisitStatus()
 		{
 			List<VisitStatus> currentVisits = new List<VisitStatus>();
@@ -206,7 +248,7 @@ namespace STim.Status
 				{
 					VisitId = lastStatus != null ? lastStatus.VisitId : ++visitCounter,
 					SkeletonId = skeleton.TrackingId,
-					
+
 					VisitInit = lastStatus != null ? lastStatus.VisitInit : currentDateTime,
 					Zone = VisitorContr.DetectZone(skeleton),
 
@@ -223,7 +265,7 @@ namespace STim.Status
 
 					AttentionSimple = skeleton.AttentionSimple,
 					AttentionSocial = skeleton.AttentionSocial,
-					
+
 					TouchInteraction = false,
 					GestureInteraction = false
 				};
@@ -243,7 +285,6 @@ namespace STim.Status
 			String statusLog = String.Format(formatSt.ToString(), logObjects);
 			logger.Info(statusLog);
 		}
-
 
 	}
 

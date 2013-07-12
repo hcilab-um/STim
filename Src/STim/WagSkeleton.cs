@@ -23,8 +23,20 @@ namespace STim
 
 		public Point3D TransformedPosition { get; set; }
 
+		private bool inPeriphery;
+
 		private Point3D headLocation = new Point3D(0, 0, 3);
 		private Vector3D headOrientation = new Vector3D(0, 0, 0);
+
+		public bool InPeriphery
+		{
+			get { return inPeriphery; }
+			set
+			{
+				inPeriphery = value;
+				OnPropertyChanged("InPeriphery");
+			}
+		}
 
 		public Point3D HeadLocation
 		{

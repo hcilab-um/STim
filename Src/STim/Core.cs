@@ -37,6 +37,7 @@ namespace STim
 		private const int RIGHT_EYE = 54;
 		private const int FACE_BOTTOM = 43;
 
+		private const int PERIPHERY_MAX_ANGLE = 110;
 		//height should be 0.58
 
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
@@ -92,20 +93,28 @@ namespace STim
 		private Core() { }
 
 		public void Initialize(Dispatcher uiDispatcher, double closeZoneConstrain, double notificationZoneConstrain, int blockPercentBufferSize, double blockDepthPercent, int uploadPeriod, string imageFolder, string dateTimeFileNameFormat,
-			string dateTimeLogFormat, double displayWidthInMeters, double displayHeightInMeters, double kinectDistanceZ, double kinectDistanceY, log4net.ILog visitLogger, log4net.ILog statusLogger)
+			string dateTimeLogFormat, double displayWidthInMeters, double displayHeightInMeters, double kinectDistanceZ, double kinectDistanceY, int screenGridRows, int screenGridColumns, log4net.ILog visitLogger, log4net.ILog statusLogger)
 		{
 			STimSettings.CloseZoneConstrain = closeZoneConstrain;
 			STimSettings.NotificationZoneConstrain = notificationZoneConstrain;
+
 			STimSettings.BlockPercentBufferSize = blockPercentBufferSize;
+			STimSettings.BlockDepthPercent = blockDepthPercent;
+			
 			STimSettings.UploadPeriod = uploadPeriod;
+			
 			STimSettings.ImageFolder = imageFolder;
 			STimSettings.DateTimeFileNameFormat = dateTimeFileNameFormat;
 			STimSettings.DateTimeLogFormat = dateTimeLogFormat;
+			
 			STimSettings.DisplayWidthInMeters = displayWidthInMeters;
 			STimSettings.DisplayHeightInMeters = displayHeightInMeters;
+			
 			STimSettings.KinectDistanceZ = kinectDistanceZ;
 			STimSettings.KinectDistanceY = kinectDistanceY;
-			STimSettings.BlockDepthPercent = blockDepthPercent;
+			
+			STimSettings.ScreenGridRows = screenGridRows;
+			STimSettings.ScreenGridColumns = screenGridColumns;
 
 			VisitorCtr = new VisitorController();
 			DepthPercentF = new DepthPercentFilter(STimSettings.BlockPercentBufferSize);
@@ -205,6 +214,8 @@ namespace STim
 					//The process below need to be in order
 					skeleton.HeadLocation = CalculateHeadLocation(skeleton);
 					skeleton.BodyOrientationAngle = CalculateBodyOrientationAngle(skeleton);
+					skeleton.InPeriphery = (skeleton.BodyOrientationAngle <= PERIPHERY_MAX_ANGLE);
+
 					skeleton.AttentionSimple = attentionerSimple.CalculateAttention(skeleton);
 					skeleton.AttentionSocial = attentionerSocial.CalculateAttention(skeleton, this.currentVisitors.Values.ToArray());
 
@@ -407,14 +418,12 @@ namespace STim
 			Microsoft.Kinect.Joint shoulderLeft = userSkeleton.TransformedJoints[JointType.ShoulderLeft];
 			Microsoft.Kinect.Joint shoulderRight = userSkeleton.TransformedJoints[JointType.ShoulderRight];
 
-			System.Windows.Point shoulderRightP = new System.Windows.Point(shoulderRight.Position.X, shoulderRight.Position.Z);
-			System.Windows.Point shoulderLeftP = new System.Windows.Point(shoulderLeft.Position.X, shoulderLeft.Position.Z);
-
-			Vector shoulderVector = new Vector(shoulderRightP.X - shoulderLeftP.X, shoulderRightP.Y - shoulderLeftP.Y);
-			Vector xAxis = new Vector(1, 0);
-
-			double orientationAngle = Vector.AngleBetween(xAxis, shoulderVector);
-
+			Vector shoulderVector = new Vector(shoulderRight.Position.X - shoulderLeft.Position.X, shoulderRight.Position.Z - shoulderLeft.Position.Z);
+      Matrix matrix = new Matrix();
+      matrix.Rotate(-90);
+      Vector bodyFacingDirection = matrix.Transform(shoulderVector);
+      Vector displayLocation = -new Vector(userSkeleton.HeadLocation.X, userSkeleton.HeadLocation.Z);
+      double orientationAngle = Math.Abs(Vector.AngleBetween(displayLocation, bodyFacingDirection));
 			return Math.Abs(orientationAngle);
 		}
 

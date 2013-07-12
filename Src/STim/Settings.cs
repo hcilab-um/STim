@@ -27,5 +27,8 @@ namespace STim
 		
 		public static double BlockDepthPercent { get; set; }
 
+		public static int ScreenGridRows { get; set; }
+		public static int ScreenGridColumns { get; set; }
+
 	}
 }

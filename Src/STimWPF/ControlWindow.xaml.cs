@@ -13,13 +13,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using Microsoft.Win32;
-using STimWPF.Properties;
+using STimAttentionWPF.Properties;
 using System.IO;
 using System.Windows.Threading;
 using STim.Interaction;
 using STim;
 
-namespace STimWPF
+namespace STimAttentionWPF
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml

@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Data;
 using System.Windows;
 
-namespace STimWPF.Converters
+namespace STimAttentionWPF.Converters
 {
 	class DivisionConverter: IMultiValueConverter
 	{

@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 using System.Windows.Media.Media3D;
 using System.ComponentModel;
 
-namespace STimWPF.Controls
+namespace STimAttentionWPF.Controls
 {
 	/// <summary>
 	/// Interaction logic for VisualDirectionControl.xaml

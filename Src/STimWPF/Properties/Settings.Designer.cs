@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace STimWPF.Properties {
+namespace STimAttentionWPF.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -145,7 +145,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.23")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.18")]
         public double KinectDistanceZ {
             get {
                 return ((double)(this["KinectDistanceZ"]));
@@ -157,7 +157,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.265")]
         public double KinectDistanceY {
             get {
                 return ((double)(this["KinectDistanceY"]));
@@ -176,6 +176,30 @@ namespace STimWPF.Properties {
             }
             set {
                 this["BlockDepthPercent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int ScreenGridRows {
+            get {
+                return ((int)(this["ScreenGridRows"]));
+            }
+            set {
+                this["ScreenGridRows"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int ScreenGridColumns {
+            get {
+                return ((int)(this["ScreenGridColumns"]));
+            }
+            set {
+                this["ScreenGridColumns"] = value;
             }
         }
     }

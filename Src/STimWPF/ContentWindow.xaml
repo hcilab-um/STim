@@ -1,8 +1,13 @@
-﻿<Window x:Class="STimWPF.ContentWindow" x:Name="contentW"
+﻿<Window x:Class="STimAttentionWPF.ContentWindow" x:Name="contentW"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	    xmlns:converters="clr-namespace:STimWPF.Converters"
-        xmlns:controls="clr-namespace:STimWPF.Controls"
+				xmlns:converters="clr-namespace:STimAttentionWPF.Converters"
+        xmlns:controls="clr-namespace:STimAttentionWPF.Controls"
 				WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
-				Title="WAG - ContentWindow" Width="1366" Height="768" >
+				Title="WAG - ContentWindow" Width="1366" Height="768" Loaded="contentW_Loaded" SizeChanged="contentW_SizeChanged">
+	<Window.Resources>
+		<converters:HeadDistanceConverter x:Key="hdConverter"/>
+	</Window.Resources>
+	<controls:SpatialAlignControl HeadLocation="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation}"
+																Distance ="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"/>
 </Window>
