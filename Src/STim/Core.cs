@@ -6,19 +6,18 @@ using Microsoft.Kinect;
 using System.Windows.Media.Media3D;
 using System.Windows.Media;
 using System.Windows.Threading;
-using STimWPF.Interaction;
+using STim.Interaction;
 using System.Windows.Media.Imaging;
 using System.Windows;
-using STimWPF.Properties;
 using System.ComponentModel;
-using STimWPF.Status;
+using STim.Status;
 using System.IO;
-using STimWPF.Attention;
+using STim.Attention;
 using Microsoft.Kinect.Toolkit.FaceTracking;
 using System.Globalization;
-using STimWPF.Util;
+using STim.Util;
 
-namespace STimWPF
+namespace STim
 {
 	public class Core : INotifyPropertyChanged
 	{
@@ -39,7 +38,6 @@ namespace STimWPF
 		private const int FACE_BOTTOM = 43;
 
 		//height should be 0.58
-		private static readonly double KinectDisplayCenterDistanceY = Settings.Default.DisplayHeightInMeters / 2 + Settings.Default.KinectDistanceY;
 
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 
@@ -93,11 +91,25 @@ namespace STimWPF
 
 		private Core() { }
 
-		public void Initialize(int depthPercentBufferSize, int uploadPeriod)
+		public void Initialize(Dispatcher uiDispatcher, double closeZoneConstrain, double notificationZoneConstrain, int blockPercentBufferSize, double blockDepthPercent, int uploadPeriod, string imageFolder, string dateTimeFileNameFormat,
+			string dateTimeLogFormat, double displayWidthInMeters, double displayHeightInMeters, double kinectDistanceZ, double kinectDistanceY, log4net.ILog visitLogger, log4net.ILog statusLogger)
 		{
+			STimSettings.CloseZoneConstrain = closeZoneConstrain;
+			STimSettings.NotificationZoneConstrain = notificationZoneConstrain;
+			STimSettings.BlockPercentBufferSize = blockPercentBufferSize;
+			STimSettings.UploadPeriod = uploadPeriod;
+			STimSettings.ImageFolder = imageFolder;
+			STimSettings.DateTimeFileNameFormat = dateTimeFileNameFormat;
+			STimSettings.DateTimeLogFormat = dateTimeLogFormat;
+			STimSettings.DisplayWidthInMeters = displayWidthInMeters;
+			STimSettings.DisplayHeightInMeters = displayHeightInMeters;
+			STimSettings.KinectDistanceZ = kinectDistanceZ;
+			STimSettings.KinectDistanceY = kinectDistanceY;
+			STimSettings.BlockDepthPercent = blockDepthPercent;
+
 			VisitorCtr = new VisitorController();
-			DepthPercentF = new DepthPercentFilter(depthPercentBufferSize);
-			StatusCtr = new StatusController(uploadPeriod) { VisitorContr = VisitorCtr };
+			DepthPercentF = new DepthPercentFilter(STimSettings.BlockPercentBufferSize);
+			StatusCtr = new StatusController(uiDispatcher, STimSettings.UploadPeriod, visitLogger, statusLogger) { VisitorContr = VisitorCtr };
 
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
@@ -130,7 +142,7 @@ namespace STimWPF
 
 					KinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 
-					originTransform = CreateOriginMatrix(0, KinectDisplayCenterDistanceY, Settings.Default.KinectDistanceZ, KinectSensor.ElevationAngle);
+					originTransform = CreateOriginMatrix(0, STimSettings.DisplayHeightInMeters / 2 + STimSettings.KinectDistanceY, STimSettings.KinectDistanceZ, KinectSensor.ElevationAngle);
 				}
 			}
 		}
@@ -228,7 +240,6 @@ namespace STimWPF
 			MemoryStream memory = new MemoryStream();
 			encoder.Save(memory);
 			lastImage = memory.ToArray();
-
 			return lastImage;
 		}
 
@@ -239,7 +250,7 @@ namespace STimWPF
 			depthPixels = new DepthImagePixel[KinectSensor.DepthStream.FramePixelDataLength];
 			depthFrame.CopyDepthImagePixelDataTo(depthPixels);
 			int closePixel = 0;
-			short constrain = (short)(Settings.Default.CloseZoneConstrain + Settings.Default.KinectDistanceZ * 1000);
+			short constrain = (short)(STimSettings.CloseZoneConstrain + STimSettings.KinectDistanceZ * 1000);
 			for (int i = 0; i < depthPixels.Length; ++i)
 			{
 				closePixel += (depthPixels[i].Depth <= constrain ? 1 : 0);

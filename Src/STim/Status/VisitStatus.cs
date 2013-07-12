@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using STimWPF.Interaction;
+using STim.Interaction;
 using System.Windows;
 using System.Windows.Media.Media3D;
 using Microsoft.Kinect;
 
-namespace STimWPF.Status
+namespace STim.Status
 {
 	public class VisitStatus
 	{

@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Kinect;
 using System.Collections;
 
-namespace STimWPF
+namespace STim
 {
 	public class WagJointCollection : IEnumerable<Joint>, IEnumerable
 	{

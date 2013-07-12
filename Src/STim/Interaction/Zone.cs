@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace STimWPF.Interaction
+namespace STim.Interaction
 {
 	public enum Zone
 	{

@@ -5,10 +5,9 @@ using System.Text;
 using System.ComponentModel;
 using Microsoft.Kinect;
 using System.Windows.Media.Media3D;
-using STimWPF.Properties;
-using STimWPF.Util;
+using STim.Util;
 
-namespace STimWPF.Interaction
+namespace STim.Interaction
 {
 	public class VisitorController : INotifyPropertyChanged
 	{
@@ -20,10 +19,9 @@ namespace STimWPF.Interaction
 		private Zone interactZone;
 		private bool isSimulating;
 		private double closePercent;
-
 		public bool IsBlocked
 		{
-			get { return (closePercent > Settings.Default.BlockDepthPercent); }
+			get { return (closePercent > STimSettings.BlockDepthPercent); }
 		}
 
 		public double ClosePercent
@@ -83,16 +81,16 @@ namespace STimWPF.Interaction
 		public VisitorController()
 		{
 			standardAngleInRadian = ToolBox.AngleToRadian(90);
-			UserDisplayDistance = Settings.Default.NotificationZoneConstrain;
+			UserDisplayDistance = STimSettings.NotificationZoneConstrain;
 			interactZone = Zone.Ambient;
 			IsSimulating = false;
 		}
 
 		private double DetectUserPosition(WagSkeleton skeleton)
 		{
-			if (ClosePercent > Settings.Default.BlockDepthPercent)
+			if (ClosePercent > STimSettings.BlockDepthPercent)
 			{
-				return Settings.Default.CloseZoneConstrain / 2;
+				return STimSettings.CloseZoneConstrain / 2;
 			}
 
 			if (skeleton != null)
@@ -100,7 +98,7 @@ namespace STimWPF.Interaction
 				return skeleton.TransformedJoints[JointType.Head].Position.Z;
 			}
 
-			return Settings.Default.NotificationZoneConstrain;
+			return STimSettings.NotificationZoneConstrain;
 		}
 
 		public Zone DetectZone(WagSkeleton skeleton)
@@ -109,13 +107,13 @@ namespace STimWPF.Interaction
 			if (!IsSimulating)
 				UserDisplayDistance = DetectUserPosition(skeleton);
 
-			if (UserDisplayDistance < Settings.Default.CloseZoneConstrain)
+			if (UserDisplayDistance < STimSettings.CloseZoneConstrain)
 				calculatedZone = Zone.Close;
-			else if (UserDisplayDistance >= Settings.Default.CloseZoneConstrain && userDisplayDistance < Settings.Default.InteractionZoneConstrain)
+			else if (UserDisplayDistance >= STimSettings.CloseZoneConstrain && userDisplayDistance < STimSettings.InteractionZoneConstrain)
 				calculatedZone = Zone.Interaction;
-			else if (UserDisplayDistance >= Settings.Default.InteractionZoneConstrain && userDisplayDistance < Settings.Default.NotificationZoneConstrain)
+			else if (UserDisplayDistance >= STimSettings.InteractionZoneConstrain && userDisplayDistance < STimSettings.NotificationZoneConstrain)
 				calculatedZone = Zone.Notification;
-			else if (UserDisplayDistance >= Settings.Default.NotificationZoneConstrain)
+			else if (UserDisplayDistance >= STimSettings.NotificationZoneConstrain)
 				calculatedZone = Zone.Ambient;
 
 			return calculatedZone;

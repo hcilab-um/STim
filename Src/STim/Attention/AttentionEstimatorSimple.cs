@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Kinect;
 using System.Windows;
 
-namespace STimWPF.Attention
+namespace STim.Attention
 {
 	public class AttentionEstimatorSimple
 	{

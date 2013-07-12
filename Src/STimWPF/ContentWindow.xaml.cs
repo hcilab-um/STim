@@ -10,8 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
-using Microsoft.Kinect;
-using STimWPF.Interaction;
+using STim;
 
 namespace STimWPF
 {

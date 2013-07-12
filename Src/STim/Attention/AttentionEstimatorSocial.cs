@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace STimWPF.Attention
+namespace STim.Attention
 {
 	public class AttentionEstimatorSocial
 	{

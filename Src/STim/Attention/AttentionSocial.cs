@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace STimWPF.Attention
+namespace STim.Attention
 {
 	public struct AttentionSocial
 	{

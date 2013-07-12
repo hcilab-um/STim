@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 
-namespace STimWPF.Util
+namespace STim.Util
 {
 	/// <summary>
 	/// Taken from: http://www.codeproject.com/KB/cs/circlist.aspx

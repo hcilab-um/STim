@@ -7,6 +7,7 @@ using System.Windows;
 using STimWPF.Properties;
 using System.Xml;
 using System.Reflection;
+using STim;
 
 namespace STimWPF
 {
@@ -27,8 +28,21 @@ namespace STimWPF
 
 			Core.Instance.Initialize
 			(
-					Settings.Default.BlockPercentBufferSize,
-					Settings.Default.UploadPeriod
+				Dispatcher,
+				Settings.Default.CloseZoneConstrain,
+				Settings.Default.NotificationZoneConstrain,
+				Settings.Default.BlockPercentBufferSize,
+				Settings.Default.BlockDepthPercent,
+				Settings.Default.UploadPeriod,
+				Settings.Default.ImageFolder,
+				Settings.Default.DateTimeFileNameFormat,
+				Settings.Default.DateTimeLogFormat,
+				Settings.Default.DisplayWidthInMeters,
+				Settings.Default.DisplayHeightInMeters,
+				Settings.Default.KinectDistanceZ,
+				Settings.Default.KinectDistanceY,
+				log4net.LogManager.GetLogger("VisitLogger"),
+				log4net.LogManager.GetLogger("StatusLogger")
 			);
 
 			MainW = new ControlWindow(this);

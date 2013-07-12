@@ -7,7 +7,7 @@ using Microsoft.Kinect.Toolkit.FaceTracking;
 using System.Windows.Media.Media3D;
 using System.ComponentModel;
 
-namespace STimWPF
+namespace STim
 {
 
 	public class WagSkeleton : Skeleton, INotifyPropertyChanged

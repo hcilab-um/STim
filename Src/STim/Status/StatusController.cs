@@ -4,24 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Microsoft.Kinect;
-using STimWPF.Interaction;
+using STim.Interaction;
 using System.Windows;
-using STimWPF.Properties;
 using System.Net;
 using System.IO;
 using System.Windows.Media.Media3D;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Windows.Threading;
-using STimWPF.Util;
+using STim.Util;
 using System.Diagnostics;
 
-namespace STimWPF.Status
+namespace STim.Status
 {
 	public class StatusController
 	{
-		private static readonly log4net.ILog visitlogger = log4net.LogManager.GetLogger("VisitLogger");
-		private static readonly log4net.ILog statuslogger = log4net.LogManager.GetLogger("StatusLogger");
+		private log4net.ILog visitLogger;
+		private log4net.ILog statusLogger;
 
 		private const float RenderWidth = 640.0f;
 		private const float RenderHeight = 480.0f;
@@ -40,10 +39,13 @@ namespace STimWPF.Status
 		private List<VisitStatus> lastVisits = null;
 		public VisitorController VisitorContr { get; set; }
 
-		private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
+		private Dispatcher _dispatcher;
 
-		public StatusController(int period)
+		public StatusController(Dispatcher uiDispatcher, int period, log4net.ILog visitLogger, log4net.ILog statusLogger)
 		{
+			this.visitLogger = visitLogger;
+			this.statusLogger = statusLogger;
+			_dispatcher = uiDispatcher;
 			lastControllerId = -1;
 			Trigger = new Timer(new TimerCallback(TimerCallback), null, 0, period);
 			lastPositions = new Dictionary<int, Point3D>();
@@ -68,7 +70,7 @@ namespace STimWPF.Status
 				{
 					skeletonIdInfo += String.Format("-{0}", wagSkeleton.TrackingId);
 				}
-				qualifiedName = String.Format("{0}ms{1}.jpg", currentTime.ToString(Settings.Default.DateTimeFileNameFormat), skeletonIdInfo);
+				qualifiedName = String.Format("{0}ms{1}.jpg", currentTime.ToString(STimSettings.DateTimeFileNameFormat), skeletonIdInfo);
 				totalVisits = currentSkeletons.Count;
 				SaveDrawingImage(imageSource, qualifiedName);
 			}
@@ -76,12 +78,12 @@ namespace STimWPF.Status
 			Object[] logObjects = null;
 			logObjects = new Object[]
 			{
-				currentTime.ToString(Settings.Default.DateTimeFileNameFormat),
+				currentTime.ToString(STimSettings.DateTimeFileNameFormat),
 				totalVisits,
 				qualifiedName
 			};
 
-			LogInformation(logObjects, statuslogger);
+			LogInformation(logObjects, statusLogger);
 
 			waitHandle.Set();
 		}
@@ -93,7 +95,7 @@ namespace STimWPF.Status
 			try
 			{
 
-				using (var stream = new FileStream(Settings.Default.ImageFolder + imageName, FileMode.Create))
+				using (var stream = new FileStream(STimSettings.ImageFolder + imageName, FileMode.Create))
 				{
 					stream.Write(image, 0, image.Length);
 				}
@@ -135,7 +137,7 @@ namespace STimWPF.Status
 					//ImageFile
 					logObjects = new Object[]
 						{
-							status.VisitInit.ToString(Settings.Default.DateTimeLogFormat),
+							status.VisitInit.ToString(STimSettings.DateTimeLogFormat),
 							currentVisits.Count,
 							status.VisitId,
 							status.SkeletonId,
@@ -165,7 +167,7 @@ namespace STimWPF.Status
 							status.GestureInteraction
 						};
 
-					LogInformation(logObjects, visitlogger);
+					LogInformation(logObjects, visitLogger);
 				}
 
 				lastControllerId = controllerId;
