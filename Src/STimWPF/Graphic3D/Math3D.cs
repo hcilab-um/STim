@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media.Media3D;
 
-namespace STimAttentionWPF.Graphic3D
+namespace STimWPF.Graphic3D
 {
 	public class Math3D
 	{

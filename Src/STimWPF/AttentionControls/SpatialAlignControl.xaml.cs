@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 using _3DTools;
 using System.Windows.Media.Media3D;
 
-namespace STimAttentionWPF.Controls
+namespace STimWPF.AttentionControls
 {
 	/// <summary>
 	/// Interaction logic for SpatialAlignControl.xaml

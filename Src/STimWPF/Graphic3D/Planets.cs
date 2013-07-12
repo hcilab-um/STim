@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace STimAttentionWPF.Graphic3D
+namespace STimWPF.Graphic3D
 {
 	public class BigPlanet : SphereGeometry3D
 	{

@@ -5,9 +5,8 @@ using System.Text;
 using System.Windows.Data;
 using System.Windows;
 using System.Windows.Media.Media3D;
-using STimAttentionWPF.Properties;
 
-namespace STimAttentionWPF.Converters
+namespace STim.Converters
 {
 	public class LocationOrientationViewConverter : IMultiValueConverter
 	{
@@ -41,8 +40,8 @@ namespace STimAttentionWPF.Converters
 				displayPhysicalLocationY = headOrientation.Y * rational + headLocation.Y;
 			}
 
-			int column = (int)((displayPhysicalLocationX / Settings.Default.DisplayWidthInMeters * width +width/2) / rectWidth);
-			int row = (int)((-displayPhysicalLocationY / Settings.Default.DisplayHeightInMeters * height + height / 2) / rectHeight);
+			int column = (int)((displayPhysicalLocationX / STimSettings.DisplayWidthInMeters * width +width/2) / rectWidth);
+			int row = (int)((-displayPhysicalLocationY / STimSettings.DisplayHeightInMeters * height + height / 2) / rectHeight);
 			
 			column = Math.Max(0, column);
 			column = Math.Min(column, colCount - 1);

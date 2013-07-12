@@ -5,7 +5,7 @@ using System.Windows.Media.Media3D;
 using System.Linq;
 using System.Text;
 
-namespace STimAttentionWPF.Graphic3D
+namespace STimWPF.Graphic3D
 {
 	/// <summary>
 	/// Resource from: http://www.codeproject.com/Articles/14414/Generating-a-sphere-mesh-in-XAML

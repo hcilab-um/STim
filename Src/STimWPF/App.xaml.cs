@@ -4,12 +4,12 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
-using STimAttentionWPF.Properties;
+using STimWPF.Properties;
 using System.Xml;
 using System.Reflection;
 using STim;
 
-namespace STimAttentionWPF
+namespace STimWPF
 {
 
 	/// <summary>
@@ -46,10 +46,14 @@ namespace STimAttentionWPF
 				log4net.LogManager.GetLogger("VisitLogger"),
 				log4net.LogManager.GetLogger("StatusLogger")
 			);
+			
+			if (Settings.Default.Testing)
+			{
+				ControlW = new ControlWindow(this);
+				ControlW.Show();
+			}
 
-			ControlW = new ControlWindow(this);
 			ContentW = new ContentWindow(this);
-			ControlW.Show();
 			ContentW.Show();
 		}
 

@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using STim;
 
-namespace STimAttentionWPF
+namespace STimWPF
 {
     /// <summary>
     /// Interaction logic for TextEntryWindow.xaml

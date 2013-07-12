@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace STimAttentionWPF.Properties {
+namespace STimWPF.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -200,6 +200,30 @@ namespace STimAttentionWPF.Properties {
             }
             set {
                 this["ScreenGridColumns"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Testing {
+            get {
+                return ((bool)(this["Testing"]));
+            }
+            set {
+                this["Testing"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BaseLine")]
+        public global::STimWPF.ApplicationMode ApplicationMode {
+            get {
+                return ((global::STimWPF.ApplicationMode)(this["ApplicationMode"]));
+            }
+            set {
+                this["ApplicationMode"] = value;
             }
         }
     }

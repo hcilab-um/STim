@@ -13,8 +13,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Media3D;
 using System.ComponentModel;
+using STimWPF.Properties;
 
-namespace STimAttentionWPF.Controls
+namespace STimWPF.AttentionControls
 {
 	/// <summary>
 	/// Interaction logic for VisualDirectionControl.xaml
@@ -41,8 +42,8 @@ namespace STimAttentionWPF.Controls
 
 		public VisualDirectionControl()
 		{
-			Rows = 4;
-			Columns = 4;
+			Rows = Settings.Default.ScreenGridRows;
+			Columns = Settings.Default.ScreenGridColumns;
 			InitializeComponent();
 		}
 	}

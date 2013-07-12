@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 using System.Windows.Media;
-using STimAttentionWPF.Properties;
+using STimWPF.Properties;
 
-namespace STimAttentionWPF.Converters
+namespace STimWPF.Converters
 {
 	public class DistanceColorConverter : IValueConverter
 	{

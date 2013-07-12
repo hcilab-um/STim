@@ -43,6 +43,7 @@
       <HintPath>..\SharedLib\Microsoft.Kinect.Toolkit.FaceTracking.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml" />
@@ -59,6 +60,7 @@
     <Compile Include="Attention\AttentionSimple.cs" />
     <Compile Include="Attention\AttentionSocial.cs" />
     <Compile Include="ColorImageReadyArgs.cs" />
+    <Compile Include="Converters\LocationOrientationViewConverter.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="DepthImageReadyArgs.cs" />
     <Compile Include="Interaction\VisitorController.cs" />

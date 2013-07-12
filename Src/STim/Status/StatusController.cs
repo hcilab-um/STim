@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using STim.Util;
 using System.Diagnostics;
+using STim.Converters;
 
 namespace STim.Status
 {
@@ -194,35 +195,20 @@ namespace STim.Status
 
 		private Point CalculateVision(VisitStatus status)
 		{
+      LocationOrientationViewConverter converter = new LocationOrientationViewConverter();
 
-			Point3D headLocation = status.HeadLocation;
-			Vector3D headOrientation = status.HeadDirection;
+      Point3D headLocation = status.HeadLocation;
+      Vector3D headOrientation = status.HeadDirection;
 
-			if (headOrientation.Length == 0)
-				return new Point(-1, -1);
+      if (headOrientation.Length == 0)
+        return new Point(-1, -1);
 
-			double rectWidth = DisplayWidth / STimSettings.ScreenGridColumns;
-			double rectHeight = DisplayHeight / STimSettings.ScreenGridRows;
+			int rowCount = STimSettings.ScreenGridRows;
+			int colCount = STimSettings.ScreenGridColumns;
 
-			double displayPhysicalLocationX = Double.MaxValue;
-			double displayPhysicalLocationY = Double.MaxValue;
-
-			if (headOrientation.Z != 0)
-			{
-				double rational = -headLocation.Z / headOrientation.Z;
-				displayPhysicalLocationX = headOrientation.X * rational + headLocation.X;
-				displayPhysicalLocationY = headOrientation.Y * rational + headLocation.Y;
-			}
-
-			int column = (int)((displayPhysicalLocationX / STimSettings.DisplayWidthInMeters * DisplayWidth + DisplayWidth / 2) / rectWidth);
-			int row = (int)((-displayPhysicalLocationY / STimSettings.DisplayHeightInMeters * DisplayHeight + DisplayHeight / 2) / rectHeight);
-
-			column = Math.Max(0, column);
-			column = Math.Min(column, STimSettings.ScreenGridColumns - 1);
-			row = Math.Max(0, row);
-			row = Math.Min(row, STimSettings.ScreenGridRows - 1);
-
-			return new Point() { X = column, Y = row };
+      Thickness convResult = (Thickness)converter.Convert(new object[] { headLocation, headOrientation, DisplayWidth, DisplayHeight, rowCount, colCount }, null, null, null);
+      Point result = new Point() { X = convResult.Left / (DisplayWidth / colCount), Y = convResult.Top / (DisplayHeight / rowCount) };
+      return result;
 		}
 
 		private List<VisitStatus> CreateVisitStatus()

@@ -47,5 +47,11 @@
     <Setting Name="ScreenGridColumns" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">4</Value>
     </Setting>
+    <Setting Name="Testing" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ApplicationMode" Type="STimWPF.ApplicationMode" Scope="User">
+      <Value Profile="(Default)">BaseLine</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

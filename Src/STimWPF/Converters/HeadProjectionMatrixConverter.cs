@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 using System.Windows.Media.Media3D;
-using STimAttentionWPF.Graphic3D;
-using STimAttentionWPF.Properties;
+using STimWPF.Graphic3D;
+using STimWPF.Properties;
 
-namespace STimAttentionWPF.Converters
+namespace STimWPF.Converters
 {
 	public class HeadProjectionMatrixConverter : IValueConverter
 	{		

@@ -8,8 +8,8 @@
     <ProjectGuid>{047A0786-3A92-412B-BB0E-BFB787189F84}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>STimAttentionWPF</RootNamespace>
-    <AssemblyName>STimAttentionWPF</AssemblyName>
+    <RootNamespace>STimWPF</RootNamespace>
+    <AssemblyName>STimWPF</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -84,26 +84,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ApplicationMode.cs" />
+    <Compile Include="Converters\ApplicationModeVisibilityConverter.cs" />
     <Compile Include="Converters\DistanceColorConverter.cs" />
     <Compile Include="Converters\HeadDistanceConverter.cs" />
     <Compile Include="Converters\HeadProjectionMatrixConverter.cs" />
     <Compile Include="Converters\HeadViewMatrixConverter.cs" />
-    <Compile Include="Controls\SpatialAlignControl.xaml.cs">
+    <Compile Include="AttentionControls\SpatialAlignControl.xaml.cs">
       <DependentUpon>SpatialAlignControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DivisionConverter.cs" />
-    <Compile Include="Converters\LocationOrientationViewConverter.cs" />
-    <Compile Include="Controls\VisualDirectionControl.xaml.cs">
+    <Compile Include="AttentionControls\VisualDirectionControl.xaml.cs">
       <DependentUpon>VisualDirectionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ContentWindow.xaml.cs">
       <DependentUpon>ContentWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\SpatialAlignControl.xaml">
+    <Page Include="AttentionControls\SpatialAlignControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\VisualDirectionControl.xaml">
+    <Page Include="AttentionControls\VisualDirectionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -123,8 +124,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="DisplayControls\InfoDisplayControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisplayControls\InfoDisplayControl.xaml.cs">
+      <DependentUpon>InfoDisplayControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Graphic3D\DiscGeometry3D.cs" />
     <Compile Include="Graphic3D\Math3D.cs" />
     <Compile Include="Graphic3D\Planets.cs" />
