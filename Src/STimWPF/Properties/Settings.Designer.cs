@@ -109,7 +109,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("yyMMdd-HH:mm:ss.fff")]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyMMdd-HH:mm:ss")]
         public string DateTimeLogFormat {
             get {
                 return ((string)(this["DateTimeLogFormat"]));

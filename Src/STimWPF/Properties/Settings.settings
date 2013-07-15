@@ -24,7 +24,7 @@
       <Value Profile="(Default)">yyMMdd-HHmmss-fff</Value>
     </Setting>
     <Setting Name="DateTimeLogFormat" Type="System.String" Scope="User">
-      <Value Profile="(Default)">yyMMdd-HH:mm:ss.fff</Value>
+      <Value Profile="(Default)">yyMMdd-HH:mm:ss</Value>
     </Setting>
     <Setting Name="DisplayWidthInMeters" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1.06</Value>

@@ -64,7 +64,7 @@ namespace STim.Status
 		{
 			waitHandle.WaitOne();
 			DateTime currentTime = DateTime.Now;
-			String qualifiedName = "No_Skeleton";
+			String fileName = "No_Skeleton";
 
 			String skeletonIdInfo = "";
 			int totalVisits = 0;
@@ -75,17 +75,17 @@ namespace STim.Status
 				{
 					skeletonIdInfo += String.Format("-{0}", wagSkeleton.TrackingId);
 				}
-				qualifiedName = String.Format("{0}ms{1}.jpg", currentTime.ToString(STimSettings.DateTimeFileNameFormat), skeletonIdInfo);
+				fileName = String.Format("{0}ms{1}.jpg", currentTime.ToString(STimSettings.DateTimeFileNameFormat), skeletonIdInfo);
 				totalVisits = currentSkeletons.Count;
-				SaveDrawingImage(imageSource, qualifiedName);
+				SaveDrawingImage(imageSource, fileName);
 			}
 
 			Object[] logObjects = null;
 			logObjects = new Object[]
 			{
-				currentTime.ToString(STimSettings.DateTimeFileNameFormat),
+				currentTime.ToString(STimSettings.DateTimeLogFormat),
 				totalVisits,
-				qualifiedName
+				fileName
 			};
 
 			LogInformation(logObjects, statusLogger);
@@ -144,6 +144,7 @@ namespace STim.Status
 					logObjects = new Object[]
 						{
 							loggingTime.ToString(STimSettings.DateTimeLogFormat),
+							loggingTime.Millisecond,
 							currentVisits.Count,
 							status.VisitId,
 							status.SkeletonId,
