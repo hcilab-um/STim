@@ -24,7 +24,7 @@
       <Value Profile="(Default)">yyMMdd-HHmmss-fff</Value>
     </Setting>
     <Setting Name="DateTimeLogFormat" Type="System.String" Scope="User">
-      <Value Profile="(Default)">yyMMdd-HH:mm:ss</Value>
+      <Value Profile="(Default)">yyMMdd-HHmmss</Value>
     </Setting>
     <Setting Name="DisplayWidthInMeters" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1.06</Value>
@@ -48,10 +48,13 @@
       <Value Profile="(Default)">4</Value>
     </Setting>
     <Setting Name="Testing" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ApplicationMode" Type="STimWPF.ApplicationMode" Scope="User">
       <Value Profile="(Default)">BaseLine</Value>
+    </Setting>
+    <Setting Name="IncludeStatusRender" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

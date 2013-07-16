@@ -15,6 +15,7 @@ using GenericParsing;
 using System.Data;
 using System.ComponentModel;
 using System.IO;
+using System.Globalization;
 
 namespace DataAnalizer
 {
@@ -26,12 +27,14 @@ namespace DataAnalizer
 		private const string IMAGE_FOLDER = "Image";
 		private const string STATUS_FOLDER = "StatusLogs";
 		private const string VISIT_FOLDER = "VisitLogs";
-		
+
+		private const string IMAGE_FILE_COLUMN_NAME = "ImageFileName";
+
 		private DataView visitDataView;
 
 		private DataView statusDataView;
 
-		private Dictionary<string,ImageSource> imageList;
+		private Dictionary<string, ImageSource> imageList;
 
 		public DataView VisitDataView
 		{
@@ -69,14 +72,14 @@ namespace DataAnalizer
 				return;
 
 			tbRootPath.Text = fbd.SelectedPath;
-			
+
 			StatusDataView = LoadCSVDataTables(tbRootPath.Text, STATUS_FOLDER);
 			VisitDataView = LoadCSVDataTables(tbRootPath.Text, VISIT_FOLDER);
 
 			FileInfo[] imageFiles = LoadFiles(tbRootPath.Text, IMAGE_FOLDER);
 
 			//Load Image
-			foreach(FileInfo fi in imageFiles)
+			foreach (FileInfo fi in imageFiles)
 			{
 				imageList.Add(fi.Name, (new ImageSourceConverter()).ConvertFromString(fi.FullName) as ImageSource);
 			}
@@ -121,15 +124,17 @@ namespace DataAnalizer
 
 		private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (dgStatus.SelectedIndex < StatusDataView.Table.Rows.Count)
-			{
-				string imageFileName = StatusDataView.Table.Rows[dgStatus.SelectedIndex]["ImageFileName"].ToString();
+			if (dgStatus.SelectedIndex >= StatusDataView.Table.Rows.Count)
+				return;
 
-				if (imageList.ContainsKey(imageFileName))
-					visitImage.Source = imageList[imageFileName];
-				else
-					visitImage.Source = null;
-			}
+			string imageFileName = StatusDataView.Table.Rows[dgStatus.SelectedIndex][IMAGE_FILE_COLUMN_NAME].ToString();
+			
+			if (imageList.ContainsKey(imageFileName))
+				visitImage.Source = imageList[imageFileName];
+			else
+				visitImage.Source = null;
+
+			visitDataView.RowFilter = string.Format("DateTime = {0}", StatusDataView.Table.Rows[dgStatus.SelectedIndex]["DateTime"]); 
 		}
 	}
 }

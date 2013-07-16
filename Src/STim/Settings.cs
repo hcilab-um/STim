@@ -30,5 +30,6 @@ namespace STim
 		public static int ScreenGridRows { get; set; }
 		public static int ScreenGridColumns { get; set; }
 
+		public static bool IncludeStatusRender { get; set; }
 	}
 }

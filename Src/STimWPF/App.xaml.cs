@@ -43,6 +43,7 @@ namespace STimWPF
 				Settings.Default.KinectDistanceY,
 				Settings.Default.ScreenGridRows,
 				Settings.Default.ScreenGridColumns,
+				Settings.Default.IncludeStatusRender,
 				log4net.LogManager.GetLogger("VisitLogger"),
 				log4net.LogManager.GetLogger("StatusLogger")
 			);

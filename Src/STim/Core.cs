@@ -93,7 +93,7 @@ namespace STim
 		private Core() { }
 
 		public void Initialize(Dispatcher uiDispatcher, double closeZoneConstrain, double notificationZoneConstrain, int blockPercentBufferSize, double blockDepthPercent, int uploadPeriod, string imageFolder, string dateTimeFileNameFormat,
-			string dateTimeLogFormat, double displayWidthInMeters, double displayHeightInMeters, double kinectDistanceZ, double kinectDistanceY, int screenGridRows, int screenGridColumns, log4net.ILog visitLogger, log4net.ILog statusLogger)
+			string dateTimeLogFormat, double displayWidthInMeters, double displayHeightInMeters, double kinectDistanceZ, double kinectDistanceY, int screenGridRows, int screenGridColumns, bool includeStatusRender, log4net.ILog visitLogger, log4net.ILog statusLogger)
 		{
 			STimSettings.CloseZoneConstrain = closeZoneConstrain;
 			STimSettings.NotificationZoneConstrain = notificationZoneConstrain;
@@ -115,6 +115,8 @@ namespace STim
 			
 			STimSettings.ScreenGridRows = screenGridRows;
 			STimSettings.ScreenGridColumns = screenGridColumns;
+
+			STimSettings.IncludeStatusRender = includeStatusRender;
 
 			VisitorCtr = new VisitorController();
 			DepthPercentF = new DepthPercentFilter(STimSettings.BlockPercentBufferSize);
@@ -309,17 +311,19 @@ namespace STim
 							new FormattedText(skeleton.TrackingId.ToString(), CultureInfo.GetCultureInfo("en-us"),
 										FlowDirection.LeftToRight, new Typeface("Verdana"), 20, System.Windows.Media.Brushes.Red),
 							skeletonIdPos);
+						if (STimSettings.IncludeStatusRender)
+						{
+							//FormattedText
+							drawingContext.DrawText(
+								new FormattedText(skeleton.AttentionSocial.ToString(), CultureInfo.GetCultureInfo("en-us"),
+											FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Green),
+								socialDataPos);
 
-						//FormattedText
-						drawingContext.DrawText(
-							new FormattedText(skeleton.AttentionSocial.ToString(), CultureInfo.GetCultureInfo("en-us"),
-										FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Green),
-							socialDataPos);
-
-						drawingContext.DrawText(
-							new FormattedText(skeleton.AttentionSimple.ToString(), CultureInfo.GetCultureInfo("en-us"),
-										FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Green),
-							simpleDataPos);
+							drawingContext.DrawText(
+								new FormattedText(skeleton.AttentionSimple.ToString(), CultureInfo.GetCultureInfo("en-us"),
+											FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Green),
+								simpleDataPos);
+						}
 					}
 				}
 

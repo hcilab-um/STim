@@ -109,7 +109,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("yyMMdd-HH:mm:ss")]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyMMdd-HHmmss")]
         public string DateTimeLogFormat {
             get {
                 return ((string)(this["DateTimeLogFormat"]));
@@ -205,7 +205,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Testing {
             get {
                 return ((bool)(this["Testing"]));
@@ -224,6 +224,18 @@ namespace STimWPF.Properties {
             }
             set {
                 this["ApplicationMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IncludeStatusRender {
+            get {
+                return ((bool)(this["IncludeStatusRender"]));
+            }
+            set {
+                this["IncludeStatusRender"] = value;
             }
         }
     }
