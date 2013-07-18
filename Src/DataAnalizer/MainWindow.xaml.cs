@@ -134,7 +134,7 @@ namespace DataAnalizer
 			else
 				visitImage.Source = null;
 
-			visitDataView.RowFilter = string.Format("DateTime = {0}", StatusDataView.Table.Rows[dgStatus.SelectedIndex]["DateTime"]); 
+			visitDataView.RowFilter = string.Format("DateTime = '{0}'", StatusDataView.Table.Rows[dgStatus.SelectedIndex]["DateTime"].ToString()); 
 		}
 	}
 }
