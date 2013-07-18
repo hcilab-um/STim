@@ -326,7 +326,6 @@ namespace STim
 						}
 					}
 				}
-
 			}
 
 			//Make sure the image remains within the defined width and height
