@@ -2,12 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="STimWPF.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="SkeletonBufferSize" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">10</Value>
-    </Setting>
-    <Setting Name="DecimalPrecision" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">5</Value>
-    </Setting>
     <Setting Name="CloseZoneConstrain" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.5</Value>
     </Setting>
@@ -30,22 +24,37 @@
       <Value Profile="(Default)">yyMMdd-HHmmss-fff</Value>
     </Setting>
     <Setting Name="DateTimeLogFormat" Type="System.String" Scope="User">
-      <Value Profile="(Default)">yyMMdd-HH:mm:ss.fff</Value>
+      <Value Profile="(Default)">yyMMdd-HHmmss</Value>
     </Setting>
     <Setting Name="DisplayWidthInMeters" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1.06</Value>
     </Setting>
     <Setting Name="DisplayHeightInMeters" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.325</Value>
+      <Value Profile="(Default)">0.605</Value>
     </Setting>
-    <Setting Name="KinectDistanceZ" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.23</Value>
+    <Setting Name="KinectDisplayDistanceZ" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.167</Value>
     </Setting>
-    <Setting Name="KinectDistanceY" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.3</Value>
+    <Setting Name="KinectDisplayDistanceY" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.225</Value>
     </Setting>
     <Setting Name="BlockDepthPercent" Type="System.Double" Scope="User">
       <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="ScreenGridRows" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="ScreenGridColumns" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="Testing" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ApplicationMode" Type="STimWPF.ApplicationMode" Scope="User">
+      <Value Profile="(Default)">AttractAttention</Value>
+    </Setting>
+    <Setting Name="IncludeStatusRender" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

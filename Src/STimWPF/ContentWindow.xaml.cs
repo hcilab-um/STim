@@ -10,8 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
-using Microsoft.Kinect;
-using STimWPF.Interaction;
+using STim;
 
 namespace STimWPF
 {
@@ -45,5 +44,17 @@ namespace STimWPF
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
+
+				private void contentW_Loaded(object sender, RoutedEventArgs e)
+				{
+					Core.Instance.StatusCtr.DisplayWidth = ActualWidth;
+					Core.Instance.StatusCtr.DisplayHeight = ActualHeight;
+				}
+
+				private void contentW_SizeChanged(object sender, SizeChangedEventArgs e)
+				{
+					Core.Instance.StatusCtr.DisplayWidth = ActualWidth;
+					Core.Instance.StatusCtr.DisplayHeight = ActualHeight;
+				}
     }
 }

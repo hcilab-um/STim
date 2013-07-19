@@ -7,6 +7,7 @@ using System.Windows;
 using STimWPF.Properties;
 using System.Xml;
 using System.Reflection;
+using STim;
 
 namespace STimWPF
 {
@@ -17,8 +18,8 @@ namespace STimWPF
 	public partial class App : Application
 	{
 
-		public ControlWindow MainW { get; set; }
-		public ContentWindow contentW { get; set; }
+		public ControlWindow ControlW { get; set; }
+		public ContentWindow ContentW { get; set; }
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
@@ -27,14 +28,34 @@ namespace STimWPF
 
 			Core.Instance.Initialize
 			(
-					Settings.Default.BlockPercentBufferSize,
-					Settings.Default.UploadPeriod
+				Dispatcher,
+				Settings.Default.CloseZoneConstrain,
+				Settings.Default.NotificationZoneConstrain,
+				Settings.Default.BlockPercentBufferSize,
+				Settings.Default.BlockDepthPercent,
+				Settings.Default.UploadPeriod,
+				Settings.Default.ImageFolder,
+				Settings.Default.DateTimeFileNameFormat,
+				Settings.Default.DateTimeLogFormat,
+				Settings.Default.DisplayWidthInMeters,
+				Settings.Default.DisplayHeightInMeters,
+				Settings.Default.KinectDisplayDistanceZ,
+				Settings.Default.KinectDisplayDistanceY,
+				Settings.Default.ScreenGridRows,
+				Settings.Default.ScreenGridColumns,
+				Settings.Default.IncludeStatusRender,
+				log4net.LogManager.GetLogger("VisitLogger"),
+				log4net.LogManager.GetLogger("StatusLogger")
 			);
+			
+			if (Settings.Default.Testing)
+			{
+				ControlW = new ControlWindow(this);
+				ControlW.Show();
+			}
 
-			MainW = new ControlWindow(this);
-			contentW = new ContentWindow(this);
-			MainW.Show();
-			contentW.Show();
+			ContentW = new ContentWindow(this);
+			ContentW.Show();
 		}
 
 		protected override void OnExit(ExitEventArgs e)
@@ -45,10 +66,10 @@ namespace STimWPF
 
 		public void CloseApp(Window sender)
 		{
-			if (sender != MainW)
-				MainW.Close();
-			if (sender != contentW)
-				contentW.Close();
+			if (sender != ControlW)
+				ControlW.Close();
+			if (sender != ContentW)
+				ContentW.Close();
 		}
 
 	}

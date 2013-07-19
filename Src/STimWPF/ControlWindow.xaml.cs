@@ -15,9 +15,9 @@ using System.ComponentModel;
 using Microsoft.Win32;
 using STimWPF.Properties;
 using System.IO;
-using Microsoft.Kinect;
 using System.Windows.Threading;
-using STimWPF.Interaction;
+using STim.Interaction;
+using STim;
 
 namespace STimWPF
 {

@@ -1,8 +1,21 @@
 ﻿<Window x:Class="STimWPF.ContentWindow" x:Name="contentW"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	    xmlns:converters="clr-namespace:STimWPF.Converters"
-        xmlns:controls="clr-namespace:STimWPF.Controls"
+				xmlns:converters="clr-namespace:STimWPF.Converters"
+        xmlns:attentionControls="clr-namespace:STimWPF.AttentionControls"
+				xmlns:displayControls="clr-namespace:STimWPF.DisplayControls"
+				xmlns:properties="clr-namespace:STimWPF.Properties"
 				WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
-				Title="WAG - ContentWindow" Width="1366" Height="768" >
+				Title="WAG - ContentWindow" Width="1366" Height="768" Loaded="contentW_Loaded" SizeChanged="contentW_SizeChanged">
+	<Window.Resources>
+		<converters:HeadDistanceConverter x:Key="hdConverter"/>
+		<converters:ApplicationModeVisibilityConverter x:Key="amvConverter"/>
+		<properties:Settings x:Key="settings"/>
+	</Window.Resources>
+	<Grid>
+		<displayControls:InfoDisplayControl Visibility="{Binding Source={x:Static properties:Settings.Default},Path=ApplicationMode, Converter={StaticResource ResourceKey=amvConverter}, ConverterParameter=DisplayOnly}"/>
+		<attentionControls:SpatialAlignControl Visibility="{Binding Source={x:Static properties:Settings.Default},Path=ApplicationMode, Converter={StaticResource ResourceKey=amvConverter}, ConverterParameter=AttractAttention}"
+																HeadLocation="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation}"
+																Distance ="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"/>
+	</Grid>
 </Window>

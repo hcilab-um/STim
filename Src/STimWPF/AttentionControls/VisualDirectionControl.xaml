@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="STimWPF.AttentionControls.VisualDirectionControl" x:Name="vdControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+						 xmlns:converters="clr-namespace:STimWPF.Converters"
+						 xmlns:stimConverters="clr-namespace:STim.Converters;assembly=STim"
+             mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="1000" >
+	<UserControl.Resources>
+		<stimConverters:LocationOrientationViewConverter x:Key="lovConverter"/>
+		<converters:DivisionConverter x:Key="dConverter"/>
+	</UserControl.Resources>
+	<Grid>
+		<Rectangle Name="eVisual" Fill="Green" HorizontalAlignment="Left" VerticalAlignment="Top">
+			<Rectangle.Margin>
+				<MultiBinding Converter="{StaticResource ResourceKey=lovConverter}">
+					<Binding ElementName="vdControl" Path="HeadLocation"/>
+					<Binding ElementName="vdControl" Path="HeadOrientation"/>
+					<Binding ElementName="vdControl" Path="ActualWidth"/>
+					<Binding ElementName="vdControl" Path="ActualHeight"/>
+					<Binding ElementName="vdControl" Path="Rows"/>
+					<Binding ElementName="vdControl" Path="Columns"/>
+				</MultiBinding>
+			</Rectangle.Margin>
+			<Rectangle.Width>
+				<MultiBinding Converter="{StaticResource ResourceKey=dConverter}">
+					<Binding ElementName="vdControl" Path="ActualWidth"/>
+					<Binding ElementName="vdControl" Path="Columns"/>
+				</MultiBinding>
+			</Rectangle.Width>
+			<Rectangle.Height>
+				<MultiBinding Converter="{StaticResource ResourceKey=dConverter}">
+					<Binding ElementName="vdControl" Path="ActualHeight"/>
+					<Binding ElementName="vdControl" Path="Rows"/>
+				</MultiBinding>
+			</Rectangle.Height>
+		</Rectangle>
+		<Label Content="{Binding ElementName=vdControl, Path=HeadOrientation}" FontSize="30" Width="1000" Height="200"/>
+	</Grid>
+</UserControl>
