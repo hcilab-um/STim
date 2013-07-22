@@ -75,6 +75,7 @@ namespace STim.Status
 				{
 					skeletonIdInfo += String.Format("-{0}", wagSkeleton.TrackingId);
 				}
+
 				fileName = String.Format("{0}ms{1}.jpg", currentTime.ToString(STimSettings.DateTimeFileNameFormat), skeletonIdInfo);
 				totalVisits = currentSkeletons.Count;
 				SaveDrawingImage(imageSource, fileName);
@@ -148,6 +149,9 @@ namespace STim.Status
 							currentVisits.Count,
 							status.VisitId,
 							status.SkeletonId,
+							
+							status.FramesNotSeen,
+
 							status.VisitInit.ToString(STimSettings.DateTimeLogFormat),
 							
 							status.Zone,
@@ -196,20 +200,20 @@ namespace STim.Status
 
 		private Point CalculateVision(VisitStatus status)
 		{
-      LocationOrientationViewConverter converter = new LocationOrientationViewConverter();
+			LocationOrientationViewConverter converter = new LocationOrientationViewConverter();
 
-      Point3D headLocation = status.HeadLocation;
-      Vector3D headOrientation = status.HeadDirection;
+			Point3D headLocation = status.HeadLocation;
+			Vector3D headOrientation = status.HeadDirection;
 
-      if (headOrientation.Length == 0)
-        return new Point(-1, -1);
+			if (headOrientation.Length == 0)
+				return new Point(-1, -1);
 
 			int rowCount = STimSettings.ScreenGridRows;
 			int colCount = STimSettings.ScreenGridColumns;
 
-      Thickness convResult = (Thickness)converter.Convert(new object[] { headLocation, headOrientation, DisplayWidth, DisplayHeight, rowCount, colCount }, null, null, null);
-      Point result = new Point() { X = convResult.Left / (DisplayWidth / colCount), Y = convResult.Top / (DisplayHeight / rowCount) };
-      return result;
+			Thickness convResult = (Thickness)converter.Convert(new object[] { headLocation, headOrientation, DisplayWidth, DisplayHeight, rowCount, colCount }, null, null, null);
+			Point result = new Point() { X = convResult.Left / (DisplayWidth / colCount), Y = convResult.Top / (DisplayHeight / rowCount) };
+			return result;
 		}
 
 		private List<VisitStatus> CreateVisitStatus()
@@ -235,7 +239,7 @@ namespace STim.Status
 				{
 					VisitId = lastStatus != null ? lastStatus.VisitId : ++visitCounter,
 					SkeletonId = skeleton.TrackingId,
-
+					FramesNotSeen = skeleton.FramesNotSeen,
 					VisitInit = lastStatus != null ? lastStatus.VisitInit : currentDateTime,
 					Zone = VisitorContr.DetectZone(skeleton),
 
@@ -271,6 +275,11 @@ namespace STim.Status
 
 			String statusLog = String.Format(formatSt.ToString(), logObjects);
 			logger.Info(statusLog);
+		}
+
+		public void Stop()
+		{
+			Trigger.Dispose();
 		}
 
 	}

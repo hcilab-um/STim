@@ -14,7 +14,9 @@ namespace STim.Attention
 
 		public override string ToString()
 		{
-			return String.Format("Social({0},{1},{2}) = {3}", OrientationEffect.ToString(".00"), DistanceEffect.ToString(".00"), SocialEffect.ToString(".00"), SocialAttentionValue.ToString(".00"));
-		}
+			String output = String.Format("So: {0}", SocialAttentionValue.ToString(".00"));
+			//String.Format("Social({0},{1},{2}) = {3}", OrientationEffect.ToString(".00"), DistanceEffect.ToString(".00"), SocialEffect.ToString(".00"), SocialAttentionValue.ToString(".00"));
+			return output;
+		}			
 	}
 }

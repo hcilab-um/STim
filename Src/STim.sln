@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STim", "STim\STim.csproj", "{D04552DB-406D-474E-9E20-303AAD30C7DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STimWPF", "STimWPF\STimWPF.csproj", "{047A0786-3A92-412B-BB0E-BFB787189F84}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D04552DB-406D-474E-9E20-303AAD30C7DA} = {D04552DB-406D-474E-9E20-303AAD30C7DA}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAnalizer", "DataAnalizer\DataAnalizer.csproj", "{0DCEF8CC-7315-4B4E-86D9-5EA4DD65FF79}"
 EndProject

@@ -13,7 +13,9 @@ namespace STim.Attention
 
 		public override string ToString()
 		{
-			return String.Format("Simple({0},{1}) = {2}", SimpleOrientationEffect.ToString(".00"), SimpleDistanceEffect.ToString(".00"), SimpleAttentionValue.ToString(".00"));
+			String output = String.Format("Si: {0}", SimpleAttentionValue.ToString(".00"));
+			//String.Format("Simple({0},{1}) = {2}", SimpleOrientationEffect.ToString(".00"), SimpleDistanceEffect.ToString(".00"), SimpleAttentionValue.ToString(".00"));
+			return output;
 		}
 	}
 }

@@ -14,6 +14,8 @@ namespace STim.Status
 		public int VisitId { get; set; }
 		public int SkeletonId { get; set; }
 
+		public int FramesNotSeen { get; set; }
+
 		public DateTime VisitInit { get; set; }
 		public Zone Zone { get; set; }
 		

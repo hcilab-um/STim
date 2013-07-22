@@ -64,6 +64,7 @@
     </Reference>
     <Reference Include="STim">
       <HintPath>..\STim\bin\Debug\STim.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

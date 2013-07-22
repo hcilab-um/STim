@@ -39,7 +39,7 @@
       <Value Profile="(Default)">0.225</Value>
     </Setting>
     <Setting Name="BlockDepthPercent" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">20</Value>
+      <Value Profile="(Default)">28</Value>
     </Setting>
     <Setting Name="ScreenGridRows" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">4</Value>
@@ -54,7 +54,7 @@
       <Value Profile="(Default)">AttractAttention</Value>
     </Setting>
     <Setting Name="IncludeStatusRender" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

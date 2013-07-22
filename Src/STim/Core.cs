@@ -40,6 +40,8 @@ namespace STim
 		private const int PERIPHERY_MAX_ANGLE = 110;
 		//height should be 0.58
 
+		private const int FACE_DELAY_THRESHOLD = 100;
+
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 
 		private static Core instance = null;
@@ -93,26 +95,26 @@ namespace STim
 		private Core() { }
 
 		public void Initialize(Dispatcher uiDispatcher, double closeZoneConstrain, double notificationZoneConstrain, int blockPercentBufferSize, double blockDepthPercent, int uploadPeriod, string imageFolder, string dateTimeFileNameFormat,
-			string dateTimeLogFormat, double displayWidthInMeters, double displayHeightInMeters, double kinectDistanceZ, double kinectDistanceY, int screenGridRows, int screenGridColumns, bool includeStatusRender, log4net.ILog visitLogger, log4net.ILog statusLogger)
+				string dateTimeLogFormat, double displayWidthInMeters, double displayHeightInMeters, double kinectDistanceZ, double kinectDistanceY, int screenGridRows, int screenGridColumns, bool includeStatusRender, log4net.ILog visitLogger, log4net.ILog statusLogger)
 		{
 			STimSettings.CloseZoneConstrain = closeZoneConstrain;
 			STimSettings.NotificationZoneConstrain = notificationZoneConstrain;
 
 			STimSettings.BlockPercentBufferSize = blockPercentBufferSize;
 			STimSettings.BlockDepthPercent = blockDepthPercent;
-			
+
 			STimSettings.UploadPeriod = uploadPeriod;
-			
+
 			STimSettings.ImageFolder = imageFolder;
 			STimSettings.DateTimeFileNameFormat = dateTimeFileNameFormat;
 			STimSettings.DateTimeLogFormat = dateTimeLogFormat;
-			
+
 			STimSettings.DisplayWidthInMeters = displayWidthInMeters;
 			STimSettings.DisplayHeightInMeters = displayHeightInMeters;
-			
+
 			STimSettings.KinectDistanceZ = kinectDistanceZ;
 			STimSettings.KinectDistanceY = kinectDistanceY;
-			
+
 			STimSettings.ScreenGridRows = screenGridRows;
 			STimSettings.ScreenGridColumns = screenGridColumns;
 
@@ -287,10 +289,14 @@ namespace STim
 				{
 					foreach (WagSkeleton skeleton in skeletons)
 					{
+						if (skeleton.FramesNotSeen > 0 && !(VisitorCtr.IsBlocked && skeleton.TrackingId == ClosestVisitor.TrackingId))
+							continue;
 						skeletonDrawer.DrawUpperSkeleton(skeleton, drawingContext);
 						Joint head = skeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.Head);
 						Joint shoulderCenter = skeleton.Joints.SingleOrDefault(temp => temp.JointType == JointType.ShoulderCenter);
 						System.Windows.Point headP = skeletonDrawer.SkeletonPointToScreen(head.Position);
+						headP.X -= 30;
+						headP.Y -= 25;
 						System.Windows.Point shoulderP = skeletonDrawer.SkeletonPointToScreen(shoulderCenter.Position);
 
 						double distance = new Vector(headP.X - shoulderP.X, headP.Y - shoulderP.Y).Length / 2;
@@ -299,30 +305,28 @@ namespace STim
 						System.Windows.Point socialDataPos = headP;
 						System.Windows.Point simpleDataPos = headP;
 
+						drawingContext.DrawRectangle(Brushes.White, new Pen(Brushes.White, 1), new System.Windows.Rect(headP, new Size(100, 100)));
 
-						socialDataPos.Y = headP.Y - distance;
-						simpleDataPos.Y = socialDataPos.Y - 30;
-
-						skeletonIdPos.X = headP.X - distance;
-						skeletonIdPos.Y = socialDataPos.Y;
+						socialDataPos.Y = headP.Y + 25;
+						simpleDataPos.Y = socialDataPos.Y + 30;
 
 						//FormattedText
 						drawingContext.DrawText(
-							new FormattedText(skeleton.TrackingId.ToString(), CultureInfo.GetCultureInfo("en-us"),
-										FlowDirection.LeftToRight, new Typeface("Verdana"), 20, System.Windows.Media.Brushes.Red),
-							skeletonIdPos);
+								new FormattedText(String.Format("ID: {0}", skeleton.TrackingId), CultureInfo.GetCultureInfo("en-us"),
+														FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Red),
+								headP);
 						if (STimSettings.IncludeStatusRender)
 						{
 							//FormattedText
 							drawingContext.DrawText(
-								new FormattedText(skeleton.AttentionSocial.ToString(), CultureInfo.GetCultureInfo("en-us"),
-											FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Green),
-								socialDataPos);
+									new FormattedText(skeleton.AttentionSocial.ToString(), CultureInfo.GetCultureInfo("en-us"),
+															FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Green),
+									socialDataPos);
 
 							drawingContext.DrawText(
-								new FormattedText(skeleton.AttentionSimple.ToString(), CultureInfo.GetCultureInfo("en-us"),
-											FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Green),
-								simpleDataPos);
+									new FormattedText(skeleton.AttentionSimple.ToString(), CultureInfo.GetCultureInfo("en-us"),
+															FlowDirection.LeftToRight, new Typeface("Verdana"), 15, System.Windows.Media.Brushes.Green),
+									simpleDataPos);
 						}
 					}
 				}
@@ -377,10 +381,17 @@ namespace STim
 				}
 
 				currentVisitors[skeleton.TrackingId].LastFrameSeen = currentFrame;
+
 				ApplyTransformations(currentVisitors[skeleton.TrackingId]);
 			}
 
+			foreach (WagSkeleton wagSkeleton in currentVisitors.Values)
+			{
+				wagSkeleton.FramesNotSeen = currentFrame - wagSkeleton.LastFrameSeen;
+			}
+
 			OnPropertyChanged("ClosestVisitor");
+
 		}
 
 		private void ApplyTransformations(WagSkeleton skeleton)
@@ -422,11 +433,11 @@ namespace STim
 			Microsoft.Kinect.Joint shoulderRight = userSkeleton.TransformedJoints[JointType.ShoulderRight];
 
 			Vector shoulderVector = new Vector(shoulderRight.Position.X - shoulderLeft.Position.X, shoulderRight.Position.Z - shoulderLeft.Position.Z);
-      Matrix matrix = new Matrix();
-      matrix.Rotate(-90);
-      Vector bodyFacingDirection = matrix.Transform(shoulderVector);
-      Vector displayLocation = -new Vector(userSkeleton.HeadLocation.X, userSkeleton.HeadLocation.Z);
-      double orientationAngle = Math.Abs(Vector.AngleBetween(displayLocation, bodyFacingDirection));
+			Matrix matrix = new Matrix();
+			matrix.Rotate(-90);
+			Vector bodyFacingDirection = matrix.Transform(shoulderVector);
+			Vector displayLocation = -new Vector(userSkeleton.HeadLocation.X, userSkeleton.HeadLocation.Z);
+			double orientationAngle = Math.Abs(Vector.AngleBetween(displayLocation, bodyFacingDirection));
 			return Math.Abs(orientationAngle);
 		}
 
@@ -468,15 +479,16 @@ namespace STim
 
 		private void CleanOldSkeletons()
 		{
-			var oldSkeletons = currentVisitors.Values.Where(skeleton => skeleton.LastFrameSeen <= (currentFrame - 100)).ToArray();
+			var oldSkeletons = currentVisitors.Values.Where(skeleton => skeleton.FramesNotSeen >= FACE_DELAY_THRESHOLD).ToArray();
+
 			foreach (WagSkeleton skeleton in oldSkeletons)
 			{
-				if (!(VisitorCtr.IsBlocked && ClosestVisitor.TrackingId == skeleton.TrackingId))
-				{
-					currentVisitors.Remove(skeleton.TrackingId);
-					faceTrackers.Remove(skeleton.TrackingId);
-				}
+				if (VisitorCtr.IsBlocked && ClosestVisitor.TrackingId == skeleton.TrackingId)
+					continue;
+				currentVisitors.Remove(skeleton.TrackingId);
+				faceTrackers.Remove(skeleton.TrackingId);
 			}
+
 			System.GC.Collect();
 		}
 
@@ -487,6 +499,8 @@ namespace STim
 				KinectSensor.Stop();
 				KinectSensor.Dispose();
 			}
+
+			StatusCtr.Stop();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

@@ -67,7 +67,7 @@
     <Compile Include="Interaction\VisitorController.cs" />
     <Compile Include="Interaction\Zone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="STimSettings.cs" />
     <Compile Include="SkeletonDrawer.cs" />
     <Compile Include="Status\StatusController.cs" />
     <Compile Include="Status\VisitStatus.cs" />
