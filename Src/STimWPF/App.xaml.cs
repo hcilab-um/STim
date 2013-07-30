@@ -26,24 +26,32 @@ namespace STimWPF
 			base.OnStartup(e);
 			log4net.Config.XmlConfigurator.Configure();
 
+			STimSettings.CloseZoneConstrain = Settings.Default.CloseZoneConstrain;
+			STimSettings.NotificationZoneConstrain = Settings.Default.NotificationZoneConstrain;
+
+			STimSettings.BlockPercentBufferSize = Settings.Default.BlockPercentBufferSize;
+			STimSettings.BlockDepthPercent = Settings.Default.BlockDepthPercent;
+
+			STimSettings.UploadPeriod = Settings.Default.UploadPeriod;
+
+			STimSettings.ImageFolder = Settings.Default.ImageFolder;
+			STimSettings.DateTimeFileNameFormat = Settings.Default.DateTimeFileNameFormat;
+			STimSettings.DateTimeLogFormat = Settings.Default.DateTimeLogFormat;
+
+			STimSettings.DisplayWidthInMeters = Settings.Default.DisplayWidthInMeters;
+			STimSettings.DisplayHeightInMeters = Settings.Default.DisplayHeightInMeters;
+
+			STimSettings.KinectDistanceZ = Settings.Default.KinectDisplayDistanceZ;
+			STimSettings.KinectDistanceY = Settings.Default.KinectDisplayDistanceY;
+
+			STimSettings.ScreenGridRows = Settings.Default.ScreenGridRows;
+			STimSettings.ScreenGridColumns = Settings.Default.ScreenGridColumns;
+
+			STimSettings.IncludeStatusRender = Settings.Default.IncludeStatusRender;
+
 			Core.Instance.Initialize
 			(
 				Dispatcher,
-				Settings.Default.CloseZoneConstrain,
-				Settings.Default.NotificationZoneConstrain,
-				Settings.Default.BlockPercentBufferSize,
-				Settings.Default.BlockDepthPercent,
-				Settings.Default.UploadPeriod,
-				Settings.Default.ImageFolder,
-				Settings.Default.DateTimeFileNameFormat,
-				Settings.Default.DateTimeLogFormat,
-				Settings.Default.DisplayWidthInMeters,
-				Settings.Default.DisplayHeightInMeters,
-				Settings.Default.KinectDisplayDistanceZ,
-				Settings.Default.KinectDisplayDistanceY,
-				Settings.Default.ScreenGridRows,
-				Settings.Default.ScreenGridColumns,
-				Settings.Default.IncludeStatusRender,
 				log4net.LogManager.GetLogger("VisitLogger"),
 				log4net.LogManager.GetLogger("StatusLogger")
 			);

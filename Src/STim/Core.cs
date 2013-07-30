@@ -94,32 +94,8 @@ namespace STim
 
 		private Core() { }
 
-		public void Initialize(Dispatcher uiDispatcher, double closeZoneConstrain, double notificationZoneConstrain, int blockPercentBufferSize, double blockDepthPercent, int uploadPeriod, string imageFolder, string dateTimeFileNameFormat,
-				string dateTimeLogFormat, double displayWidthInMeters, double displayHeightInMeters, double kinectDistanceZ, double kinectDistanceY, int screenGridRows, int screenGridColumns, bool includeStatusRender, log4net.ILog visitLogger, log4net.ILog statusLogger)
+		public void Initialize(Dispatcher uiDispatcher, log4net.ILog visitLogger, log4net.ILog statusLogger)
 		{
-			STimSettings.CloseZoneConstrain = closeZoneConstrain;
-			STimSettings.NotificationZoneConstrain = notificationZoneConstrain;
-
-			STimSettings.BlockPercentBufferSize = blockPercentBufferSize;
-			STimSettings.BlockDepthPercent = blockDepthPercent;
-
-			STimSettings.UploadPeriod = uploadPeriod;
-
-			STimSettings.ImageFolder = imageFolder;
-			STimSettings.DateTimeFileNameFormat = dateTimeFileNameFormat;
-			STimSettings.DateTimeLogFormat = dateTimeLogFormat;
-
-			STimSettings.DisplayWidthInMeters = displayWidthInMeters;
-			STimSettings.DisplayHeightInMeters = displayHeightInMeters;
-
-			STimSettings.KinectDistanceZ = kinectDistanceZ;
-			STimSettings.KinectDistanceY = kinectDistanceY;
-
-			STimSettings.ScreenGridRows = screenGridRows;
-			STimSettings.ScreenGridColumns = screenGridColumns;
-
-			STimSettings.IncludeStatusRender = includeStatusRender;
-
 			VisitorCtr = new VisitorController();
 			DepthPercentF = new DepthPercentFilter(STimSettings.BlockPercentBufferSize);
 			StatusCtr = new StatusController(uiDispatcher, STimSettings.UploadPeriod, visitLogger, statusLogger) { VisitorContr = VisitorCtr };
@@ -227,6 +203,9 @@ namespace STim
 					if (tracker == null)
 						continue;
 					skeleton.FaceFrame = tracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
+
+					//Console.WriteLine("{0}", VisitorCtr.ClosePercent);
+					//Console.WriteLine("{0}", VisitorCtr.IsBlocked);
 					if (skeleton.FaceFrame.TrackSuccessful)
 						skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
 				}
@@ -367,6 +346,8 @@ namespace STim
 				else
 					currentVisitors.Add(skeleton.TrackingId, new WagSkeleton(skeleton));
 
+				//int start = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
+
 				try
 				{
 					if (!faceTrackers.ContainsKey(skeleton.TrackingId))
@@ -379,6 +360,9 @@ namespace STim
 					// and don't track a face.
 					Console.WriteLine("ExtractValidSkeletons - creating a new FaceTracker threw an InvalidOperationException");
 				}
+				
+				//int end = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
+				//Console.WriteLine("{0}", end - start);
 
 				currentVisitors[skeleton.TrackingId].LastFrameSeen = currentFrame;
 
