@@ -17,8 +17,9 @@ namespace VVVV.STim.Nodes
 	#region PluginInfo
 	[PluginInfo(Name = "STimCore", Category = "STim", Author = "xg")]
 	#endregion PluginInfo
+
 	public class ValueSTimCoreNode : IPluginEvaluate
-	{ 
+	{
 		#region fields & pins
 		[Input("CloseZoneConstrain", DefaultValue = 0.5)]
 		private ISpread<double> FInCloseZoneConstrain;
@@ -35,7 +36,7 @@ namespace VVVV.STim.Nodes
 		[Input("UploadPeriod (Millisecond)", DefaultValue = 1000)]
 		private ISpread<int> FInUploadPeriod;
 
-		[Input("ImageFolder", DefaultString = @"C:\Users\{USERNAME}\Dropbox\STimStatus\Image\")]
+		[Input("ImageFolder", DefaultString = @"C:\Users\wag\Dropbox\STimStatus\Image\")]
 		private ISpread<string> FInImageFolder;
 
 		[Input("DateTimeFileNameFormat", DefaultString = "yyMMdd-HHmmss-fff")]
@@ -68,6 +69,9 @@ namespace VVVV.STim.Nodes
 		[Input("IncludeStatusRender", DefaultBoolean = true)]
 		private ISpread<bool> FInIncludeStatusRender;
 
+		[Input("EnableCore", DefaultBoolean = false)]
+		private ISpread<bool> FInEnableCore;
+
 		[Output("HeadLocation")]
 		private ISpread<VVVV.Utils.VMath.Vector3D> FOutHeadLocation;
 
@@ -81,8 +85,6 @@ namespace VVVV.STim.Nodes
 		public ILogger FLogger;
 		#endregion fields & pins
 
-		private bool isInitialized = false;		
-		
 		//called when data for any output pin is requested
 		public void Evaluate(int SpreadMax)
 		{
@@ -110,8 +112,9 @@ namespace VVVV.STim.Nodes
 			STimSettings.ScreenGridColumns = FInScreenGridColumns[0];
 
 			STimSettings.IncludeStatusRender = FInIncludeStatusRender[0];
+			
 			//2- Initialize if it's the first time
-			if(!Core.Instance.IsInitialized)
+			if (!Core.Instance.IsInitialized && FInEnableCore[0])
 			{
 				try
 				{
@@ -122,6 +125,11 @@ namespace VVVV.STim.Nodes
 				{
 					FOutExcept1[0] = ex.Message;
 				}
+			}
+
+			if (Core.Instance.IsInitialized && !FInEnableCore[0])
+			{
+				Core.Instance.Shutdown();
 			}
 
 			try
@@ -138,7 +146,7 @@ namespace VVVV.STim.Nodes
 			}
 			catch (Exception ex)
 			{
-					FOutExcept2[0] = ex.Message;
+				FOutExcept2[0] = ex.Message;
 			}
 		}
 	}

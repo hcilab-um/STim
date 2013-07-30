@@ -226,24 +226,14 @@
    </LINK>
    <LINK srcnodeid="42" srcpinname="Output" dstnodeid="48" dstpinname="Phase">
    </LINK>
-   <NODE systemname="STimCore (STim)" filename="plugins\ValueSTimCore\ValueSTimCore.csproj" nodename="STimCore (STim)" componentmode="Hidden" id="49">
-   <BOUNDS type="Node" left="5235" top="1185" width="100" height="100">
-   </BOUNDS>
-   <PIN pinname="HeadLocationXYZ" visible="1">
-   </PIN>
-   <PIN pinname="NotificationZoneConstrain" slicecount="1" values="3">
-   </PIN>
-   </NODE>
    <NODE systemname="Vector (3d Split)" nodename="Vector (3d Split)" componentmode="Hidden" id="50">
    <BOUNDS type="Node" left="5220" top="1830" width="100" height="100">
    </BOUNDS>
-   <PIN pinname="XYZ" visible="1">
+   <PIN pinname="XYZ" visible="1" slicecount="3" values="0.754456162452698,0.186407834291458,3.91390466690063">
    </PIN>
    <PIN pinname="Z" visible="1">
    </PIN>
    </NODE>
-   <LINK srcnodeid="49" srcpinname="HeadLocationXYZ" dstnodeid="50" dstpinname="XYZ">
-   </LINK>
    <NODE systemname="GE (Value)" nodename="GE (Value)" componentmode="Hidden" id="52">
    <BOUNDS type="Node" left="5745" top="2820" width="100" height="100">
    </BOUNDS>
@@ -381,5 +371,61 @@
    <LINK srcnodeid="17" srcpinname="Height" dstnodeid="64" dstpinname="Input 1">
    </LINK>
    <LINK srcnodeid="64" srcpinname="Output" dstnodeid="56" dstpinname="Input 1">
+   </LINK>
+   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="65">
+   <BOUNDS type="Node" left="6165" top="1350" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="6165" top="1350" width="795" height="720">
+   </BOUNDS>
+   <PIN pinname="Rows" slicecount="1" values="3">
+   </PIN>
+   <PIN pinname="Y Input Value" slicecount="3" visible="1" values="0.754456162452698,0.186407834291458,3.91390466690063">
+   </PIN>
+   <PIN pinname="Vector Size" slicecount="1" values="3">
+   </PIN>
+   <PIN pinname="Default" slicecount="1" values="|0, 0, 0|">
+   </PIN>
+   </NODE>
+   <NODE systemname="STimCore (STim)" filename="plugins\ValueSTimCore\ValueSTimCore.csproj" nodename="STimCore (STim)" componentmode="Hidden" id="66">
+   <BOUNDS type="Node" left="5295" top="870" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="HeadLocationXYZ" visible="1">
+   </PIN>
+   <PIN pinname="EnableCore" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="66" srcpinname="HeadLocationXYZ" dstnodeid="50" dstpinname="XYZ">
+   </LINK>
+   <LINK srcnodeid="66" srcpinname="HeadLocationXYZ" dstnodeid="65" dstpinname="Y Input Value">
+   </LINK>
+   <NODE componentmode="InABox" id="69" nodename="IOBOX (VALUE ADVANCED)" systemname="IOBox (Value Advanced)">
+   <BOUNDS height="0" left="8145" top="90" type="Node" width="0">
+   </BOUNDS>
+   <BOUNDS height="160" left="4916" top="3042" type="Window" width="215">
+   </BOUNDS>
+   <BOUNDS height="435" left="8145" top="90" type="Box" width="465">
+   </BOUNDS>
+   <PIN pinname="Slider Behavior" slicecount="1" values="Toggle">
+   </PIN>
+   <PIN pinname="Show Value" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="Show Slider" slicecount="1" values="1">
+   </PIN>
+   <PIN pinname="X Input Value" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="Y Input Value" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="Minimum" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="Maximum" slicecount="1" values="1">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Boolean">
+   </PIN>
+   <PIN pinname="Sticky Slider" slicecount="1" values="1">
+   </PIN>
+   <PIN pinname="Y Output Value" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="69" srcpinname="Y Output Value" dstnodeid="66" dstpinname="EnableCore">
    </LINK>
    </PATCH>

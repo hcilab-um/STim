@@ -61,15 +61,14 @@ namespace VVVV.STim.Nodes.Status
 		/// </summary>
 		/// <param name="state"></param>
 		public void TimerCallback(Object state)
-		{
-			
+		{			
 			waitHandle.WaitOne();
-			Trigger.Change(0, STimSettings.UploadPeriod);
+
 			DateTime currentTime = DateTime.Now;
 			String fileName = "No_Skeleton";
-
 			String skeletonIdInfo = "";
 			int totalVisits = 0;
+			
 			//"DDMMYY-HHmmss-milliseconds-SK1-SK2..."
 			if (currentSkeletons != null)
 			{
@@ -91,7 +90,8 @@ namespace VVVV.STim.Nodes.Status
 				fileName
 			};
 
-			//LogInformation(logObjects, statusLogger);
+			LogInformation(logObjects, statusLogger);
+			Trigger.Change(STimSettings.UploadPeriod, STimSettings.UploadPeriod);
 
 			waitHandle.Set();
 		}
@@ -125,7 +125,6 @@ namespace VVVV.STim.Nodes.Status
 			waitHandle.WaitOne();
 
 			imageSource = drawingImage;
-
 			if (skeletons == null || skeletons.Count == 0 || controllerSkeleton == null)
 			{
 				currentSkeletons = null;
@@ -184,7 +183,7 @@ namespace VVVV.STim.Nodes.Status
 							status.GestureInteraction
 						};
 
-					//LogInformation(logObjects, visitLogger);
+					LogInformation(logObjects, visitLogger);
 				}
 
 				lastControllerId = controllerId;

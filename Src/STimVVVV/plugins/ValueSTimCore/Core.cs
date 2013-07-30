@@ -100,9 +100,16 @@ namespace VVVV.STim.Nodes
 		}
 		public void Initialize(Dispatcher uiDispatcher)
 		{
-
+			String a = Directory.GetCurrentDirectory();
+			log4net.Config.XmlConfigurator.Configure(new FileInfo("logger.xml"));
 			VisitorCtr = new VisitorController();
-			StatusCtr = new StatusController(uiDispatcher, null, null) { VisitorContr = VisitorCtr };
+
+			StatusCtr = new StatusController
+				(	uiDispatcher, 
+					log4net.LogManager.GetLogger("VisitLogger"), 
+					log4net.LogManager.GetLogger("StatusLogger")
+				) { VisitorContr = VisitorCtr };
+
 			DepthPercentF = new DepthPercentFilter();
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
@@ -481,7 +488,7 @@ namespace VVVV.STim.Nodes
 				KinectSensor.Stop();
 				KinectSensor.Dispose();
 			}
-
+			IsInitialized = false;
 			StatusCtr.Stop();
 		}
 
