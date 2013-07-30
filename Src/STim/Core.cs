@@ -42,6 +42,8 @@ namespace STim
 
 		private const int FACE_DELAY_THRESHOLD = 100;
 
+		private const int FACE_TRACKER_CAPACITY = 6;
+
 		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
 
 		private static Core instance = null;
@@ -65,8 +67,7 @@ namespace STim
 		private short[] depthImage;
 
 		private Dictionary<int, WagSkeleton> currentVisitors = new Dictionary<int, WagSkeleton>();
-		private Dictionary<int, FaceTracker> faceTrackers = new Dictionary<int, FaceTracker>();
-
+		private List<WagFaceTracker> wagFaceTrackers = new List<WagFaceTracker>(FACE_TRACKER_CAPACITY);
 		private AttentionEstimatorSimple attentionerSimple = new AttentionEstimatorSimple();
 		private AttentionEstimatorSocial attentionerSocial = new AttentionEstimatorSocial();
 
@@ -99,7 +100,6 @@ namespace STim
 			VisitorCtr = new VisitorController();
 			DepthPercentF = new DepthPercentFilter(STimSettings.BlockPercentBufferSize);
 			StatusCtr = new StatusController(uiDispatcher, STimSettings.UploadPeriod, visitLogger, statusLogger) { VisitorContr = VisitorCtr };
-
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
 				Console.WriteLine("No Kinect found");
@@ -133,6 +133,11 @@ namespace STim
 
 					originTransform = CreateOriginMatrix(0, STimSettings.DisplayHeightInMeters / 2 + STimSettings.KinectDistanceY, STimSettings.KinectDistanceZ, KinectSensor.ElevationAngle);
 				}
+			}
+
+			for (int i = 0; i < FACE_TRACKER_CAPACITY; i++)
+			{
+				wagFaceTrackers.Add(new WagFaceTracker(KinectSensor));
 			}
 		}
 
@@ -199,15 +204,20 @@ namespace STim
 					skeleton.AttentionSimple = attentionerSimple.CalculateAttention(skeleton);
 					skeleton.AttentionSocial = attentionerSocial.CalculateAttention(skeleton, this.currentVisitors.Values.ToArray());
 
-					FaceTracker tracker = faceTrackers[skeleton.TrackingId];
-					if (tracker == null)
-						continue;
-					skeleton.FaceFrame = tracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
+
+					WagFaceTracker wagTracker = wagFaceTrackers.SingleOrDefault(trk => trk.SkeletonId == skeleton.TrackingId);
+
+					int start = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
+					skeleton.FaceFrame = wagTracker.FaceTracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
+					int end = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
+					Console.WriteLine("TrackingTime: {0}", end - start);
 
 					//Console.WriteLine("{0}", VisitorCtr.ClosePercent);
 					//Console.WriteLine("{0}", VisitorCtr.IsBlocked);
 					if (skeleton.FaceFrame.TrackSuccessful)
+					{
 						skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
+					}
 				}
 			}
 
@@ -345,22 +355,15 @@ namespace STim
 					currentVisitors[skeleton.TrackingId].Update(skeleton);
 				else
 					currentVisitors.Add(skeleton.TrackingId, new WagSkeleton(skeleton));
+				WagFaceTracker wagFaceTracker = wagFaceTrackers.SingleOrDefault(tracker => tracker.SkeletonId == skeleton.TrackingId);
+				if (wagFaceTracker == null)
+				{
+					wagFaceTracker = wagFaceTrackers.FirstOrDefault(tracker => !tracker.IsUsing);
+					wagFaceTracker.SkeletonId = skeleton.TrackingId;
+					wagFaceTracker.IsUsing = true;
+				}
 
 				//int start = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
-
-				try
-				{
-					if (!faceTrackers.ContainsKey(skeleton.TrackingId))
-						faceTrackers.Add(skeleton.TrackingId, new FaceTracker(KinectSensor));
-				}
-				catch (InvalidOperationException)
-				{
-					//Try/Catch code and comment taken from the SDK project 
-					// During some shutdown scenarios the FaceTracker is unable to be instantiated.  Catch that exception
-					// and don't track a face.
-					Console.WriteLine("ExtractValidSkeletons - creating a new FaceTracker threw an InvalidOperationException");
-				}
-				
 				//int end = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
 				//Console.WriteLine("{0}", end - start);
 
@@ -470,7 +473,8 @@ namespace STim
 				if (VisitorCtr.IsBlocked && ClosestVisitor.TrackingId == skeleton.TrackingId)
 					continue;
 				currentVisitors.Remove(skeleton.TrackingId);
-				faceTrackers.Remove(skeleton.TrackingId);
+				WagFaceTracker wagFaceTracker = wagFaceTrackers.SingleOrDefault(wagTracker => wagTracker.SkeletonId == skeleton.TrackingId);
+				wagFaceTracker.IsUsing = false;
 			}
 
 			System.GC.Collect();
