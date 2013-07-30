@@ -8,16 +8,16 @@ using VVVV.Utils.VColor;
 using VVVV.Utils.VMath;
 
 using VVVV.Core.Logging;
+using System.IO;
+using STim;
 using System.Windows.Threading;
-using System.ComponentModel;
 #endregion usings
 
-namespace VVVV.STim.Nodes
+namespace VVVV.Nodes
 {
 	#region PluginInfo
-	[PluginInfo(Name = "STimCore", Category = "STim", Author = "xg")]
+	[PluginInfo(Name = "STimCore", Category = "Value", Author = "xg", Tags = "")]
 	#endregion PluginInfo
-
 	public class ValueSTimCoreNode : IPluginEvaluate
 	{
 		#region fields & pins
@@ -112,13 +112,15 @@ namespace VVVV.STim.Nodes
 			STimSettings.ScreenGridColumns = FInScreenGridColumns[0];
 
 			STimSettings.IncludeStatusRender = FInIncludeStatusRender[0];
-			
 			//2- Initialize if it's the first time
-			if (!Core.Instance.IsInitialized && FInEnableCore[0])
+			if (!STim.Core.Instance.IsInitialized && FInEnableCore[0])
 			{
+				log4net.Config.XmlConfigurator.Configure(new FileInfo("logger.xml"));
+				log4net.ILog visitLogger = log4net.LogManager.GetLogger("VisitLogger");
+				log4net.ILog statusLogger = log4net.LogManager.GetLogger("StatusLogger");
 				try
 				{
-					Core.Instance.Initialize(Dispatcher.CurrentDispatcher);
+					STim.Core.Instance.Initialize(Dispatcher.CurrentDispatcher, visitLogger, statusLogger);
 					FOutExcept1[0] = "OK";
 				}
 				catch (Exception ex)
@@ -127,16 +129,16 @@ namespace VVVV.STim.Nodes
 				}
 			}
 
-			if (Core.Instance.IsInitialized && !FInEnableCore[0])
+			if (STim.Core.Instance.IsInitialized && !FInEnableCore[0])
 			{
-				Core.Instance.Shutdown();
+				STim.Core.Instance.Shutdown();
 			}
 
 			try
 			{
-				if (Core.Instance.ClosestVisitor != null)
+				if (STim.Core.Instance.ClosestVisitor != null)
 				{
-					FOutHeadLocation[0] = new VVVV.Utils.VMath.Vector3D(Core.Instance.ClosestVisitor.HeadLocation.X, Core.Instance.ClosestVisitor.HeadLocation.Y, Core.Instance.ClosestVisitor.HeadLocation.Z);
+					FOutHeadLocation[0] = new VVVV.Utils.VMath.Vector3D(STim.Core.Instance.ClosestVisitor.HeadLocation.X, STim.Core.Instance.ClosestVisitor.HeadLocation.Y, STim.Core.Instance.ClosestVisitor.HeadLocation.Z);
 				}
 				else
 				{

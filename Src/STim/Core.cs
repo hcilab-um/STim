@@ -82,6 +82,8 @@ namespace STim
 		public StatusController StatusCtr { get; set; }
 		public VisitorController VisitorCtr { get; set; }
 
+		public bool IsInitialized { get; set; }
+
 		private bool showColorImage = false;
 		public bool ShowColorImage
 		{
@@ -93,7 +95,10 @@ namespace STim
 			}
 		}
 
-		private Core() { }
+		private Core() 
+		{
+			IsInitialized = false;
+		}
 
 		public void Initialize(Dispatcher uiDispatcher, log4net.ILog visitLogger, log4net.ILog statusLogger)
 		{
@@ -139,6 +144,7 @@ namespace STim
 			{
 				wagFaceTrackers.Add(new WagFaceTracker(KinectSensor));
 			}
+			IsInitialized = true;
 		}
 
 		private Matrix3D CreateOriginMatrix(double offsetX, double offsetY, double offsetZ, int rotateAroundX)
@@ -487,7 +493,7 @@ namespace STim
 				KinectSensor.Stop();
 				KinectSensor.Dispose();
 			}
-
+			IsInitialized = false;
 			StatusCtr.Stop();
 		}
 
