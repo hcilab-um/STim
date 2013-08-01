@@ -16,6 +16,7 @@ using STim.Attention;
 using Microsoft.Kinect.Toolkit.FaceTracking;
 using System.Globalization;
 using STim.Util;
+using System.Diagnostics;
 
 namespace STim
 {
@@ -40,7 +41,7 @@ namespace STim
 		private const int PERIPHERY_MAX_ANGLE = 110;
 		//height should be 0.58
 
-		private const int FACE_DELAY_THRESHOLD = 100;
+		private const int FACE_DELAY_THRESHOLD = 2;
 
 		private const int FACE_TRACKER_CAPACITY = 6;
 
@@ -196,6 +197,11 @@ namespace STim
 
 			ExtractValidSkeletons(rawSkeletons);
 			VisitorCtr.Zone = VisitorCtr.DetectZone(ClosestVisitor);
+			
+			foreach (WagSkeleton wagSkeleton in currentVisitors.Values)
+			{
+				Debug.Assert(wagFaceTrackers.SingleOrDefault(tracker => tracker.SkeletonId == wagSkeleton.TrackingId) != null);
+			}
 
 			if (colorImage != null && depthImage != null)
 			{
@@ -204,14 +210,16 @@ namespace STim
 				{
 					//The process below need to be in order
 					skeleton.HeadLocation = CalculateHeadLocation(skeleton);
+
 					skeleton.BodyOrientationAngle = CalculateBodyOrientationAngle(skeleton);
+
 					skeleton.InPeriphery = (skeleton.BodyOrientationAngle <= PERIPHERY_MAX_ANGLE);
 
 					skeleton.AttentionSimple = attentionerSimple.CalculateAttention(skeleton);
+
 					skeleton.AttentionSocial = attentionerSocial.CalculateAttention(skeleton, this.currentVisitors.Values.ToArray());
 
-
-					WagFaceTracker wagTracker = wagFaceTrackers.SingleOrDefault(trk => trk.SkeletonId == skeleton.TrackingId);
+					WagFaceTracker wagTracker = wagFaceTrackers.Single(trk => trk.SkeletonId == skeleton.TrackingId);
 
 					int start = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
 					skeleton.FaceFrame = wagTracker.FaceTracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
@@ -352,19 +360,21 @@ namespace STim
 
 		private void ExtractValidSkeletons(Skeleton[] rawSkeletons)
 		{
-			var validSkeletons = rawSkeletons.Where(skeleton => skeleton.TrackingState == SkeletonTrackingState.Tracked);
-			validSkeletons = validSkeletons.Where(skeleton => skeleton.Joints.Count(joint => joint.TrackingState == JointTrackingState.Tracked) > MINIMUM_JOINT_THRESHOLD);
-
+			var validSkeletons = rawSkeletons.Where(skeleton => skeleton.TrackingState == SkeletonTrackingState.Tracked 
+																							&& skeleton.Joints.Count(joint => joint.TrackingState == JointTrackingState.Tracked) > MINIMUM_JOINT_THRESHOLD);
+			
 			foreach (Skeleton skeleton in validSkeletons)
 			{
 				if (currentVisitors.ContainsKey(skeleton.TrackingId))
 					currentVisitors[skeleton.TrackingId].Update(skeleton);
 				else
 					currentVisitors.Add(skeleton.TrackingId, new WagSkeleton(skeleton));
-				WagFaceTracker wagFaceTracker = wagFaceTrackers.SingleOrDefault(tracker => tracker.SkeletonId == skeleton.TrackingId);
+
+				WagFaceTracker wagFaceTracker = wagFaceTrackers.SingleOrDefault(tracker => tracker.SkeletonId == skeleton.TrackingId);				
+				
 				if (wagFaceTracker == null)
 				{
-					wagFaceTracker = wagFaceTrackers.FirstOrDefault(tracker => !tracker.IsUsing);
+					wagFaceTracker = wagFaceTrackers.FirstOrDefault(tracker => tracker.IsUsing == false);
 					wagFaceTracker.SkeletonId = skeleton.TrackingId;
 					wagFaceTracker.IsUsing = true;
 				}
@@ -384,7 +394,6 @@ namespace STim
 			}
 
 			OnPropertyChanged("ClosestVisitor");
-
 		}
 
 		private void ApplyTransformations(WagSkeleton skeleton)
@@ -465,8 +474,6 @@ namespace STim
 			headPointsPointUpMatrix.RotateAt(new Quaternion(new Vector3D(int.MaxValue, 0, 0), -20), skeleton.TransformedJoints[JointType.Head].Position.ToPoint3D());
 			Vector3D lowered = headPointsPointUpMatrix.Transform(headOrientation);
 
-			if (headOrientation.Z > 0)
-				throw new Exception("Right hand rule violation");
 			return lowered;
 		}
 
@@ -481,6 +488,7 @@ namespace STim
 				currentVisitors.Remove(skeleton.TrackingId);
 				WagFaceTracker wagFaceTracker = wagFaceTrackers.SingleOrDefault(wagTracker => wagTracker.SkeletonId == skeleton.TrackingId);
 				wagFaceTracker.IsUsing = false;
+				wagFaceTracker.SkeletonId = -1;
 			}
 
 			System.GC.Collect();
