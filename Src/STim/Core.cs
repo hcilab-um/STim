@@ -28,7 +28,7 @@ namespace STim
 		private const float RenderWidth = 640.0f;
 		private const float RenderHeight = 480.0f;
 
-		private const int MINIMUM_JOINT_THRESHOLD = 7;
+		private const int MINIMUM_JOINT_THRESHOLD = 5;
 
 		private const float RENDER_WIDTH = 640.0f;
 		private const float RENDER_HEIGHT = 480.0f;

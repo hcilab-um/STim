@@ -1,6 +1,6 @@
 <!DOCTYPE PATCH  SYSTEM "http://vvvv.org/versions/vvvv45beta30.2.dtd" >
    <PATCH nodename="C:\Users\wag\Documents\GitHub\STim\Src\STimVVVV\BoxLine.v4p" systemname="BoxLine" filename="C:\Users\wag\Documents\GitHub\STim\Src\STimVVVV\BoxLine.v4p">
-   <BOUNDS type="Window" left="-120" top="-120" width="20670" height="11160">
+   <BOUNDS type="Window" left="1875" top="11535" width="1260" height="1380">
    </BOUNDS>
    <NODE systemname="LinearSpread (Spreads)" nodename="LinearSpread (Spreads)" componentmode="Hidden" id="12">
    <BOUNDS type="Node" left="7260" top="2085" width="100" height="100">

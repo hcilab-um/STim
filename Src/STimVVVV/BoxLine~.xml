@@ -1,6 +1,6 @@
 <!DOCTYPE PATCH  SYSTEM "http://vvvv.org/versions/vvvv45beta30.2.dtd" >
    <PATCH nodename="C:\Users\wag\Documents\GitHub\STim\Src\STimVVVV\BoxLine.v4p" systemname="BoxLine" filename="C:\Users\wag\Documents\GitHub\STim\Src\STimVVVV\BoxLine.v4p">
-   <BOUNDS type="Window" left="-120" top="-120" width="20670" height="11160">
+   <BOUNDS type="Window" left="1875" top="11535" width="1260" height="1380">
    </BOUNDS>
    <NODE systemname="LinearSpread (Spreads)" nodename="LinearSpread (Spreads)" componentmode="Hidden" id="12">
    <BOUNDS type="Node" left="7260" top="2085" width="100" height="100">
@@ -557,11 +557,13 @@
    <LINK srcnodeid="79" srcpinname="Y Output Value" dstnodeid="80" dstpinname="Y">
    </LINK>
    <NODE systemname="Group (EX9)" nodename="Group (EX9)" componentmode="Hidden" id="81">
-   <BOUNDS type="Node" left="12105" top="13290" width="100" height="100">
+   <BOUNDS type="Node" left="12135" top="13605" width="100" height="100">
    </BOUNDS>
    <PIN pinname="Layer 1" visible="1">
    </PIN>
    <PIN pinname="Layer" visible="1">
+   </PIN>
+   <PIN pinname="Layer 2" visible="1">
    </PIN>
    </NODE>
    <LINK srcnodeid="51" srcpinname="Output" dstnodeid="80" dstpinname="Z">
@@ -599,5 +601,53 @@
    <LINK srcnodeid="81" srcpinname="Layer" dstnodeid="83" dstpinname="Layer 2">
    </LINK>
    <LINK srcnodeid="83" srcpinname="Layer" dstnodeid="30" dstpinname="Input Node">
+   </LINK>
+   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="87">
+   <BOUNDS type="Node" left="16950" top="11100" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="16950" top="11100" width="825" height="675">
+   </BOUNDS>
+   <PIN pinname="Rows" slicecount="1" values="2">
+   </PIN>
+   <PIN pinname="Y Input Value" visible="1" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="Y Output Value" visible="1">
+   </PIN>
+   </NODE>
+   <NODE systemname="Vector (3d Join)" nodename="Vector (3d Join)" componentmode="Hidden" id="86">
+   <BOUNDS type="Node" left="15870" top="12630" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Y" visible="1">
+   </PIN>
+   <PIN pinname="Z" visible="1" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="X" visible="1" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="XYZ" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="87" srcpinname="Y Output Value" dstnodeid="86" dstpinname="Y">
+   </LINK>
+   <NODE systemname="Line (EX9.Geometry)" nodename="Line (EX9.Geometry)" componentmode="Hidden" id="84">
+   <BOUNDS type="Node" left="16935" top="13110" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="VerticesXYZ" visible="1">
+   </PIN>
+   <PIN pinname="Color" visible="1" slicecount="1" values="|1.00000,1.00000,1.00000,1.00000|">
+   </PIN>
+   <PIN pinname="Layer" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="86" srcpinname="XYZ" dstnodeid="84" dstpinname="VerticesXYZ">
+   </LINK>
+   <LINK srcnodeid="78" srcpinname="Output" dstnodeid="87" dstpinname="Y Input Value">
+   </LINK>
+   <LINK srcnodeid="67" srcpinname="Output" dstnodeid="86" dstpinname="X">
+   </LINK>
+   <LINK srcnodeid="51" srcpinname="Output" dstnodeid="86" dstpinname="Z">
+   </LINK>
+   <LINK srcnodeid="84" srcpinname="Layer" dstnodeid="81" dstpinname="Layer 2">
+   </LINK>
+   <LINK srcnodeid="15" srcpinname="Color Output" dstnodeid="84" dstpinname="Color">
    </LINK>
    </PATCH>
