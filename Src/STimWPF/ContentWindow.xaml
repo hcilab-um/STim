@@ -15,7 +15,7 @@
 	<Grid>
 		<displayControls:InfoDisplayControl Visibility="{Binding Source={x:Static properties:Settings.Default},Path=ApplicationMode, Converter={StaticResource ResourceKey=amvConverter}, ConverterParameter=DisplayOnly}"/>
 		<attentionControls:SpatialAlignControl Visibility="{Binding Source={x:Static properties:Settings.Default},Path=ApplicationMode, Converter={StaticResource ResourceKey=amvConverter}, ConverterParameter=AttractAttention}"
-																HeadLocation="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation}"
-																Distance ="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"/>
+																Distance ="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"
+																HeadLocation="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation}"/>
 	</Grid>
 </Window>

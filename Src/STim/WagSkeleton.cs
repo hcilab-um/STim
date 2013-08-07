@@ -60,6 +60,9 @@ namespace STim
 
 		public int LastFrameSeen { get; set; }
 
+		public int FramesNotSeen { get; set; }
+
+
 		public WagSkeleton(Skeleton source)
 		{
 			TrackingId = source.TrackingId;

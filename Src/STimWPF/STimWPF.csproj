@@ -62,8 +62,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharedLib\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Kinect.Toolkit.FaceTracking">
+      <HintPath>..\SharedLib\Microsoft.Kinect.Toolkit.FaceTracking.dll</HintPath>
+    </Reference>
     <Reference Include="STim">
-      <HintPath>..\STim\bin\Debug\STim.dll</HintPath>
+      <HintPath>..\STim\obj\Debug\STim.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -191,10 +195,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FaceTrackData.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="FaceTrackLib.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="fart.exe" />
   </ItemGroup>

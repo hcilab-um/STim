@@ -1,0 +1,227 @@
+<!DOCTYPE PATCH  SYSTEM "http://vvvv.org/versions/vvvv45beta30.2.dtd" >
+   <PATCH nodename="C:\Users\wag\Documents\GitHub\STim\Src\STimVVVV\SpotLight.v4p" systemname="SpotLight" filename="C:\Users\wag\Documents\GitHub\STim\Src\STimVVVV\SpotLight.v4p">
+   <BOUNDS type="Window" left="210" top="1065" width="10215" height="8265">
+   </BOUNDS>
+   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="1">
+   <BOUNDS type="Node" left="6450" top="1215" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="6450" top="1215" width="795" height="240">
+   </BOUNDS>
+   <PIN pinname="Descriptive Name" slicecount="1" values="DisplayHeight">
+   </PIN>
+   <PIN pinname="Y Output Value" visible="1">
+   </PIN>
+   </NODE>
+   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="2">
+   <BOUNDS type="Node" left="7515" top="1290" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="7515" top="1290" width="645" height="240">
+   </BOUNDS>
+   <PIN pinname="Descriptive Name" slicecount="1" values="DisplayDepth">
+   </PIN>
+   <PIN pinname="Y Input Value" slicecount="1" values="0.5">
+   </PIN>
+   <PIN pinname="Y Output Value" visible="1">
+   </PIN>
+   </NODE>
+   <NODE systemname="STimCamera (Transform)" filename="plugins\STimCamera\STimCamera4V.csproj" nodename="STimCamera (Transform)" componentmode="Hidden" id="14">
+   <BOUNDS type="Node" left="7290" top="2655" width="1485" height="270">
+   </BOUNDS>
+   <PIN pinname="CameraPositionXYZ" visible="1">
+   </PIN>
+   <PIN pinname="ViewMatrix" visible="1">
+   </PIN>
+   <PIN pinname="ProjectionMatrix" visible="1">
+   </PIN>
+   <PIN pinname="DisplayWidthInMeters" visible="1" slicecount="1" values="1.06">
+   </PIN>
+   <PIN pinname="DisplayHeightInMeters" visible="1">
+   </PIN>
+   </NODE>
+   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="15">
+   <BOUNDS type="Node" left="8700" top="1095" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="8700" top="1095" width="795" height="720">
+   </BOUNDS>
+   <PIN pinname="Rows" slicecount="1" values="3">
+   </PIN>
+   <PIN pinname="Y Input Value" slicecount="3" values="0,0,2">
+   </PIN>
+   <PIN pinname="Vector Size" slicecount="1" values="3">
+   </PIN>
+   <PIN pinname="Default" slicecount="1" values="|0, 0, 0|">
+   </PIN>
+   <PIN pinname="Y Output Value" visible="1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="CameraPosition">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="15" srcpinname="Y Output Value" dstnodeid="14" dstpinname="CameraPositionXYZ">
+   </LINK>
+   <NODE systemname="IOBox (Node)" nodename="IOBox (Node)" componentmode="InABox" id="16">
+   <BOUNDS type="Node" left="7305" top="4200" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="7305" top="4200" width="795" height="240">
+   </BOUNDS>
+   <PIN pinname="Input Node" visible="1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="ViewMatrix">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="14" srcpinname="ViewMatrix" dstnodeid="16" dstpinname="Input Node">
+   </LINK>
+   <NODE systemname="IOBox (Node)" nodename="IOBox (Node)" componentmode="InABox" id="17">
+   <BOUNDS type="Node" left="8715" top="4185" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="8715" top="4185" width="795" height="240">
+   </BOUNDS>
+   <PIN pinname="Input Node" visible="1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="ProjectionMatrix">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="14" srcpinname="ProjectionMatrix" dstnodeid="17" dstpinname="Input Node">
+   </LINK>
+   <LINK srcnodeid="1" srcpinname="Y Output Value" dstnodeid="14" dstpinname="DisplayHeightInMeters">
+   </LINK>
+   <NODE systemname="Group (EX9)" nodename="Group (EX9)" componentmode="Hidden" id="18">
+   <BOUNDS type="Node" left="1800" top="4140" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Layer 1" visible="1" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Layer 2" visible="1" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Layer" visible="1">
+   </PIN>
+   </NODE>
+   <NODE systemname="IOBox (Node)" nodename="IOBox (Node)" componentmode="InABox" id="20">
+   <BOUNDS type="Node" left="1800" top="5340" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="1800" top="5340" width="795" height="240">
+   </BOUNDS>
+   <PIN pinname="Input Node" visible="1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="SpatialAlignLayer">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="18" srcpinname="Layer" dstnodeid="20" dstpinname="Input Node">
+   </LINK>
+   <LINK srcnodeid="0" srcpinname="Y Output Value" dstnodeid="12" dstpinname="DisplayWidth">
+   </LINK>
+   <NODE id="0" systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox">
+   <PIN pinname="Y Output Value" visible="1">
+   </PIN>
+   <BOUNDS type="Node" left="4545" top="1320" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="4545" top="1320" width="795" height="240">
+   </BOUNDS>
+   <PIN pinname="Descriptive Name" slicecount="1" values="DisplayWidth">
+   </PIN>
+   </NODE>
+   <NODE id="12" systemname="BoxLine" filename="BoxLine.v4p" nodename="BoxLine.v4p" componentmode="InAWindow">
+   <PIN pinname="DisplayWidth" visible="1">
+   </PIN>
+   <PIN pinname="DisplayHeight" visible="1">
+   </PIN>
+   <PIN pinname="DisplayDepth" visible="1">
+   </PIN>
+   <PIN pinname="BoxLayer" visible="1">
+   </PIN>
+   <BOUNDS type="Node" left="4770" top="3150" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Window" left="1875" top="11535" width="1260" height="1380">
+   </BOUNDS>
+   </NODE>
+   <LINK srcnodeid="0" srcpinname="Y Output Value" dstnodeid="14" dstpinname="DisplayWidthInMeters">
+   </LINK>
+   <LINK srcnodeid="1" srcpinname="Y Output Value" dstnodeid="12" dstpinname="DisplayHeight">
+   </LINK>
+   <LINK srcnodeid="2" srcpinname="Y Output Value" dstnodeid="12" dstpinname="DisplayDepth">
+   </LINK>
+   <NODE systemname="HilightGeometry" filename="HilightGeometry.v4p" nodename="HilightGeometry.v4p" componentmode="InAWindow" id="40">
+   <BOUNDS type="Node" left="742" top="2845" width="0" height="0">
+   </BOUNDS>
+   <BOUNDS type="Box" left="0" top="0" width="6120" height="6895">
+   </BOUNDS>
+   <BOUNDS type="Window" left="2790" top="3780" width="8745" height="6810">
+   </BOUNDS>
+   <PIN pinname="Diameter" visible="1" slicecount="1" values="0.1">
+   </PIN>
+   <PIN pinname="XYZ" visible="1" slicecount="3" values="0.07,0.1,-0.25">
+   </PIN>
+   <PIN pinname="Fill" visible="1">
+   </PIN>
+   <PIN pinname="Layer" visible="1" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="SizeOut" slicecount="1" values="0.11">
+   </PIN>
+   <PIN pinname="BorderWidth" slicecount="1" values="0.005">
+   </PIN>
+   </NODE>
+   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="42">
+   <BOUNDS type="Node" left="3450" top="1875" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="3450" top="1875" width="795" height="720">
+   </BOUNDS>
+   <PIN pinname="Rows" slicecount="1" values="3">
+   </PIN>
+   <PIN pinname="Y Input Value" slicecount="3" values="0.21,-0.12,-0.25">
+   </PIN>
+   <PIN pinname="Vector Size" slicecount="1" values="3">
+   </PIN>
+   <PIN pinname="Default" slicecount="1" values="|0, 0, 0|">
+   </PIN>
+   <PIN pinname="Y Output Value" visible="1">
+   </PIN>
+   </NODE>
+   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="44">
+   <BOUNDS type="Node" left="1575" top="1185" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="1575" top="1185" width="795" height="720">
+   </BOUNDS>
+   <PIN pinname="Rows" slicecount="1" values="3">
+   </PIN>
+   <PIN pinname="Y Input Value" slicecount="3" values="0.065,0.105,-0.25">
+   </PIN>
+   <PIN pinname="Vector Size" slicecount="1" values="3">
+   </PIN>
+   <PIN pinname="Default" slicecount="1" values="|0, 0, 0|">
+   </PIN>
+   <PIN pinname="Y Output Value" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="44" srcpinname="Y Output Value" dstnodeid="40" dstpinname="XYZ">
+   </LINK>
+   <NODE systemname="Fill (EX9.RenderState)" nodename="Fill (EX9.RenderState)" componentmode="Hidden" id="45">
+   <BOUNDS type="Node" left="720" top="1665" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Render State Out" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="45" srcpinname="Render State Out" dstnodeid="40" dstpinname="Fill">
+   </LINK>
+   <LINK srcnodeid="40" srcpinname="Layer" dstnodeid="18" dstpinname="Layer 1">
+   </LINK>
+   <NODE systemname="HilightGeometry" filename="HilightGeometry.v4p" nodename="HilightGeometry.v4p" componentmode="InAWindow" id="47">
+   <BOUNDS type="Node" left="3075" top="3090" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Fill" visible="1">
+   </PIN>
+   <PIN pinname="XYZ" visible="1">
+   </PIN>
+   <PIN pinname="Size" slicecount="1" values="0.05">
+   </PIN>
+   <PIN pinname="Layer" visible="1">
+   </PIN>
+   <BOUNDS type="Window" left="2790" top="3780" width="8745" height="6810">
+   </BOUNDS>
+   <PIN pinname="BorderWidth" slicecount="1" values="0.005">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="45" srcpinname="Render State Out" dstnodeid="47" dstpinname="Fill">
+   </LINK>
+   <LINK srcnodeid="42" srcpinname="Y Output Value" dstnodeid="47" dstpinname="XYZ">
+   </LINK>
+   <LINK srcnodeid="47" srcpinname="Layer" dstnodeid="18" dstpinname="Layer 2">
+   </LINK>
+   </PATCH>
