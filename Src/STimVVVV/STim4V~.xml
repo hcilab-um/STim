@@ -59,7 +59,7 @@
    </BOUNDS>
    <BOUNDS type="Box" left="3270" top="6090" width="2400" height="1800">
    </BOUNDS>
-   <BOUNDS type="Window" left="-120" top="-120" width="20670" height="11160">
+   <BOUNDS type="Window" left="8160" top="1185" width="6240" height="5010">
    </BOUNDS>
    <PIN pinname="Background Color" slicecount="1" values="|0.00000,0.00000,0.00000,1.00000|">
    </PIN>
@@ -108,8 +108,6 @@
    <PIN pinname="DisplayWidth" visible="1">
    </PIN>
    <PIN pinname="DisplayHeight" visible="1">
-   </PIN>
-   <PIN pinname="Radius" slicecount="1" values="0.31">
    </PIN>
    </NODE>
    <LINK srcnodeid="0" srcpinname="HeadLocationXYZ" dstnodeid="14" dstpinname="CameraPosition">
