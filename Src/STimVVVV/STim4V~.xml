@@ -1,13 +1,13 @@
 <!DOCTYPE PATCH  SYSTEM "http://vvvv.org/versions/vvvv45beta30.2.dtd" >
    <PATCH nodename="C:\Users\wag\Documents\GitHub\STim\Src\STimVVVV\STim4V.v4p" systemname="STim4V" filename="C:\Users\wag\Documents\GitHub\STim\Src\STimVVVV\STim4V.v4p">
-   <BOUNDS type="Window" left="210" top="1065" width="10455" height="8610">
+   <BOUNDS type="Window" left="-120" top="-120" width="28980" height="15840">
    </BOUNDS>
    <NODE componentmode="InABox" id="3" nodename="IOBOX (VALUE ADVANCED)" systemname="IOBox (Value Advanced)">
-   <BOUNDS height="0" left="9150" top="765" type="Node" width="0">
+   <BOUNDS height="0" left="17400" top="1020" type="Node" width="0">
    </BOUNDS>
    <BOUNDS height="160" left="4916" top="3042" type="Window" width="215">
    </BOUNDS>
-   <BOUNDS height="420" left="9150" top="765" type="Box" width="390">
+   <BOUNDS height="615" left="17400" top="1020" type="Box" width="675">
    </BOUNDS>
    <PIN pinname="Slider Behavior" slicecount="1" values="Toggle">
    </PIN>
@@ -31,21 +31,25 @@
    </PIN>
    </NODE>
    <NODE systemname="Vector (3d Split)" nodename="Vector (3d Split)" componentmode="Hidden" id="11">
-   <BOUNDS type="Node" left="6105" top="3195" width="100" height="100">
+   <BOUNDS type="Node" left="6450" top="3015" width="100" height="100">
    </BOUNDS>
    <PIN pinname="XYZ" visible="1" slicecount="3" values="0,0,0">
    </PIN>
    <PIN pinname="Z" visible="1">
    </PIN>
+   <PIN pinname="X" visible="1">
+   </PIN>
+   <PIN pinname="Y" visible="1">
+   </PIN>
    </NODE>
    <NODE systemname="Renderer (EX9)" nodename="Renderer (EX9)" componentmode="InAWindow" id="12">
-   <BOUNDS type="Node" left="960" top="6180" width="4350" height="270">
+   <BOUNDS type="Node" left="10080" top="12825" width="4350" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="960" top="6180" width="2400" height="1800">
+   <BOUNDS type="Box" left="10080" top="12825" width="2400" height="1800">
    </BOUNDS>
-   <BOUNDS type="Window" left="-120" top="-120" width="28980" height="15840">
+   <BOUNDS type="Window" left="-120" top="-120" width="20670" height="11160">
    </BOUNDS>
-   <PIN pinname="Background Color" slicecount="1" visible="1" values="|1.00000,1.00000,1.00000,1.00000|">
+   <PIN pinname="Background Color" slicecount="1" visible="1" values="|0.00000,0.00000,0.00000,1.00000|">
    </PIN>
    <PIN pinname="Layers" visible="1" slicecount="1" values="||">
    </PIN>
@@ -58,66 +62,14 @@
    <PIN pinname="Projection" visible="1" slicecount="1" values="||">
    </PIN>
    </NODE>
-   <NODE systemname="RandomSquareAnimation" filename="RandomSquareAnimation.v4p" nodename="RandomSquareAnimation.v4p" componentmode="InAWindow" id="13">
-   <BOUNDS type="Node" left="7110" top="4425" width="1965" height="270">
-   </BOUNDS>
-   <PIN pinname="HeadDistance" visible="1">
-   </PIN>
-   <PIN pinname="RandomRectAnimation" visible="1">
-   </PIN>
-   <PIN pinname="ViewMatrix" visible="1">
-   </PIN>
-   <PIN pinname="Period" slicecount="1" values="1">
-   </PIN>
-   <PIN pinname="Columns" slicecount="1" values="40">
-   </PIN>
-   <PIN pinname="Rows" slicecount="1" values="20">
-   </PIN>
-   <BOUNDS type="Window" left="2235" top="2505" width="2790" height="2220">
-   </BOUNDS>
-   <PIN pinname="ProjectionMatrix" visible="1">
-   </PIN>
-   <PIN pinname="NotificationMax" visible="1">
-   </PIN>
-   <PIN pinname="NotificationMin" visible="1">
-   </PIN>
-   </NODE>
-   <LINK srcnodeid="11" srcpinname="Z" dstnodeid="13" dstpinname="HeadDistance">
-   </LINK>
-   <NODE systemname="SpotLight" filename="SpotLight.v4p" nodename="SpotLight.v4p" componentmode="InAWindow" id="14">
-   <BOUNDS type="Node" left="945" top="3735" width="100" height="100">
-   </BOUNDS>
-   <PIN pinname="CameraPosition" visible="1" slicecount="3" values="0,0,2">
-   </PIN>
-   <PIN pinname="SpatialAlignLayer" visible="1">
-   </PIN>
-   <PIN pinname="ViewMatrix" visible="1">
-   </PIN>
-   <PIN pinname="ProjectionMatrix" visible="1">
-   </PIN>
-   <PIN pinname="DisplayWidth" visible="1" slicecount="1" values="0">
-   </PIN>
-   <PIN pinname="DisplayHeight" visible="1">
-   </PIN>
-   <PIN pinname="Radius" slicecount="1" values="0.1">
-   </PIN>
-   <BOUNDS type="Window" left="210" top="1065" width="10455" height="8610">
-   </BOUNDS>
-   <PIN pinname="DisplayDepth" visible="1">
-   </PIN>
-   <PIN pinname="Diameter" visible="1" slicecount="1" values="0.1">
-   </PIN>
-   <PIN pinname="SphereCenterLocation" visible="1" slicecount="3" values="0.07,0.1,-0.25">
-   </PIN>
-   </NODE>
    <NODE systemname="ScreenInfo (Windows)" filename="%VVVV%\addonpack\lib\nodes\plugins\ScreenInfo.dll" nodename="ScreenInfo (Windows)" componentmode="Hidden" id="15">
-   <BOUNDS type="Node" left="3795" top="6795" width="100" height="100">
+   <BOUNDS type="Node" left="9975" top="13185" width="100" height="100">
    </BOUNDS>
    <PIN pinname="ResolutionXY" visible="1">
    </PIN>
    </NODE>
    <NODE systemname="Vector (2d Split)" nodename="Vector (2d Split)" componentmode="Hidden" id="17">
-   <BOUNDS type="Node" left="2340" top="7020" width="100" height="100">
+   <BOUNDS type="Node" left="11505" top="13395" width="100" height="100">
    </BOUNDS>
    <PIN pinname="XY" visible="1">
    </PIN>
@@ -133,9 +85,9 @@
    <LINK srcnodeid="17" srcpinname="Y" dstnodeid="12" dstpinname="Backbuffer Height">
    </LINK>
    <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="18">
-   <BOUNDS type="Node" left="1365" top="480" width="100" height="100">
+   <BOUNDS type="Node" left="14925" top="120" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="1365" top="480" width="600" height="240">
+   <BOUNDS type="Box" left="14925" top="120" width="660" height="270">
    </BOUNDS>
    <PIN pinname="Y Input Value" slicecount="1" values="1.06">
    </PIN>
@@ -143,47 +95,17 @@
    </PIN>
    </NODE>
    <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="19">
-   <BOUNDS type="Node" left="2580" top="270" width="100" height="100">
+   <BOUNDS type="Node" left="16815" top="180" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="2580" top="270" width="795" height="240">
+   <BOUNDS type="Box" left="16815" top="180" width="795" height="240">
    </BOUNDS>
    <PIN pinname="Y Input Value" slicecount="1" values="0.605">
    </PIN>
    <PIN pinname="Y Output Value" visible="1">
    </PIN>
    </NODE>
-   <LINK srcnodeid="18" srcpinname="Y Output Value" dstnodeid="14" dstpinname="DisplayWidth">
-   </LINK>
-   <LINK srcnodeid="19" srcpinname="Y Output Value" dstnodeid="14" dstpinname="DisplayHeight">
-   </LINK>
-   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="20">
-   <BOUNDS type="Node" left="4050" top="690" width="100" height="100">
-   </BOUNDS>
-   <BOUNDS type="Box" left="4050" top="690" width="795" height="240">
-   </BOUNDS>
-   <PIN pinname="Y Input Value" slicecount="1" values="0.5">
-   </PIN>
-   <PIN pinname="Y Output Value" visible="1">
-   </PIN>
-   </NODE>
-   <LINK srcnodeid="20" srcpinname="Y Output Value" dstnodeid="14" dstpinname="DisplayDepth">
-   </LINK>
-   <NODE systemname="RGB (Color Join)" nodename="RGB (Color Join)" componentmode="Hidden" id="29">
-   <BOUNDS type="Node" left="5310" top="5145" width="100" height="100">
-   </BOUNDS>
-   <PIN pinname="Red" slicecount="1" visible="1" values="0">
-   </PIN>
-   <PIN pinname="Green" slicecount="1" visible="1" values="-0.368466377258301">
-   </PIN>
-   <PIN pinname="Blue" slicecount="1" visible="1" values="-0.386021137237549">
-   </PIN>
-   <PIN pinname="Output" visible="1">
-   </PIN>
-   <PIN pinname="Alpha" visible="1" slicecount="1" values="1">
-   </PIN>
-   </NODE>
    <NODE systemname="STimCore (Value)" filename="plugins\ValueSTimCore\bin\x64\Debug\STimCore.dll" nodename="STimCore (Value)" componentmode="Hidden" id="30">
-   <BOUNDS type="Node" left="6090" top="1980" width="100" height="100">
+   <BOUNDS type="Node" left="8115" top="2445" width="7275" height="270">
    </BOUNDS>
    <PIN pinname="EnableCore" visible="1">
    </PIN>
@@ -197,87 +119,251 @@
    </PIN>
    <PIN pinname="InteractionZoneConstrain" visible="1">
    </PIN>
+   <PIN pinname="BlockDepthPercent" slicecount="1" values="32">
+   </PIN>
+   <PIN pinname="KinectDisplayDistanceZ" slicecount="1" values="0.18">
+   </PIN>
+   <PIN pinname="KinectDisplayDistanceY" slicecount="1" values="0.27">
+   </PIN>
+   <PIN pinname="CloseZoneConstrain" visible="1">
+   </PIN>
    </NODE>
    <LINK srcnodeid="3" srcpinname="Y Output Value" dstnodeid="30" dstpinname="EnableCore">
    </LINK>
    <LINK srcnodeid="30" srcpinname="HeadLocationXYZ" dstnodeid="11" dstpinname="XYZ">
    </LINK>
-   <LINK srcnodeid="30" srcpinname="HeadLocationXYZ" dstnodeid="14" dstpinname="CameraPosition">
-   </LINK>
    <LINK srcnodeid="18" srcpinname="Y Output Value" dstnodeid="30" dstpinname="DisplayWidthInMeters">
    </LINK>
    <LINK srcnodeid="19" srcpinname="Y Output Value" dstnodeid="30" dstpinname="DisplayHeightInMeters">
    </LINK>
-   <NODE systemname="Subtract (Value)" nodename="Subtract (Value)" componentmode="Hidden" id="34">
-   <BOUNDS type="Node" left="5505" top="4020" width="100" height="100">
-   </BOUNDS>
-   <PIN pinname="Input 1" slicecount="1" visible="1" values="3">
-   </PIN>
-   <PIN pinname="Input 2" visible="1">
-   </PIN>
-   <PIN pinname="Output" visible="1">
-   </PIN>
-   </NODE>
-   <LINK srcnodeid="11" srcpinname="Z" dstnodeid="34" dstpinname="Input 2">
-   </LINK>
    <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="37">
-   <BOUNDS type="Node" left="5475" top="630" width="100" height="100">
+   <BOUNDS type="Node" left="7170" top="435" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="5475" top="630" width="795" height="240">
+   <BOUNDS type="Box" left="7170" top="435" width="795" height="240">
    </BOUNDS>
-   <PIN pinname="Y Input Value" slicecount="1" values="4">
+   <PIN pinname="Y Input Value" slicecount="1" values="3.5">
    </PIN>
-   <PIN pinname="Descriptive Name" slicecount="1" values="NotificationZone">
+   <PIN pinname="Descriptive Name" slicecount="1" values="NotificationZoneConstrain">
    </PIN>
    <PIN pinname="Y Output Value" visible="1">
    </PIN>
    </NODE>
    <LINK srcnodeid="37" srcpinname="Y Output Value" dstnodeid="30" dstpinname="NotificationZoneConstrain">
    </LINK>
-   <LINK srcnodeid="37" srcpinname="Y Output Value" dstnodeid="34" dstpinname="Input 1">
-   </LINK>
-   <NODE systemname="Divide (Value)" nodename="Divide (Value)" componentmode="Hidden" id="40">
-   <BOUNDS type="Node" left="5520" top="4560" width="100" height="100">
-   </BOUNDS>
-   <PIN pinname="Input 2" slicecount="1" values="2">
-   </PIN>
-   <PIN pinname="Input" visible="1">
-   </PIN>
-   <PIN pinname="Output" visible="1">
-   </PIN>
-   </NODE>
-   <LINK srcnodeid="34" srcpinname="Output" dstnodeid="40" dstpinname="Input">
-   </LINK>
-   <LINK srcnodeid="40" srcpinname="Output" dstnodeid="29" dstpinname="Red">
-   </LINK>
-   <LINK srcnodeid="40" srcpinname="Output" dstnodeid="29" dstpinname="Green">
-   </LINK>
-   <LINK srcnodeid="40" srcpinname="Output" dstnodeid="29" dstpinname="Blue">
-   </LINK>
-   <LINK srcnodeid="37" srcpinname="Y Output Value" dstnodeid="13" dstpinname="NotificationMax">
-   </LINK>
    <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="41">
-   <BOUNDS type="Node" left="7110" top="270" width="100" height="100">
+   <BOUNDS type="Node" left="4425" top="585" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="7110" top="270" width="795" height="240">
+   <BOUNDS type="Box" left="4425" top="585" width="855" height="240">
    </BOUNDS>
-   <PIN pinname="Y Input Value" slicecount="1" values="1">
+   <PIN pinname="Y Input Value" slicecount="1" values="2">
    </PIN>
-   <PIN pinname="Descriptive Name" slicecount="1" values="InteractionZone">
+   <PIN pinname="Descriptive Name" slicecount="1" values="InteractionZoneConstrain">
    </PIN>
    <PIN pinname="Y Output Value" visible="1">
    </PIN>
    </NODE>
    <LINK srcnodeid="41" srcpinname="Y Output Value" dstnodeid="30" dstpinname="InteractionZoneConstrain">
    </LINK>
-   <LINK srcnodeid="41" srcpinname="Y Output Value" dstnodeid="13" dstpinname="NotificationMin">
+   <NODE systemname="SpotLight" filename="SpotLight.v4p" nodename="SpotLight.v4p" componentmode="InAWindow" id="47">
+   <BOUNDS type="Node" left="9015" top="6525" width="2685" height="270">
+   </BOUNDS>
+   <PIN pinname="SpatialAlignLayer" visible="1">
+   </PIN>
+   <PIN pinname="ViewMatrix" visible="1">
+   </PIN>
+   <PIN pinname="ProjectionMatrix" visible="1">
+   </PIN>
+   <PIN pinname="DisplayWidth" visible="1">
+   </PIN>
+   <PIN pinname="DisplayHeight" visible="1">
+   </PIN>
+   <PIN pinname="DisplayDepth" visible="1">
+   </PIN>
+   <PIN pinname="CameraPosition" visible="1">
+   </PIN>
+   <BOUNDS type="Window" left="-120" top="-120" width="28980" height="15840">
+   </BOUNDS>
+   <PIN pinname="NotificationZone" visible="1">
+   </PIN>
+   <PIN pinname="BackgroundColor" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="18" srcpinname="Y Output Value" dstnodeid="47" dstpinname="DisplayWidth">
    </LINK>
-   <LINK srcnodeid="14" srcpinname="SpatialAlignLayer" dstnodeid="12" dstpinname="Layers">
+   <LINK srcnodeid="19" srcpinname="Y Output Value" dstnodeid="47" dstpinname="DisplayHeight">
    </LINK>
-   <LINK srcnodeid="14" srcpinname="ViewMatrix" dstnodeid="12" dstpinname="View">
+   <LINK srcnodeid="30" srcpinname="HeadLocationXYZ" dstnodeid="47" dstpinname="CameraPosition">
    </LINK>
-   <LINK srcnodeid="14" srcpinname="ProjectionMatrix" dstnodeid="12" dstpinname="Projection">
+   <NODE systemname="RandomSquareAnimation" filename="RandomSquareAnimation.v4p" nodename="RandomSquareAnimation.v4p" componentmode="InAWindow" id="48">
+   <BOUNDS type="Node" left="14490" top="6555" width="2940" height="270">
+   </BOUNDS>
+   <BOUNDS type="Window" left="1140" top="990" width="17910" height="9210">
+   </BOUNDS>
+   <PIN pinname="HeadDistance" visible="1">
+   </PIN>
+   <PIN pinname="NotificationMax" slicecount="1" visible="1" values="4">
+   </PIN>
+   <PIN pinname="RandomRectAnimation" visible="1">
+   </PIN>
+   <PIN pinname="ViewMatrix" visible="1">
+   </PIN>
+   <PIN pinname="ProjectionMatrix" visible="1">
+   </PIN>
+   <PIN pinname="BackgroundColor" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="11" srcpinname="Z" dstnodeid="48" dstpinname="HeadDistance">
    </LINK>
-   <LINK srcnodeid="29" srcpinname="Output" dstnodeid="12" dstpinname="Background Color">
+   <LINK srcnodeid="37" srcpinname="Y Output Value" dstnodeid="48" dstpinname="NotificationMax">
+   </LINK>
+   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="65">
+   <BOUNDS type="Node" left="1425" top="480" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="1425" top="480" width="795" height="240">
+   </BOUNDS>
+   <PIN pinname="Y Input Value" slicecount="1" values="1">
+   </PIN>
+   <PIN pinname="Y Output Value" visible="1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="CloseZoneConstrain">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="65" srcpinname="Y Output Value" dstnodeid="30" dstpinname="CloseZoneConstrain">
+   </LINK>
+   <NODE systemname="Switch (Node Input)" nodename="Switch (Node Input)" componentmode="Hidden" id="66">
+   <BOUNDS type="Node" left="1770" top="10125" width="1545" height="270">
+   </BOUNDS>
+   <PIN pinname="Input Count" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Switch" visible="1">
+   </PIN>
+   <PIN pinname="Input 2" visible="1">
+   </PIN>
+   <PIN pinname="Output" visible="1">
+   </PIN>
+   <PIN pinname="Input 3" visible="1">
+   </PIN>
+   <PIN pinname="Input 4" visible="1">
+   </PIN>
+   </NODE>
+   <NODE id="64" systemname="StateMachine" filename="StateMachine.v4p" nodename="StateMachine.v4p" componentmode="InAWindow">
+   <PIN pinname="Distance" visible="1">
+   </PIN>
+   <PIN pinname="InteractionZoneConstrain" visible="1">
+   </PIN>
+   <PIN pinname="CloseZoneConstrain" visible="1">
+   </PIN>
+   <PIN pinname="NotificationZoneConstrain" visible="1">
+   </PIN>
+   <BOUNDS type="Node" left="1080" top="6255" width="0" height="0">
+   </BOUNDS>
+   <BOUNDS type="Box" left="735" top="5415" width="3100" height="3100">
+   </BOUNDS>
+   <BOUNDS type="Window" left="12465" top="5745" width="10050" height="7410">
+   </BOUNDS>
+   <PIN pinname="Input 1" visible="1">
+   </PIN>
+   <PIN pinname="Output" visible="1">
+   </PIN>
+   <PIN pinname="CurrentZone" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="37" srcpinname="Y Output Value" dstnodeid="64" dstpinname="NotificationZoneConstrain">
+   </LINK>
+   <LINK srcnodeid="65" srcpinname="Y Output Value" dstnodeid="64" dstpinname="CloseZoneConstrain">
+   </LINK>
+   <LINK srcnodeid="41" srcpinname="Y Output Value" dstnodeid="64" dstpinname="InteractionZoneConstrain">
+   </LINK>
+   <LINK srcnodeid="11" srcpinname="Z" dstnodeid="64" dstpinname="Distance">
+   </LINK>
+   <LINK srcnodeid="64" srcpinname="CurrentZone" dstnodeid="66" dstpinname="Switch">
+   </LINK>
+   <NODE systemname="Switch (Node Input)" nodename="Switch (Node Input)" componentmode="Hidden" id="67">
+   <BOUNDS type="Node" left="10005" top="10035" width="2565" height="270">
+   </BOUNDS>
+   <PIN pinname="Input Count" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Switch" visible="1" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="Input 2" visible="1">
+   </PIN>
+   <PIN pinname="Output" visible="1">
+   </PIN>
+   <PIN pinname="Input 3" visible="1">
+   </PIN>
+   <PIN pinname="Input 4" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="37" srcpinname="Y Output Value" dstnodeid="47" dstpinname="NotificationZone">
+   </LINK>
+   <LINK srcnodeid="47" srcpinname="SpatialAlignLayer" dstnodeid="66" dstpinname="Input 2">
+   </LINK>
+   <LINK srcnodeid="47" srcpinname="ViewMatrix" dstnodeid="67" dstpinname="Input 2">
+   </LINK>
+   <NODE systemname="Switch (Node Input)" nodename="Switch (Node Input)" componentmode="Hidden" id="68">
+   <BOUNDS type="Node" left="15540" top="9945" width="2970" height="270">
+   </BOUNDS>
+   <PIN pinname="Input Count" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Switch" visible="1" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="Input 2" visible="1" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Input 3" visible="1">
+   </PIN>
+   <PIN pinname="Input 4" visible="1">
+   </PIN>
+   <PIN pinname="Output" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="47" srcpinname="ProjectionMatrix" dstnodeid="68" dstpinname="Input 2">
+   </LINK>
+   <LINK srcnodeid="67" srcpinname="Output" dstnodeid="12" dstpinname="View">
+   </LINK>
+   <LINK srcnodeid="66" srcpinname="Output" dstnodeid="12" dstpinname="Layers">
+   </LINK>
+   <LINK srcnodeid="48" srcpinname="RandomRectAnimation" dstnodeid="66" dstpinname="Input 3">
+   </LINK>
+   <LINK srcnodeid="48" srcpinname="RandomRectAnimation" dstnodeid="66" dstpinname="Input 4">
+   </LINK>
+   <LINK srcnodeid="48" srcpinname="ViewMatrix" dstnodeid="67" dstpinname="Input 3">
+   </LINK>
+   <LINK srcnodeid="48" srcpinname="ViewMatrix" dstnodeid="67" dstpinname="Input 4">
+   </LINK>
+   <LINK srcnodeid="48" srcpinname="ProjectionMatrix" dstnodeid="68" dstpinname="Input 3">
+   </LINK>
+   <LINK srcnodeid="48" srcpinname="ProjectionMatrix" dstnodeid="68" dstpinname="Input 4">
+   </LINK>
+   <LINK srcnodeid="64" srcpinname="CurrentZone" dstnodeid="67" dstpinname="Switch">
+   </LINK>
+   <LINK srcnodeid="64" srcpinname="CurrentZone" dstnodeid="68" dstpinname="Switch">
+   </LINK>
+   <LINK srcnodeid="68" srcpinname="Output" dstnodeid="12" dstpinname="Projection">
+   </LINK>
+   <NODE systemname="Switch (Color Input)" nodename="Switch (Color Input)" componentmode="Hidden" id="70">
+   <BOUNDS type="Node" left="6360" top="10020" width="3045" height="270">
+   </BOUNDS>
+   <PIN pinname="Input Count" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Switch" visible="1">
+   </PIN>
+   <PIN pinname="Input 2" visible="1">
+   </PIN>
+   <PIN pinname="Input 3" visible="1">
+   </PIN>
+   <PIN pinname="Input 4" visible="1">
+   </PIN>
+   <PIN pinname="Output" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="64" srcpinname="CurrentZone" dstnodeid="70" dstpinname="Switch">
+   </LINK>
+   <LINK srcnodeid="47" srcpinname="BackgroundColor" dstnodeid="70" dstpinname="Input 2">
+   </LINK>
+   <LINK srcnodeid="48" srcpinname="BackgroundColor" dstnodeid="70" dstpinname="Input 3">
+   </LINK>
+   <LINK srcnodeid="48" srcpinname="BackgroundColor" dstnodeid="70" dstpinname="Input 4">
+   </LINK>
+   <LINK srcnodeid="70" srcpinname="Output" dstnodeid="12" dstpinname="Background Color">
    </LINK>
    </PATCH>
