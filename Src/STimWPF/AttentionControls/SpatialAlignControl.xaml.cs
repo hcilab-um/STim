@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using _3DTools;
 using System.Windows.Media.Media3D;
+using STimWPF.Properties;
 
 namespace STimWPF.AttentionControls
 {
@@ -29,6 +30,10 @@ namespace STimWPF.AttentionControls
 		public static readonly DependencyProperty DistanceProperty = DependencyProperty.Register("Distance", typeof(double), typeof(SpatialAlignControl));
 		public static readonly DependencyProperty HeadLocationProperty = DependencyProperty.Register("HeadLocation", typeof(Point3D), typeof(SpatialAlignControl));
 
+		public Point3D ObjectPosition { get; set; }
+		
+		public double ObjectDiameter { get; set; }
+
 		public double Distance
 		{
 			get { return (double)GetValue(DistanceProperty); }
@@ -43,8 +48,10 @@ namespace STimWPF.AttentionControls
 
 		public SpatialAlignControl()
 		{
+			ObjectPosition = new Point3D(0, 0, -Settings.Default.DisplayDepthtInMeters/2);
+			ObjectDiameter = 0.05;
 			InitializeComponent();
-			drawGrid();
+			//drawGrid();
 		}
 
 		private void drawGrid()

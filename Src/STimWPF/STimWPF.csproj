@@ -134,6 +134,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\HighlightPositionConverter.cs" />
+    <Compile Include="Converters\HighlightSizeConverter.cs" />
     <Compile Include="DisplayControls\InfoDisplayControl.xaml.cs">
       <DependentUpon>InfoDisplayControl.xaml</DependentUpon>
     </Compile>

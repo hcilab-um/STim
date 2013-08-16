@@ -218,7 +218,6 @@ namespace STim
 					int start = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
 					skeleton.FaceFrame = wagTracker.FaceTracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
 					int end = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
-					Console.WriteLine("TrackingTime: {0}", end - start);
 
 					//Console.WriteLine("{0}", VisitorCtr.ClosePercent);
 					//Console.WriteLine("{0}", VisitorCtr.IsBlocked);
@@ -436,9 +435,12 @@ namespace STim
 		private Point3D CalculateHeadLocation(WagSkeleton skeleton)
 		{
 			Point3D headLocation = new Point3D(0, 0, 0);
+
 			Joint head = skeleton.TransformedJoints[JointType.Head];
+
 			if (head != null && head.TrackingState == JointTrackingState.Tracked)
 				headLocation = head.Position.ToPoint3D();
+
 			return headLocation;
 		}
 
@@ -492,13 +494,13 @@ namespace STim
 				KinectSensor.Dispose();
 			}
 
-			foreach(WagFaceTracker tracker in wagFaceTrackers)
+			foreach (WagFaceTracker tracker in wagFaceTrackers)
 			{
 				tracker.FaceTracker.Dispose();
 			}
 
 			wagFaceTrackers.Clear();
-			
+
 			IsInitialized = false;
 			StatusCtr.Stop();
 		}

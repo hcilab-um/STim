@@ -33,10 +33,10 @@
       <Value Profile="(Default)">0.605</Value>
     </Setting>
     <Setting Name="KinectDisplayDistanceZ" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.167</Value>
+      <Value Profile="(Default)">0.28</Value>
     </Setting>
     <Setting Name="KinectDisplayDistanceY" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.225</Value>
+      <Value Profile="(Default)">0.27</Value>
     </Setting>
     <Setting Name="BlockDepthPercent" Type="System.Double" Scope="User">
       <Value Profile="(Default)">28</Value>
@@ -55,6 +55,12 @@
     </Setting>
     <Setting Name="IncludeStatusRender" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="BinocularDistance" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.07</Value>
+    </Setting>
+    <Setting Name="DisplayDepthtInMeters" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.5</Value>
     </Setting>
   </Settings>
 </SettingsFile>

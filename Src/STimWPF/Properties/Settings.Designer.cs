@@ -145,7 +145,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.167")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.28")]
         public double KinectDisplayDistanceZ {
             get {
                 return ((double)(this["KinectDisplayDistanceZ"]));
@@ -157,7 +157,7 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.225")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.27")]
         public double KinectDisplayDistanceY {
             get {
                 return ((double)(this["KinectDisplayDistanceY"]));
@@ -236,6 +236,30 @@ namespace STimWPF.Properties {
             }
             set {
                 this["IncludeStatusRender"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.07")]
+        public double BinocularDistance {
+            get {
+                return ((double)(this["BinocularDistance"]));
+            }
+            set {
+                this["BinocularDistance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.5")]
+        public double DisplayDepthtInMeters {
+            get {
+                return ((double)(this["DisplayDepthtInMeters"]));
+            }
+            set {
+                this["DisplayDepthtInMeters"] = value;
             }
         }
     }
