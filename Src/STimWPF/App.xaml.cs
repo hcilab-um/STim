@@ -41,9 +41,6 @@ namespace STimWPF
 			STimSettings.DisplayWidthInMeters = Settings.Default.DisplayWidthInMeters;
 			STimSettings.DisplayHeightInMeters = Settings.Default.DisplayHeightInMeters;
 
-			STimSettings.KinectDistanceZ = Settings.Default.KinectDisplayDistanceZ;
-			STimSettings.KinectDistanceY = Settings.Default.KinectDisplayDistanceY;
-
 			STimSettings.ScreenGridRows = Settings.Default.ScreenGridRows;
 			STimSettings.ScreenGridColumns = Settings.Default.ScreenGridColumns;
 

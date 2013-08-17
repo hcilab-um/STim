@@ -26,14 +26,12 @@ namespace STimWPF.Converters
 			string [] parameters = (parameter as string).Split('-');
 			
 			double physicalSizeRange = Settings.Default.DisplayHeightInMeters;
+			double screenResolutionRange = SystemParameters.FullPrimaryScreenHeight;
 
 			if (parameters[0].Equals("Width"))
 			{
 				physicalSizeRange = Settings.Default.DisplayWidthInMeters;
-			}
-			else
-			{
- 
+				screenResolutionRange = SystemParameters.FullPrimaryScreenWidth;
 			}
 
 			double eyeDistance = 0;
@@ -50,7 +48,7 @@ namespace STimWPF.Converters
 			double physicalProjectionSize = eyeDistance * objectScreenDistance / objectCameraZDistance + objectDiameter * cameraScreenDistance / objectCameraZDistance;
 
 			//from physical Size map to screen resolution size
-			return physicalProjectionSize / physicalSizeRange * SystemParameters.FullPrimaryScreenWidth;
+			return physicalProjectionSize / physicalSizeRange * screenResolutionRange;
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)

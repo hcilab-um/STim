@@ -137,7 +137,7 @@ namespace STim
 
 					KinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
 
-					originTransform = CreateOriginMatrix(0, STimSettings.DisplayHeightInMeters / 2 + STimSettings.KinectDistanceY, STimSettings.KinectDistanceZ, KinectSensor.ElevationAngle);
+					originTransform = CreateOriginMatrix(0, STimSettings.DisplayHeightInMeters / 2, 0, KinectSensor.ElevationAngle);
 				}
 			}
 
@@ -261,7 +261,7 @@ namespace STim
 			depthPixels = new DepthImagePixel[KinectSensor.DepthStream.FramePixelDataLength];
 			depthFrame.CopyDepthImagePixelDataTo(depthPixels);
 			int closePixel = 0;
-			short constrain = (short)(STimSettings.CloseZoneConstrain + STimSettings.KinectDistanceZ * 1000);
+			short constrain = (short)(STimSettings.CloseZoneConstrain);
 			for (int i = 0; i < depthPixels.Length; ++i)
 			{
 				closePixel += (depthPixels[i].Depth <= constrain ? 1 : 0);
@@ -440,7 +440,6 @@ namespace STim
 
 			if (head != null && head.TrackingState == JointTrackingState.Tracked)
 				headLocation = head.Position.ToPoint3D();
-
 			return headLocation;
 		}
 

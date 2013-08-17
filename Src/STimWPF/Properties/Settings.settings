@@ -30,13 +30,7 @@
       <Value Profile="(Default)">1.06</Value>
     </Setting>
     <Setting Name="DisplayHeightInMeters" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.605</Value>
-    </Setting>
-    <Setting Name="KinectDisplayDistanceZ" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.28</Value>
-    </Setting>
-    <Setting Name="KinectDisplayDistanceY" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.27</Value>
+      <Value Profile="(Default)">0.58</Value>
     </Setting>
     <Setting Name="BlockDepthPercent" Type="System.Double" Scope="User">
       <Value Profile="(Default)">28</Value>
@@ -61,6 +55,12 @@
     </Setting>
     <Setting Name="DisplayDepthtInMeters" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.5</Value>
+    </Setting>
+    <Setting Name="CenterOffsetY" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.0225</Value>
+    </Setting>
+    <Setting Name="CenterOffsetX" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.003</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -14,18 +14,24 @@ using System.Windows.Shapes;
 using _3DTools;
 using System.Windows.Media.Media3D;
 using STimWPF.Properties;
+using System.ComponentModel;
 
 namespace STimWPF.AttentionControls
 {
 	/// <summary>
 	/// Interaction logic for SpatialAlignControl.xaml
 	/// </summary>
-	public partial class SpatialAlignControl : UserControl
+	public partial class SpatialAlignControl : UserControl, INotifyPropertyChanged
 	{
-		private static readonly Point3D startV = new Point3D(-0.530, -0.29, -0.5);
-		private static readonly Point3D endV = new Point3D(-0.530, 0.29, -0.5);
-		private static readonly Point3D startH = new Point3D(-0.530, -0.29, -0.5);
-		private static readonly Point3D endH = new Point3D(0.530, -0.29, -0.5);
+		private static readonly Point3D LeftTopFront = new Point3D(-Settings.Default.DisplayWidthInMeters / 2 - Settings.Default.CenterOffsetX, Settings.Default.DisplayHeightInMeters / 2 - Settings.Default.CenterOffsetY, 0);
+		private static readonly Point3D RightTopFront = new Point3D(Settings.Default.DisplayWidthInMeters / 2 - Settings.Default.CenterOffsetX, Settings.Default.DisplayHeightInMeters / 2 - Settings.Default.CenterOffsetY, 0);
+		private static readonly Point3D LeftBottomFront = new Point3D(-Settings.Default.DisplayWidthInMeters / 2 - Settings.Default.CenterOffsetX, -Settings.Default.DisplayHeightInMeters / 2 - Settings.Default.CenterOffsetY, 0);
+		private static readonly Point3D RightBottomFront = new Point3D(Settings.Default.DisplayWidthInMeters / 2 - Settings.Default.CenterOffsetX, -Settings.Default.DisplayHeightInMeters / 2 - Settings.Default.CenterOffsetY, 0);
+
+		private static readonly Point3D LeftTopBack = new Point3D(-Settings.Default.DisplayWidthInMeters / 2 - Settings.Default.CenterOffsetX, Settings.Default.DisplayHeightInMeters / 2 - Settings.Default.CenterOffsetY, -Settings.Default.DisplayDepthtInMeters);
+		private static readonly Point3D RightTopBack = new Point3D(Settings.Default.DisplayWidthInMeters / 2 - Settings.Default.CenterOffsetX, Settings.Default.DisplayHeightInMeters / 2 - Settings.Default.CenterOffsetY, -Settings.Default.DisplayDepthtInMeters);
+		private static readonly Point3D LeftBottomBack = new Point3D(-Settings.Default.DisplayWidthInMeters / 2 - Settings.Default.CenterOffsetX, -Settings.Default.DisplayHeightInMeters / 2 - Settings.Default.CenterOffsetY, -Settings.Default.DisplayDepthtInMeters);
+		private static readonly Point3D RightBottomBack = new Point3D(Settings.Default.DisplayWidthInMeters / 2 - Settings.Default.CenterOffsetX, -Settings.Default.DisplayHeightInMeters / 2 - Settings.Default.CenterOffsetY, -Settings.Default.DisplayDepthtInMeters);
 
 		public static readonly DependencyProperty DistanceProperty = DependencyProperty.Register("Distance", typeof(double), typeof(SpatialAlignControl));
 		public static readonly DependencyProperty HeadLocationProperty = DependencyProperty.Register("HeadLocation", typeof(Point3D), typeof(SpatialAlignControl));
@@ -33,6 +39,14 @@ namespace STimWPF.AttentionControls
 		public Point3D ObjectPosition { get; set; }
 		
 		public double ObjectDiameter { get; set; }
+
+		private Point3D calibrateHeadLocation;
+
+		private int calibrateStepIndex = 0;
+
+		private readonly Point3D[] calibrationHeadPositions = new Point3D[] { new Point3D(-Settings.Default.DisplayWidthInMeters / 2, 0.5, 1),  new Point3D(0, 0.5, 1),  new Point3D(Settings.Default.DisplayWidthInMeters / 2, 0.5, 1),
+ 																																					new Point3D(-Settings.Default.DisplayWidthInMeters / 2, 0.25, 1), new Point3D(0, 0.25, 1), new Point3D(Settings.Default.DisplayWidthInMeters / 2, 0.25, 1),
+																																					new Point3D(-Settings.Default.DisplayWidthInMeters / 2, 0, 1),    new Point3D(0, 0, 1),    new Point3D(Settings.Default.DisplayWidthInMeters / 2, 0, 1),};
 
 		public double Distance
 		{
@@ -46,55 +60,71 @@ namespace STimWPF.AttentionControls
 			set { SetValue(HeadLocationProperty, value); }
 		}
 
-		public SpatialAlignControl()
+		public Point3D CalibrateHeadLocation
 		{
-			ObjectPosition = new Point3D(0, 0, -Settings.Default.DisplayDepthtInMeters/2);
-			ObjectDiameter = 0.05;
-			InitializeComponent();
-			//drawGrid();
+			get { return calibrateHeadLocation; }
+			set
+			{
+				calibrateHeadLocation = value;
+				OnPropertyChanged("CalibrateHeadLocation");
+			}
 		}
 
-		private void drawGrid()
+		public SpatialAlignControl()
 		{
-			ScreenSpaceLines3D normal0Wire = new ScreenSpaceLines3D();
+			ObjectPosition = new Point3D(-Settings.Default.CenterOffsetX, -Settings.Default.CenterOffsetY, -Settings.Default.DisplayDepthtInMeters / 2);
+			ObjectDiameter = 0.011;
+			CalibrateHeadLocation = calibrationHeadPositions[calibrateStepIndex];
+			HeadLocation = calibrationHeadPositions[calibrateStepIndex];
+			InitializeComponent();
+			drawBox();
+		}
+
+		private void drawBox()
+		{
+
+			ScreenSpaceLines3D lineCollection = new ScreenSpaceLines3D();
 			int width = 2;
-			normal0Wire.Thickness = width;
-			normal0Wire.Color = Colors.Red;
+			lineCollection.Thickness = width;
+			lineCollection.Color = Colors.Red;
 
-			normal0Wire.Points.Add(startV);
-			normal0Wire.Points.Add(endV);
+			DrawLine(lineCollection, LeftTopBack, RightTopBack);
+			DrawLine(lineCollection, LeftBottomBack, RightBottomBack);
+			DrawLine(lineCollection, LeftTopBack, LeftBottomBack);
+			DrawLine(lineCollection, RightTopBack, RightBottomBack);
 
-			normal0Wire.Points.Add(new Point3D(0.530, -0.29, -0.5));
-			normal0Wire.Points.Add(new Point3D(0.530, 0.29, -0.5));
+			DrawLine(lineCollection, LeftTopBack, LeftTopFront);
+			DrawLine(lineCollection, RightTopBack, RightTopFront);
+			DrawLine(lineCollection, LeftBottomBack, LeftBottomFront);
+			DrawLine(lineCollection, RightBottomBack, RightBottomFront);
+			
+			viewport.Children.Add(lineCollection);
 
-			normal0Wire.Points.Add(new Point3D(0.530, 0.29, -0.5));
-			normal0Wire.Points.Add(new Point3D(-0.530, 0.29, -0.5));
+		}
 
-			normal0Wire.Points.Add(startH);
-			normal0Wire.Points.Add(endH);
+		private void DrawLine(ScreenSpaceLines3D lineCollection, Point3D start, Point3D end)
+		{
+			lineCollection.Points.Add(start);
+			lineCollection.Points.Add(end);
+		}
 
-			normal0Wire.Points.Add(new Point3D(0, 0, 0));
-			normal0Wire.Points.Add(new Point3D(0, 0, -0.5));
+		private void CenterCalibration_Click(object sender, RoutedEventArgs e)
+		{
+			if (++calibrateStepIndex >= calibrationHeadPositions.Length)
+			{
+				calibrateStepIndex = 0;
+				MessageBox.Show("CalibrationFinished");
+			}	
+			CalibrateHeadLocation = calibrationHeadPositions[calibrateStepIndex];
+			HeadLocation = calibrationHeadPositions[calibrateStepIndex];
+		}
 
-			normal0Wire.Points.Add(new Point3D(0, 0, -0.25));
-			normal0Wire.Points.Add(new Point3D(0.530, 0, -0.25));
+		public event PropertyChangedEventHandler PropertyChanged;
 
-			normal0Wire.Points.Add(new Point3D(0, 0, -0.25));
-			normal0Wire.Points.Add(new Point3D(0, 0.29, -0.25));
-
-			normal0Wire.Points.Add(new Point3D(-0.530, -0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(-0.530, -0.289, -0.042));
-
-			normal0Wire.Points.Add(new Point3D(0.530, -0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(0.530, -0.289, -0.042));
-
-			normal0Wire.Points.Add(new Point3D(-0.530, 0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(-0.530, 0.289, -0.042));
-
-			normal0Wire.Points.Add(new Point3D(0.530, 0.289, -0.5));
-			normal0Wire.Points.Add(new Point3D(0.530, 0.289, -0.042));
-
-			viewport.Children.Add(normal0Wire);
+		private void OnPropertyChanged(String name)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(name));
 		}
 
 	}

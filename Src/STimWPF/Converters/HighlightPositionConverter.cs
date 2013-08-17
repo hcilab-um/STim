@@ -24,9 +24,8 @@ namespace STimWPF.Converters
 			Point3D objectPosition = (Point3D)values[1];
 			double projectionX = CalculateProjection(objectPosition.X, cameraPosition.X, cameraPosition.Z, -objectPosition.Z);
 			double projectionY = CalculateProjection(objectPosition.Y, cameraPosition.Y, cameraPosition.Z, -objectPosition.Z);
-
-			double leftMargin = projectionX / Settings.Default.DisplayWidthInMeters*2 * SystemParameters.FullPrimaryScreenWidth;
-			double bottomMargin = projectionY / Settings.Default.DisplayHeightInMeters*2 * SystemParameters.FullPrimaryScreenHeight;
+			double leftMargin = projectionX / Settings.Default.DisplayWidthInMeters*2 * SystemParameters.PrimaryScreenWidth;
+			double bottomMargin = projectionY / Settings.Default.DisplayHeightInMeters*2 * SystemParameters.PrimaryScreenHeight;
 			return new System.Windows.Thickness(leftMargin, 0, 0, bottomMargin);
 		}
 
