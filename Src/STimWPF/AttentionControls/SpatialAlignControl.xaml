@@ -22,7 +22,7 @@
 											Positions="{Binding Source={StaticResource ResourceKey=SphereSource1}, Path=Points}"
 											TriangleIndices="{Binding Source={StaticResource ResourceKey=SphereSource1}, Path=TriangleIndices}"/>
 		</Grid.Resources>
-		<Viewport3D x:Name="viewport" HorizontalAlignment="Stretch">
+		<Viewport3D x:Name="Viewport" HorizontalAlignment="Stretch">
 			<Viewport3D.Camera>
 				<MatrixCamera x:Name="mCamera" 
 											ViewMatrix="{Binding ElementName=saControl, Path=HeadLocation, Converter={StaticResource ResourceKey=hvmConverter}}"
@@ -71,9 +71,6 @@
 				</MultiBinding>
 			</Ellipse.Margin>
 		</Ellipse>-->
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-			<Button Content="Correct" Click="CenterCalibration_Click" HorizontalAlignment="Left" Width="50" Height="50"/>
-			<TextBlock Text="1,2,3"/>
-		</StackPanel>
+
 	</Grid>
 </UserControl>

@@ -17,6 +17,7 @@ using Microsoft.Kinect.Toolkit.FaceTracking;
 using System.Globalization;
 using STim.Util;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace STim
 {
@@ -41,13 +42,52 @@ namespace STim
 		private const int PERIPHERY_MAX_ANGLE = 110;
 		//height should be 0.58
 
-		private const int FACE_DELAY_THRESHOLD = 2;
+		private const int FACE_DELAY_THRESHOLD = 5;
 
 		private const int FACE_TRACKER_CAPACITY = 6;
 
-		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
+		private readonly Point3D[] StandardCalibrationPositions = new Point3D[] 
+		{
+			new Point3D(0, 0.5, 1.5), //top
+			new Point3D(0.5, 0.5, 1.5), //right
+			new Point3D(0, 0.5, 2), //front
+			new Point3D(0, 0.5, 1) //back
+		};
 
 		private static Core instance = null;
+
+		private Point3D[] captureCalibrationPositions;
+
+		private int calibrationHeadIndex = 0;
+
+		private SkeletonDrawer skeletonDrawer;
+
+		private bool showColorImage = false;
+		private bool isCalibrated = false;
+
+		private Point3D userHeadLocation;
+
+		private int currentFrame = 0;
+		private Matrix3D calibrateTransform = new Matrix3D();
+
+		private List<VisitStatus> visitStatus = new List<VisitStatus>();
+
+		private byte[] colorImage;
+		private byte[] lastColorImage = new byte[0];
+		private short[] depthImage;
+
+		private Dictionary<int, WagSkeleton> currentVisitors = new Dictionary<int, WagSkeleton>();
+		private List<WagFaceTracker> wagFaceTrackers = new List<WagFaceTracker>(FACE_TRACKER_CAPACITY);
+		private AttentionEstimatorSimple attentionerSimple = new AttentionEstimatorSimple();
+		private AttentionEstimatorSocial attentionerSocial = new AttentionEstimatorSocial();
+
+		private KinectSensor KinectSensor { get; set; }
+		private DepthPercentFilter DepthPercentF { get; set; }
+		private VisitorController VisitorCtr { get; set; }
+		private OriginFinder OriginFinder { get; set; }
+
+		public event EventHandler<ColorImageReadyArgs> ColorImageReady;
+
 		public static Core Instance
 		{
 			get
@@ -58,34 +98,16 @@ namespace STim
 			}
 		}
 
-		private SkeletonDrawer skeletonDrawer;
-
-		private int currentFrame = 0;
-		private Matrix3D originTransform;
-
-		private List<VisitStatus> visitStatus = new List<VisitStatus>();
-		private byte[] colorImage;
-		private short[] depthImage;
-
-		private Dictionary<int, WagSkeleton> currentVisitors = new Dictionary<int, WagSkeleton>();
-		private List<WagFaceTracker> wagFaceTrackers = new List<WagFaceTracker>(FACE_TRACKER_CAPACITY);
-		private AttentionEstimatorSimple attentionerSimple = new AttentionEstimatorSimple();
-		private AttentionEstimatorSocial attentionerSocial = new AttentionEstimatorSocial();
-
 		public WagSkeleton ClosestVisitor
 		{
 			get { return currentVisitors.Values.OrderBy<WagSkeleton, double>(skeleton => skeleton.TransformedPosition.Z).FirstOrDefault(); }
 			set { }
 		}
 
-		public KinectSensor KinectSensor { get; set; }
-		public DepthPercentFilter DepthPercentF { get; set; }
 		public StatusController StatusCtr { get; set; }
-		public VisitorController VisitorCtr { get; set; }
 
 		public bool IsInitialized { get; set; }
 
-		private bool showColorImage = false;
 		public bool ShowColorImage
 		{
 			get { return showColorImage; }
@@ -96,6 +118,36 @@ namespace STim
 			}
 		}
 
+		public bool IsCalibrated
+		{
+			get { return isCalibrated; }
+			set
+			{
+				isCalibrated = value;
+				OnPropertyChanged("IsCalibrated");
+			}
+		}
+
+		public Point3D UserHeadLocation
+		{
+			get { return userHeadLocation; }
+			set
+			{
+				userHeadLocation = value;
+				OnPropertyChanged("UserHeadLocation");
+			}
+		}
+
+		public int CalibrationHeadIndex
+		{
+			get { return calibrationHeadIndex; }
+			set
+			{
+				calibrationHeadIndex = value;
+				OnPropertyChanged("CalibrationHeadIndex");
+			}
+		}
+
 		private Core()
 		{
 			IsInitialized = false;
@@ -103,9 +155,16 @@ namespace STim
 
 		public void Initialize(Dispatcher uiDispatcher, log4net.ILog visitLogger, log4net.ILog statusLogger)
 		{
+			OriginFinder = new OriginFinder();
 			VisitorCtr = new VisitorController();
 			DepthPercentF = new DepthPercentFilter(STimSettings.BlockPercentBufferSize);
 			StatusCtr = new StatusController(uiDispatcher, STimSettings.UploadPeriod, visitLogger, statusLogger) { VisitorContr = VisitorCtr };
+			captureCalibrationPositions = new Point3D[StandardCalibrationPositions.Length];
+
+			IsCalibrated = true;
+			CalibrationHeadIndex = 0;
+			UserHeadLocation = StandardCalibrationPositions[CalibrationHeadIndex];
+
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
 				Console.WriteLine("No Kinect found");
@@ -115,7 +174,7 @@ namespace STim
 				KinectSensor = KinectSensor.KinectSensors[0];
 				if (KinectSensor == null || KinectSensor.Status == KinectStatus.NotPowered)
 				{
-					throw new Exception("Kinect Not Connected");
+					throw new Exception("Kinect Not Powered");
 				}
 				else
 				{
@@ -136,27 +195,87 @@ namespace STim
 					KinectSensor.Start();
 
 					KinectSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
-
-					originTransform = CreateOriginMatrix(0, STimSettings.DisplayHeightInMeters / 2, 0, KinectSensor.ElevationAngle);
+					
+					for (int i = 0; i < FACE_TRACKER_CAPACITY; i++)
+					{
+						wagFaceTrackers.Add(new WagFaceTracker(KinectSensor));
+					}
 				}
 			}
 
-			for (int i = 0; i < FACE_TRACKER_CAPACITY; i++)
-			{
-				wagFaceTrackers.Add(new WagFaceTracker(KinectSensor));
-			}
 			IsInitialized = true;
 		}
 
-		private Matrix3D CreateOriginMatrix(double offsetX, double offsetY, double offsetZ, int rotateAroundX)
+		public void ResetCalibration()
 		{
-			Matrix3D resultMatrix = new Matrix3D();
-			resultMatrix.Rotate(new Quaternion(new Vector3D(10, 0, 0), -rotateAroundX));
-			resultMatrix.Translate(new Vector3D(offsetX, offsetY, -offsetZ));
-			return resultMatrix;
+			IsCalibrated = false;
+			CalibrationHeadIndex = 0;
+			UserHeadLocation = StandardCalibrationPositions[CalibrationHeadIndex];
+			calibrateTransform = new Matrix3D();
 		}
 
-		void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
+		public void Calibrate()
+		{
+			if (ClosestVisitor == null || ClosestVisitor.HeadLocation == new Point3D())
+			{
+				MessageBox.Show("Can Not Detect Head Position!");
+				return;
+			}
+
+			captureCalibrationPositions[calibrationHeadIndex] = ClosestVisitor.HeadLocation;
+
+			if (++CalibrationHeadIndex >= StandardCalibrationPositions.Length)
+			{
+				CalibrationHeadIndex = 0;
+				
+				Point3D estimateOrigin = OriginFinder.EstimateOrigin(StandardCalibrationPositions, captureCalibrationPositions, 5, 0.0001, 0.05);
+				
+				CalCulateTransformationMatrix(estimateOrigin);
+
+				IsCalibrated = true;
+				MessageBox.Show("Calibration Finished");
+			}
+
+			UserHeadLocation = StandardCalibrationPositions[CalibrationHeadIndex];
+		}
+
+		private void CalCulateTransformationMatrix(Point3D estimateOrigin)
+		{
+			for(int i=0; i<captureCalibrationPositions.Length; i++)
+			{
+				Vector3D vector = new Vector3D(captureCalibrationPositions[i].X - estimateOrigin.X, captureCalibrationPositions[i].Y - estimateOrigin.Y, captureCalibrationPositions[i].Z - estimateOrigin.Z);
+				vector.Normalize();
+				vector *= StandardCalibrationPositions[i].ToVector3D().Length;
+				captureCalibrationPositions[i] = new Point3D(estimateOrigin.X + vector.X, estimateOrigin.Y + vector.Y, estimateOrigin.Z + vector.Z);
+			}
+
+			Vector3D captureAxisX = new Vector3D()
+			{
+				X = captureCalibrationPositions[1].X - captureCalibrationPositions[0].X,
+				Y = captureCalibrationPositions[1].Y - captureCalibrationPositions[0].Y,
+				Z = captureCalibrationPositions[1].Z - captureCalibrationPositions[0].Z
+			};
+
+			Vector3D captureAxisZ = new Vector3D()
+			{
+				X = captureCalibrationPositions[0].X - captureCalibrationPositions[2].X,
+				Y = captureCalibrationPositions[0].Y - captureCalibrationPositions[2].Y,
+				Z = captureCalibrationPositions[0].Z - captureCalibrationPositions[2].Z
+			};
+
+			Vector3D captureAxisY = Vector3D.CrossProduct(captureAxisX, captureAxisZ);
+
+			Vector3 originOffset = new Vector3D
+															( captureCalibrationPositions[0].X - StandardCalibrationPositions[0].X,
+																captureCalibrationPositions[0].Y - StandardCalibrationPositions[0].Y,
+																captureCalibrationPositions[0].Z - StandardCalibrationPositions[0].Z).ToVector3();
+
+			calibrateTransform = Microsoft.Xna.Framework.Matrix.CreateWorld(originOffset, captureAxisZ.ToVector3(), captureAxisY.ToVector3()).ToMatrix3D();
+
+			calibrateTransform.Invert();
+		}
+
+		private void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
 		{
 			currentFrame++;
 
@@ -215,28 +334,26 @@ namespace STim
 					skeleton.AttentionSocial = attentionerSocial.CalculateAttention(skeleton, this.currentVisitors.Values.ToArray());
 					WagFaceTracker wagTracker = wagFaceTrackers.Single(trk => trk.SkeletonId == skeleton.TrackingId);
 
-					int start = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
 					skeleton.FaceFrame = wagTracker.FaceTracker.Track(KinectSensor.ColorStream.Format, colorImage, KinectSensor.DepthStream.Format, depthImage, skeleton);
-					int end = DateTime.Now.Second * 1000 + DateTime.Now.Millisecond;
 
-					//Console.WriteLine("{0}", VisitorCtr.ClosePercent);
-					//Console.WriteLine("{0}", VisitorCtr.IsBlocked);
 					if (skeleton.FaceFrame.TrackSuccessful)
 					{
 						skeleton.HeadOrientation = CalculateHeadOrientation(skeleton);
 					}
 				}
+
+				if (IsCalibrated && ClosestVisitor != null)
+					UserHeadLocation = ClosestVisitor.HeadLocation;
 			}
 
 			StatusCtr.LoadNewSkeletonData(currentVisitors.Values.ToList(), ClosestVisitor, GetImageAsArray(imageCanvas, (currentFrame % 32) == 0));
 			CleanOldSkeletons();
 		}
 
-		private byte[] lastImage = new byte[0];
 		private byte[] GetImageAsArray(DrawingImage imageCanvas, bool performConvertion)
 		{
 			if (!performConvertion || currentVisitors.Count == 0 || imageCanvas == null)
-				return lastImage;
+				return lastColorImage;
 
 			DrawingVisual drawingVisual = new DrawingVisual();
 			DrawingContext drawingContext = drawingVisual.RenderOpen();
@@ -250,8 +367,8 @@ namespace STim
 
 			MemoryStream memory = new MemoryStream();
 			encoder.Save(memory);
-			lastImage = memory.ToArray();
-			return lastImage;
+			lastColorImage = memory.ToArray();
+			return lastColorImage;
 		}
 
 		private double CalculateBlockPercentage(DepthImageFrame depthFrame)
@@ -387,7 +504,8 @@ namespace STim
 
 		private void ApplyTransformations(WagSkeleton skeleton)
 		{
-			skeleton.TransformedPosition = originTransform.Transform(new Point3D()
+
+			skeleton.TransformedPosition = calibrateTransform.Transform(new Point3D()
 			{
 				X = skeleton.Position.X,
 				Y = skeleton.Position.Y,
@@ -396,7 +514,7 @@ namespace STim
 
 			foreach (JointType type in Enum.GetValues(typeof(JointType)))
 			{
-				Point3D transformpoint = originTransform.Transform(new Point3D()
+				Point3D transformpoint = calibrateTransform.Transform(new Point3D()
 				{
 					X = skeleton.Joints[type].Position.X,
 					Y = skeleton.Joints[type].Position.Y,
@@ -424,7 +542,7 @@ namespace STim
 			Microsoft.Kinect.Joint shoulderRight = userSkeleton.TransformedJoints[JointType.ShoulderRight];
 
 			Vector shoulderVector = new Vector(shoulderRight.Position.X - shoulderLeft.Position.X, shoulderRight.Position.Z - shoulderLeft.Position.Z);
-			Matrix matrix = new Matrix();
+			System.Windows.Media.Matrix matrix = new System.Windows.Media.Matrix();
 			matrix.Rotate(-90);
 			Vector bodyFacingDirection = matrix.Transform(shoulderVector);
 			Vector displayLocation = -new Vector(userSkeleton.HeadLocation.X, userSkeleton.HeadLocation.Z);
@@ -435,7 +553,6 @@ namespace STim
 		private Point3D CalculateHeadLocation(WagSkeleton skeleton)
 		{
 			Point3D headLocation = new Point3D(0, 0, 0);
-
 			Joint head = skeleton.TransformedJoints[JointType.Head];
 
 			if (head != null && head.TrackingState == JointTrackingState.Tracked)
@@ -459,10 +576,10 @@ namespace STim
 			Vector3D faceVectorVertical = new Vector3D(faceTop.X - faceBottom.X, faceTop.Y - faceBottom.Y, faceTop.Z - faceBottom.Z);
 
 			headOrientation = Vector3D.CrossProduct(faceVectorHorizontal, faceVectorVertical);
-			headOrientation = originTransform.Transform(headOrientation);
+			headOrientation = calibrateTransform.Transform(headOrientation);
 			headOrientation.Normalize();
 			Matrix3D headPointsPointUpMatrix = new Matrix3D();
-			headPointsPointUpMatrix.RotateAt(new Quaternion(new Vector3D(int.MaxValue, 0, 0), -20), skeleton.TransformedJoints[JointType.Head].Position.ToPoint3D());
+			headPointsPointUpMatrix.RotateAt(new System.Windows.Media.Media3D.Quaternion(new Vector3D(int.MaxValue, 0, 0), -20), skeleton.TransformedJoints[JointType.Head].Position.ToPoint3D());
 			Vector3D lowered = headPointsPointUpMatrix.Transform(headOrientation);
 
 			return lowered;

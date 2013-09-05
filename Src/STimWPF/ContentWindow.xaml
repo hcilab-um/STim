@@ -11,12 +11,15 @@
 	<Window.Resources>
 		<converters:HeadDistanceConverter x:Key="hdConverter"/>
 		<converters:ApplicationModeVisibilityConverter x:Key="amvConverter"/>
+		<converters:BoolVisibilityConverter x:Key="bvConverter"/>
 		<properties:Settings x:Key="settings"/>
 	</Window.Resources>
 	<Grid>
 		<displayControls:InfoDisplayControl Visibility="{Binding Source={x:Static properties:Settings.Default},Path=ApplicationMode, Converter={StaticResource ResourceKey=amvConverter}, ConverterParameter=DisplayOnly}"/>
 		<attentionControls:SpatialAlignControl Visibility="{Binding Source={x:Static properties:Settings.Default},Path=ApplicationMode, Converter={StaticResource ResourceKey=amvConverter}, ConverterParameter=AttractAttention}"
-																Distance ="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"/>
-																<!--HeadLocation="{Binding ElementName=contentW, Path=CoreInstance.ClosestVisitor.HeadLocation}"/>-->
+																Distance ="{Binding ElementName=contentW, Path=CoreInstance.UserHeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"
+																HeadLocation="{Binding ElementName=contentW, Path=CoreInstance.UserHeadLocation}"/>
+		<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Foreground="Red" Text="Please move and align the black Dot with the metal ball, and click the calibrate button" 
+							 Visibility="{Binding ElementName=contentW, Path=CoreInstance.IsCalibrated, Converter={StaticResource ResourceKey=bvConverter}, ConverterParameter=ToHide}"/>
 	</Grid>
 </Window>

@@ -8,6 +8,7 @@ using STimWPF.Properties;
 using System.Xml;
 using System.Reflection;
 using STim;
+using System.Windows.Media.Media3D;
 
 namespace STimWPF
 {
@@ -46,13 +47,17 @@ namespace STimWPF
 
 			STimSettings.IncludeStatusRender = Settings.Default.IncludeStatusRender;
 
+			OriginFinder originFinder = new OriginFinder();
+
+			//originFinder.TestOriginFinder(1000);
+
 			Core.Instance.Initialize
 			(
 				Dispatcher,
 				log4net.LogManager.GetLogger("VisitLogger"),
 				log4net.LogManager.GetLogger("StatusLogger")
 			);
-			
+
 			if (Settings.Default.Testing)
 			{
 				ControlW = new ControlWindow(this);

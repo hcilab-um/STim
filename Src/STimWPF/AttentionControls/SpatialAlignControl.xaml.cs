@@ -36,17 +36,9 @@ namespace STimWPF.AttentionControls
 		public static readonly DependencyProperty DistanceProperty = DependencyProperty.Register("Distance", typeof(double), typeof(SpatialAlignControl));
 		public static readonly DependencyProperty HeadLocationProperty = DependencyProperty.Register("HeadLocation", typeof(Point3D), typeof(SpatialAlignControl));
 
-		public Point3D ObjectPosition { get; set; }
-		
-		public double ObjectDiameter { get; set; }
+		public static readonly Point3D ObjectPosition = new Point3D(-Settings.Default.CenterOffsetX, -Settings.Default.CenterOffsetY, -Settings.Default.DisplayDepthtInMeters / 2);
 
-		private Point3D calibrateHeadLocation;
-
-		private int calibrateStepIndex = 0;
-
-		private readonly Point3D[] calibrationHeadPositions = new Point3D[] { new Point3D(-Settings.Default.DisplayWidthInMeters / 2, 0.5, 1),  new Point3D(0, 0.5, 1),  new Point3D(Settings.Default.DisplayWidthInMeters / 2, 0.5, 1),
- 																																					new Point3D(-Settings.Default.DisplayWidthInMeters / 2, 0.25, 1), new Point3D(0, 0.25, 1), new Point3D(Settings.Default.DisplayWidthInMeters / 2, 0.25, 1),
-																																					new Point3D(-Settings.Default.DisplayWidthInMeters / 2, 0, 1),    new Point3D(0, 0, 1),    new Point3D(Settings.Default.DisplayWidthInMeters / 2, 0, 1),};
+		public static readonly double ObjectDiameter = 0.011;
 
 		public double Distance
 		{
@@ -60,31 +52,16 @@ namespace STimWPF.AttentionControls
 			set { SetValue(HeadLocationProperty, value); }
 		}
 
-		public Point3D CalibrateHeadLocation
-		{
-			get { return calibrateHeadLocation; }
-			set
-			{
-				calibrateHeadLocation = value;
-				OnPropertyChanged("CalibrateHeadLocation");
-			}
-		}
-
 		public SpatialAlignControl()
 		{
-			ObjectPosition = new Point3D(-Settings.Default.CenterOffsetX, -Settings.Default.CenterOffsetY, -Settings.Default.DisplayDepthtInMeters / 2);
-			ObjectDiameter = 0.011;
-			CalibrateHeadLocation = calibrationHeadPositions[calibrateStepIndex];
-			HeadLocation = calibrationHeadPositions[calibrateStepIndex];
 			InitializeComponent();
 			drawBox();
 		}
 
 		private void drawBox()
 		{
-
 			ScreenSpaceLines3D lineCollection = new ScreenSpaceLines3D();
-			int width = 2;
+			int width = 1;
 			lineCollection.Thickness = width;
 			lineCollection.Color = Colors.Red;
 
@@ -97,26 +74,14 @@ namespace STimWPF.AttentionControls
 			DrawLine(lineCollection, RightTopBack, RightTopFront);
 			DrawLine(lineCollection, LeftBottomBack, LeftBottomFront);
 			DrawLine(lineCollection, RightBottomBack, RightBottomFront);
-			
-			viewport.Children.Add(lineCollection);
 
+			Viewport.Children.Add(lineCollection);
 		}
 
 		private void DrawLine(ScreenSpaceLines3D lineCollection, Point3D start, Point3D end)
 		{
 			lineCollection.Points.Add(start);
 			lineCollection.Points.Add(end);
-		}
-
-		private void CenterCalibration_Click(object sender, RoutedEventArgs e)
-		{
-			if (++calibrateStepIndex >= calibrationHeadPositions.Length)
-			{
-				calibrateStepIndex = 0;
-				MessageBox.Show("CalibrationFinished");
-			}	
-			CalibrateHeadLocation = calibrationHeadPositions[calibrateStepIndex];
-			HeadLocation = calibrationHeadPositions[calibrateStepIndex];
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

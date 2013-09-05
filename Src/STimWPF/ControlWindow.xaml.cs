@@ -18,6 +18,7 @@ using System.IO;
 using System.Windows.Threading;
 using STim.Interaction;
 using STim;
+using System.Windows.Media.Media3D;
 
 namespace STimWPF
 {
@@ -65,8 +66,18 @@ namespace STimWPF
 			ImageSource colorFrame = e.Frame;
 			if (colorFrame == null)
 				return;
-
 			iSource.Source = colorFrame;
 		}
+
+		private void BtStartCalibration_Click(object sender, RoutedEventArgs e)
+		{
+			CoreInstance.ResetCalibration();
+		}
+
+		private void BtCalibrate_Click(object sender, RoutedEventArgs e)
+		{
+			CoreInstance.Calibrate();
+		}
+
 	}
 }

@@ -14,7 +14,7 @@ namespace STim
 		private const float RenderHeight = 480.0f;
 		private KinectSensor kinectSensor;
 		private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
-		private readonly Brush inferredJointBrush = Brushes.Yellow;
+		private readonly Brush inferredJointBrush = Brushes.Red;
 		private const double JointThickness = 3;
 
 		public SkeletonDrawer(KinectSensor kinectSensor)
@@ -144,7 +144,7 @@ namespace STim
 		/// <summary>
 		/// Pen used for drawing bones that are currently inferred
 		/// </summary>        
-		private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1);
+		private readonly Pen inferredBonePen = new Pen(Brushes.Red, 3);
 
 		/// <summary>
 		/// Draws a bone line between two joints
