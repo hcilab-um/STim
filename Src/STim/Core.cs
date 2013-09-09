@@ -51,7 +51,7 @@ namespace STim
 			new Point3D(0, 0.5, 1.5), //top
 			new Point3D(0.5, 0.5, 1.5), //right
 			new Point3D(0, 0.5, 2), //front
-			new Point3D(0, 0.5, 1) //back
+			new Point3D(-0.5, 0.25, 1.5) //back
 		};
 
 		private static Core instance = null;
@@ -266,9 +266,9 @@ namespace STim
 			Vector3D captureAxisY = Vector3D.CrossProduct(captureAxisX, captureAxisZ);
 
 			Vector3 originOffset = new Vector3D
-															( captureCalibrationPositions[0].X - StandardCalibrationPositions[0].X,
-																captureCalibrationPositions[0].Y - StandardCalibrationPositions[0].Y,
-																captureCalibrationPositions[0].Z - StandardCalibrationPositions[0].Z).ToVector3();
+															( estimateOrigin.X,
+																estimateOrigin.Y,
+																estimateOrigin.Z).ToVector3();
 
 			calibrateTransform = Microsoft.Xna.Framework.Matrix.CreateWorld(originOffset, captureAxisZ.ToVector3(), captureAxisY.ToVector3()).ToMatrix3D();
 
