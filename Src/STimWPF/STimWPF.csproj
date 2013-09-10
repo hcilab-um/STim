@@ -58,6 +58,10 @@
     <Reference Include="3DTools">
       <HintPath>..\SharedLib\3DTools.dll</HintPath>
     </Reference>
+    <Reference Include="Emgu.CV, Version=2.4.9.1847, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\Emgu.CV.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharedLib\log4net.dll</HintPath>
@@ -71,6 +75,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -90,6 +95,7 @@
     </ApplicationDefinition>
     <Compile Include="ApplicationMode.cs" />
     <Compile Include="Converters\ApplicationModeVisibilityConverter.cs" />
+    <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\DistanceColorConverter.cs" />
     <Compile Include="Converters\HeadDistanceConverter.cs" />
     <Compile Include="Converters\HeadProjectionMatrixConverter.cs" />
@@ -134,6 +140,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\HighlightPositionConverter.cs" />
+    <Compile Include="Converters\HighlightSizeConverter.cs" />
+    <Compile Include="Converters\NotConverter.cs" />
     <Compile Include="DisplayControls\InfoDisplayControl.xaml.cs">
       <DependentUpon>InfoDisplayControl.xaml</DependentUpon>
     </Compile>
@@ -201,6 +210,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="fart.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

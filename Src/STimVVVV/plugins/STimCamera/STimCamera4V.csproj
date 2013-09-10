@@ -40,15 +40,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
-    <Reference Include="SlimDX" />
+    <Reference Include="SlimDX">
+      <HintPath>..\..\..\SharedLib\SlimDX.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition.Codeplex" />
+    <Reference Include="System.ComponentModel.Composition.Codeplex">
+      <HintPath>..\..\..\SharedLib\System.ComponentModel.Composition.Codeplex.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="VVVV.Core" />
-    <Reference Include="VVVV.PluginInterfaces" />
-    <Reference Include="VVVV.Utils" />
-    <Reference Include="VVVV.Utils3rdParty" />
+    <Reference Include="VVVV.Core">
+      <HintPath>..\..\..\SharedLib\VVVV.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="VVVV.PluginInterfaces">
+      <HintPath>..\..\..\SharedLib\VVVV.PluginInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="VVVV.Utils">
+      <HintPath>..\..\..\SharedLib\VVVV.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="VVVV.Utils3rdParty">
+      <HintPath>..\..\..\SharedLib\VVVV.Utils3rdParty.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Math3D.cs" />

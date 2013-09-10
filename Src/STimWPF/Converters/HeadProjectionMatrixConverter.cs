@@ -16,13 +16,13 @@ namespace STimWPF.Converters
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			Point3D CamPos = (Point3D)value;
-			double zn = 0.2;
+			double zn = 0.1;
 			double zf = 100;
 
 			double left = zn * (-Settings.Default.DisplayWidthInMeters / 2 - CamPos.X) / CamPos.Z;
 			double right = zn * (Settings.Default.DisplayWidthInMeters / 2 - CamPos.X) / CamPos.Z;
 			double bottom = zn * (-Settings.Default.DisplayHeightInMeters / 2 - CamPos.Y) / CamPos.Z;
-			double top = zn * (Settings.Default.DisplayHeightInMeters / 2 - CamPos.Y) / CamPos.Z;
+			double top = zn * (Settings.Default.DisplayHeightInMeters / 2 - CamPos.Y + Settings.Default.CenterOffsetY) / CamPos.Z;
 			return Math3D.SetPerspectiveOffCenter(left, right, bottom, top, zn, zf);
 		}
 

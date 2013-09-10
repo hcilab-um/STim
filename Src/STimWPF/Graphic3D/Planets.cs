@@ -9,7 +9,7 @@ namespace STimWPF.Graphic3D
 	{
 		public BigPlanet()
 		{
-			Radius = 0.1;
+			Radius = 0.0055;
 			Separators = 100;
 		}
 	}

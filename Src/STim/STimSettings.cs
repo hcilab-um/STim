@@ -21,9 +21,6 @@ namespace STim
 
 		public static double DisplayWidthInMeters { get; set; }
 		public static double DisplayHeightInMeters { get; set; }
-
-		public static double KinectDistanceZ { get; set; }
-		public static double KinectDistanceY { get; set; }
 		
 		public static double BlockDepthPercent { get; set; }
 

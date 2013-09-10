@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -44,10 +44,12 @@
     <Reference Include="Microsoft.Kinect.Toolkit.FaceTracking">
       <HintPath>..\SharedLib\Microsoft.Kinect.Toolkit.FaceTracking.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -67,6 +69,7 @@
     <Compile Include="DepthImageReadyArgs.cs" />
     <Compile Include="Interaction\VisitorController.cs" />
     <Compile Include="Interaction\Zone.cs" />
+    <Compile Include="OriginFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WagFaceTracker.cs" />
     <Compile Include="STimSettings.cs" />

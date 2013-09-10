@@ -5,14 +5,53 @@ using System.Text;
 using Microsoft.Kinect;
 using System.Windows;
 using System.Windows.Media.Media3D;
+using Microsoft.Xna.Framework;
 
 namespace STim.Util
 {
 	public static class ToolBox
 	{
+		public static Matrix3D ToMatrix3D(this Matrix matrix)
+		{
+			Matrix3D matrix3D = new Matrix3D()
+			{
+				M11 = matrix.M11,
+				M12 = matrix.M12,
+				M13 = matrix.M13,
+				M14 = matrix.M14,
+
+				M21 = matrix.M21,
+				M22 = matrix.M22,
+				M23 = matrix.M23,
+				M24 = matrix.M24,
+
+				M31 = matrix.M31,
+				M32 = matrix.M32,
+				M33 = matrix.M33,
+				M34 = matrix.M34,
+
+				OffsetX = matrix.M41,
+				OffsetY = matrix.M42,
+				OffsetZ = matrix.M43,
+				M44 = matrix.M44
+			};
+
+			return matrix3D;
+		}
+
+		public static Vector3 ToVector3(this Vector3D vector3D)
+		{
+			return new Vector3() { X = (float)vector3D.X, Y = (float)vector3D.Y, Z = (float)vector3D.Z };
+		}
+
 		public static Point3D ToPoint3D(this SkeletonPoint skelPoint)
 		{
 			return new Point3D() { X = skelPoint.X, Y = skelPoint.Y, Z = skelPoint.Z };
+		}
+
+		public static Vector3D ToVector3D(this Point3D point)
+		{
+			return new Vector3D() { X = point.X, Y = point.Y, Z = point.Z };
 		}
 
 		internal static Vector GetMovementVector(Point3D lastPos, Point3D currentPos)

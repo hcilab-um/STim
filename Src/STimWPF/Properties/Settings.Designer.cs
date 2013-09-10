@@ -133,37 +133,13 @@ namespace STimWPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.605")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.58")]
         public double DisplayHeightInMeters {
             get {
                 return ((double)(this["DisplayHeightInMeters"]));
             }
             set {
                 this["DisplayHeightInMeters"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.167")]
-        public double KinectDisplayDistanceZ {
-            get {
-                return ((double)(this["KinectDisplayDistanceZ"]));
-            }
-            set {
-                this["KinectDisplayDistanceZ"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.225")]
-        public double KinectDisplayDistanceY {
-            get {
-                return ((double)(this["KinectDisplayDistanceY"]));
-            }
-            set {
-                this["KinectDisplayDistanceY"] = value;
             }
         }
         
@@ -236,6 +212,54 @@ namespace STimWPF.Properties {
             }
             set {
                 this["IncludeStatusRender"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.07")]
+        public double BinocularDistance {
+            get {
+                return ((double)(this["BinocularDistance"]));
+            }
+            set {
+                this["BinocularDistance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.5")]
+        public double DisplayDepthtInMeters {
+            get {
+                return ((double)(this["DisplayDepthtInMeters"]));
+            }
+            set {
+                this["DisplayDepthtInMeters"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.0225")]
+        public double CenterOffsetY {
+            get {
+                return ((double)(this["CenterOffsetY"]));
+            }
+            set {
+                this["CenterOffsetY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.003")]
+        public double CenterOffsetX {
+            get {
+                return ((double)(this["CenterOffsetX"]));
+            }
+            set {
+                this["CenterOffsetX"] = value;
             }
         }
     }

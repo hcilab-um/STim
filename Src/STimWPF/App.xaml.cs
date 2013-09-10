@@ -8,6 +8,7 @@ using STimWPF.Properties;
 using System.Xml;
 using System.Reflection;
 using STim;
+using System.Windows.Media.Media3D;
 
 namespace STimWPF
 {
@@ -41,13 +42,14 @@ namespace STimWPF
 			STimSettings.DisplayWidthInMeters = Settings.Default.DisplayWidthInMeters;
 			STimSettings.DisplayHeightInMeters = Settings.Default.DisplayHeightInMeters;
 
-			STimSettings.KinectDistanceZ = Settings.Default.KinectDisplayDistanceZ;
-			STimSettings.KinectDistanceY = Settings.Default.KinectDisplayDistanceY;
-
 			STimSettings.ScreenGridRows = Settings.Default.ScreenGridRows;
 			STimSettings.ScreenGridColumns = Settings.Default.ScreenGridColumns;
 
 			STimSettings.IncludeStatusRender = Settings.Default.IncludeStatusRender;
+
+			OriginFinder originFinder = new OriginFinder();
+
+			//originFinder.TestOriginFinder(1000);
 
 			Core.Instance.Initialize
 			(
@@ -55,7 +57,7 @@ namespace STimWPF
 				log4net.LogManager.GetLogger("VisitLogger"),
 				log4net.LogManager.GetLogger("StatusLogger")
 			);
-			
+
 			if (Settings.Default.Testing)
 			{
 				ControlW = new ControlWindow(this);
