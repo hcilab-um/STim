@@ -36,9 +36,9 @@ namespace STimWPF.AttentionControls
 		public static readonly DependencyProperty DistanceProperty = DependencyProperty.Register("Distance", typeof(double), typeof(SpatialAlignControl));
 		public static readonly DependencyProperty HeadLocationProperty = DependencyProperty.Register("HeadLocation", typeof(Point3D), typeof(SpatialAlignControl));
 
-		public static readonly Point3D ObjectPosition = new Point3D(-Settings.Default.CenterOffsetX, -Settings.Default.CenterOffsetY, -Settings.Default.DisplayDepthtInMeters / 2);
+		public Point3D ObjectPosition { get; set; }
 
-		public static readonly double ObjectDiameter = 0.011;
+		public double ObjectDiameter { get; set; }
 
 		public double Distance
 		{
@@ -54,6 +54,8 @@ namespace STimWPF.AttentionControls
 
 		public SpatialAlignControl()
 		{
+			ObjectPosition = new Point3D(-Settings.Default.CenterOffsetX, -Settings.Default.CenterOffsetY, -Settings.Default.DisplayDepthtInMeters / 2);
+			ObjectDiameter = 0.011;
 			InitializeComponent();
 			drawBox();
 		}

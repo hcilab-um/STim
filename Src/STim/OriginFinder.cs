@@ -9,6 +9,8 @@ namespace STim
 {
 	public class OriginFinder
 	{
+		private const double ESTIMATE_ACCURACY = 0.0001;
+		private const double GRID_SIZE = 0.05;
 		enum Location
 		{
 			Center,
@@ -21,7 +23,7 @@ namespace STim
 		}
 
 		private Point3D testOrigin;
-		
+
 		private double[,] standardAngles;
 		private Dictionary<Location, Point3D> currentLocations;
 		private Dictionary<Location, double> locationErrors;
@@ -52,6 +54,7 @@ namespace STim
 			double totalDur = 0;
 			Random randomMaker = new Random(DateTime.Now.Millisecond);
 			double maxErr = 0;
+
 			for (int j = 0; j < sampleSize; j++)
 			{
 				Point3D[] standardPoints = new Point3D[]
@@ -86,7 +89,7 @@ namespace STim
 
 				testOrigin = matrix.Transform(new Point3D());
 				DateTime start = DateTime.Now.ToUniversalTime();
-				Point3D newOrigin = this.EstimateOrigin(standardPoints, capturePoints, 5, 0.0001, 0.05);
+				Point3D newOrigin = this.BruteForceEstimateOrigin(standardPoints, capturePoints, 5);
 				TimeSpan end = DateTime.Now.ToUniversalTime() - start;
 				int duration = (int)end.TotalSeconds;
 				totalDur += duration;
@@ -98,15 +101,13 @@ namespace STim
 					maxErr = offset.Length;
 					Console.WriteLine("Max Error: {1}", j, Math.Round(maxErr, 6));
 				}
-
-				//Console.WriteLine("Index: {0}\t Error: {1}", j, offset.Length);
 			}
 			double avgErr = error / sampleSize;
 			double avgDur = totalDur / sampleSize;
 			Console.WriteLine("Average Error: {0}\t Max Error: {1}", avgErr, maxErr);
 		}
 
-		public Point3D EstimateOrigin(Point3D[] standardPoints, Point3D[] capturePoints, double spaceRange, double accuracy, double gridSize)
+		public Point3D BruteForceEstimateOrigin(Point3D[] standardPoints, Point3D[] capturePoints, double spaceRange)
 		{
 			int arraySize = standardPoints.Length;
 
@@ -121,21 +122,20 @@ namespace STim
 
 			CalculateAngles(standardVectors, standardAngles);
 
-			Vector3D displacement = new Vector3D
-				(currentLocations[Location.Center].X - testOrigin.X,
-				 currentLocations[Location.Center].Y - testOrigin.Y,
-				 currentLocations[Location.Center].Z - testOrigin.Z);
+			currentLocations[Location.Center] = FindStartingLocation(capturePoints, spaceRange, GRID_SIZE);
 
-			double distance = displacement.Length;
+			double jumpDistance = GRID_SIZE / 4;
 
-			currentLocations[Location.Center] = FindStartLocation(capturePoints, spaceRange, gridSize);
-
-			double jumpDistance = gridSize / 4;
-
-			//Console.WriteLine("StartAt: {0}", currentLocations[Location.Center]);
 			do
 			{
-				SetAroundLocations(jumpDistance);
+				currentLocations[Location.Left] = new Point3D(currentLocations[Location.Center].X - jumpDistance, currentLocations[Location.Center].Y, currentLocations[Location.Center].Z);
+				currentLocations[Location.Right] = new Point3D(currentLocations[Location.Center].X + jumpDistance, currentLocations[Location.Center].Y, currentLocations[Location.Center].Z);
+
+				currentLocations[Location.Top] = new Point3D(currentLocations[Location.Center].X, currentLocations[Location.Center].Y + jumpDistance, currentLocations[Location.Center].Z);
+				currentLocations[Location.Down] = new Point3D(currentLocations[Location.Center].X, currentLocations[Location.Center].Y - jumpDistance, currentLocations[Location.Center].Z);
+
+				currentLocations[Location.Front] = new Point3D(currentLocations[Location.Center].X, currentLocations[Location.Center].Y, currentLocations[Location.Center].Z + jumpDistance);
+				currentLocations[Location.Back] = new Point3D(currentLocations[Location.Center].X, currentLocations[Location.Center].Y, currentLocations[Location.Center].Z - jumpDistance);
 
 				foreach (Location direction in Enum.GetValues(typeof(Location)))
 				{
@@ -143,59 +143,31 @@ namespace STim
 				}
 
 				Vector3D movement = CalculateMoveDirection(jumpDistance);
-
 				if (movement.Length == 0)
 				{
 					jumpDistance *= 0.5;
 					continue;
 				}
-				else
+
+				Point3D newCenter = new Point3D(currentLocations[Location.Center].X + movement.X,
+															currentLocations[Location.Center].Y + movement.Y,
+															currentLocations[Location.Center].Z + movement.Z);
+
+				if (CalculateLocationError(newCenter, capturePoints) >= locationErrors[Location.Center])
 				{
-					Point3D newCenter = new Point3D(currentLocations[Location.Center].X + movement.X,
-																					currentLocations[Location.Center].Y + movement.Y,
-																					currentLocations[Location.Center].Z + movement.Z);
-
-					if (CalculateLocationError(newCenter, capturePoints) >= locationErrors[Location.Center])
-					{
-						jumpDistance *= 0.5;
-					}
-					else
-					{
-						currentLocations[Location.Center] = newCenter;
-						locationErrors[Location.Center] = CalculateLocationError(currentLocations[Location.Center], capturePoints);
-
-						//Console.WriteLine("{0}", currentLocations[Location.Center]);
-
-						displacement = new Vector3D
-							(currentLocations[Location.Center].X - testOrigin.X,
-							 currentLocations[Location.Center].Y - testOrigin.Y,
-							 currentLocations[Location.Center].Z - testOrigin.Z);
-
-						//if (displacement.Length > distance)
-						//{
-						//  Console.WriteLine("Angle Close but Away");
-						//}
-						//else if (displacement.Length == distance)
-						//{
-						//  Console.WriteLine("Same Distance");
-						//}
-						//else
-						//{
-						//  Console.WriteLine("Close");
-						//}
-
-						distance = displacement.Length;
-					}
+					jumpDistance *= 0.5;
+					continue;
 				}
-			} while (jumpDistance > accuracy);
+
+				currentLocations[Location.Center] = newCenter;
+				locationErrors[Location.Center] = CalculateLocationError(currentLocations[Location.Center], capturePoints);
+
+
+			} while (jumpDistance > ESTIMATE_ACCURACY);
 
 			Point3D estimateOrigin = currentLocations[Location.Center];
 			double result = CalculateLocationError(testOrigin, capturePoints);
 			double a = locationErrors[Location.Center];
-			//Console.WriteLine("Actual: {0}", testOrigin);
-			//Console.WriteLine("Estimate: {0}", estimateOrigin);
-
-			//Console.WriteLine("AngleError: {0}", locationErrors[Location.Center]);
 
 			ResetOriginFinder();
 
@@ -217,7 +189,7 @@ namespace STim
 		/// <summary>
 		/// //Look around the space from origin and find best starting point
 		/// </summary>
-		private Point3D FindStartLocation(Point3D[] capturePoints, double spaceRange, double gridSize)
+		private Point3D FindStartingLocation(Point3D[] capturePoints, double spaceRange, double gridSize)
 		{
 			int totalSamples = (int)(spaceRange / gridSize);
 			double currentErrors = double.PositiveInfinity;
@@ -242,18 +214,6 @@ namespace STim
 			return startPoint;
 		}
 
-		private void SetAroundLocations(double jumpDistance)
-		{
-			currentLocations[Location.Left] = new Point3D(currentLocations[Location.Center].X - jumpDistance, currentLocations[Location.Center].Y, currentLocations[Location.Center].Z);
-			currentLocations[Location.Right] = new Point3D(currentLocations[Location.Center].X + jumpDistance, currentLocations[Location.Center].Y, currentLocations[Location.Center].Z);
-
-			currentLocations[Location.Top] = new Point3D(currentLocations[Location.Center].X, currentLocations[Location.Center].Y + jumpDistance, currentLocations[Location.Center].Z);
-			currentLocations[Location.Down] = new Point3D(currentLocations[Location.Center].X, currentLocations[Location.Center].Y - jumpDistance, currentLocations[Location.Center].Z);
-
-			currentLocations[Location.Front] = new Point3D(currentLocations[Location.Center].X, currentLocations[Location.Center].Y, currentLocations[Location.Center].Z + jumpDistance);
-			currentLocations[Location.Back] = new Point3D(currentLocations[Location.Center].X, currentLocations[Location.Center].Y, currentLocations[Location.Center].Z - jumpDistance);
-		}
-
 		private double CalculateLocationError(Point3D origin, Point3D[] capturePoints)
 		{
 			int size = capturePoints.Length;
@@ -269,6 +229,7 @@ namespace STim
 			CalculateAngles(vectors, angles);
 
 			CalculateAngleErrors(standardAngles, angles, angleErrors);
+
 			double directionOffset = 0;
 
 			for (int i = 0; i < size; i++)
@@ -280,6 +241,24 @@ namespace STim
 			}
 
 			return directionOffset;
+		}
+
+		private void CalculateAngleErrors(double[,] standardAngles, double[,] captureAngles, double[,] angleOffsets)
+		{
+			int size = standardAngles.GetLength(0);
+
+			for (int i = 0; i < size; i++)
+			{
+				for (int j = i + 1; j < size; j++)
+				{
+					if (Double.IsNaN(captureAngles[i, j]))
+					{
+						angleOffsets[i, j] = double.PositiveInfinity;
+					}
+					else
+						angleOffsets[i, j] = Math.Abs(standardAngles[i, j] - captureAngles[i, j]) / standardAngles[i, j];
+				}
+			}
 		}
 
 		private Vector3D CalculateMoveDirection(double jumpDistance)
@@ -317,34 +296,6 @@ namespace STim
 
 			Vector3D movement = movementDirection * jumpDistance;
 			return movement;
-		}
-
-		private void CalculateVectors(Point3D[] capturePoints, Point3D origin, Vector3D[] vectors)
-		{
-			int size = capturePoints.Length;
-			for (int i = 0; i < size; i++)
-			{
-				vectors[i] = new Vector3D(capturePoints[i].X - origin.X, capturePoints[i].Y - origin.Y, capturePoints[i].Z - origin.Z);
-			}
-		}
-
-
-		private void CalculateAngleErrors(double[,] standardAngles, double[,] captureAngles, double[,] angleOffsets)
-		{
-			int size = standardAngles.GetLength(0);
-
-			for (int i = 0; i < size; i++)
-			{
-				for (int j = i + 1; j < size; j++)
-				{
-					if (Double.IsNaN(captureAngles[i, j]))
-					{
-						angleOffsets[i, j] = double.PositiveInfinity;
-					}
-					else
-						angleOffsets[i, j] = Math.Abs(standardAngles[i, j] - captureAngles[i, j]) / standardAngles[i, j];
-				}
-			}
 		}
 
 	}

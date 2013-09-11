@@ -36,19 +36,21 @@ namespace STim
 		private const float RENDER_WIDTH = 640.0f;
 		private const float RENDER_HEIGHT = 480.0f;
 
+		private const double KINECT_DETECT_RANGE = 5;
+		private const double ESTIMATE_ACCURACY = 0.0001;
+
 		private const int FACE_TOP = 35;
 		private const int LEFT_EYE = 19;
 		private const int RIGHT_EYE = 54;
 		private const int FACE_BOTTOM = 43;
 
 		private const int PERIPHERY_MAX_ANGLE = 110;
-		//height should be 0.58
 
 		private const int FACE_DELAY_THRESHOLD = 5;
 
 		private const int FACE_TRACKER_CAPACITY = 6;
 
-		private readonly Point3D[] StandardCalibrationPositions = new Point3D[] 
+		private readonly Point3D[] standardCalibrationPositions = new Point3D[] 
 		{
 			new Point3D(0, 0.5, 1.5), //top
 			new Point3D(0.5, 0.5, 1.5), //right
@@ -167,10 +169,10 @@ namespace STim
 			VisitorCtr = new VisitorController();
 			DepthPercentF = new DepthPercentFilter(STimSettings.BlockPercentBufferSize);
 			StatusCtr = new StatusController(uiDispatcher, STimSettings.UploadPeriod, visitLogger, statusLogger) { VisitorContr = VisitorCtr };
-			captureCalibrationPositions = new Point3D[StandardCalibrationPositions.Length];
+			captureCalibrationPositions = new Point3D[standardCalibrationPositions.Length];
 			IsCalibrated = true;
 			CalibrationHeadIndex = 0;
-			UserHeadLocation = StandardCalibrationPositions[CalibrationHeadIndex];
+			UserHeadLocation = standardCalibrationPositions[CalibrationHeadIndex];
 
 			if (KinectSensor.KinectSensors.Count == 0)
 			{
@@ -213,46 +215,71 @@ namespace STim
 			IsInitialized = true;
 		}
 
+		public void Shutdown()
+		{
+			using (StreamWriter streamWriter = new StreamWriter(STimSettings.CalibrationFile))
+			{
+				XmlSerializer serializer = new XmlSerializer(calibrateTransform.GetType());
+				serializer.Serialize(streamWriter, calibrateTransform);
+			}
+
+			if (KinectSensor != null)
+			{
+				KinectSensor.Stop();
+				KinectSensor.Dispose();
+			}
+
+			foreach (WagFaceTracker tracker in wagFaceTrackers)
+			{
+				tracker.FaceTracker.Dispose();
+			}
+
+			wagFaceTrackers.Clear();
+
+			IsInitialized = false;
+			StatusCtr.Stop();
+		}
+
 		public void ResetCalibration()
 		{
 			IsCalibrated = false;
 			CalibrationHeadIndex = 0;
-			UserHeadLocation = StandardCalibrationPositions[CalibrationHeadIndex];
-			calibrateTransform = new Matrix3D();
+			UserHeadLocation = standardCalibrationPositions[CalibrationHeadIndex];
 		}
 
 		public void Calibrate()
 		{
-			if (ClosestVisitor == null || ClosestVisitor.HeadLocation == new Point3D())
+			if (ClosestVisitor == null || ClosestVisitor.Joints[JointType.Head].TrackingState != JointTrackingState.Tracked)
 			{
 				MessageBox.Show("Can Not Detect Head Position!");
 				return;
 			}
 
-			captureCalibrationPositions[calibrationHeadIndex] = ClosestVisitor.HeadLocation;
+			captureCalibrationPositions[calibrationHeadIndex] = ClosestVisitor.Joints[JointType.Head].Position.ToPoint3D();
 
-			if (++CalibrationHeadIndex >= StandardCalibrationPositions.Length)
+			if (++CalibrationHeadIndex >= standardCalibrationPositions.Length)
 			{
 				CalibrationHeadIndex = 0;
+
+				Point3D estimatedOrigin = OriginFinder.BruteForceEstimateOrigin(standardCalibrationPositions, captureCalibrationPositions, KINECT_DETECT_RANGE);
 				
-				Point3D estimateOrigin = OriginFinder.EstimateOrigin(StandardCalibrationPositions, captureCalibrationPositions, 5, 0.0001, 0.05);
-				
-				CalCulateTransformationMatrix(estimateOrigin);
+				CalCulateTransformationMatrix(estimatedOrigin);
 
 				IsCalibrated = true;
 				MessageBox.Show("Calibration Finished");
 			}
 
-			UserHeadLocation = StandardCalibrationPositions[CalibrationHeadIndex];
+			UserHeadLocation = standardCalibrationPositions[CalibrationHeadIndex];
 		}
 
 		private void CalCulateTransformationMatrix(Point3D estimateOrigin)
 		{
-			for(int i=0; i<captureCalibrationPositions.Length; i++)
+			calibrateTransform = Matrix3D.Identity;
+			for (int i = 0; i < captureCalibrationPositions.Length; i++)
 			{
 				Vector3D vector = new Vector3D(captureCalibrationPositions[i].X - estimateOrigin.X, captureCalibrationPositions[i].Y - estimateOrigin.Y, captureCalibrationPositions[i].Z - estimateOrigin.Z);
 				vector.Normalize();
-				vector *= StandardCalibrationPositions[i].ToVector3D().Length;
+				vector *= standardCalibrationPositions[i].ToVector3D().Length;
 				captureCalibrationPositions[i] = new Point3D(estimateOrigin.X + vector.X, estimateOrigin.Y + vector.Y, estimateOrigin.Z + vector.Z);
 			}
 
@@ -272,12 +299,7 @@ namespace STim
 
 			Vector3D captureAxisY = Vector3D.CrossProduct(captureAxisX, captureAxisZ);
 
-			Vector3 originOffset = new Vector3D
-															( estimateOrigin.X,
-																estimateOrigin.Y,
-																estimateOrigin.Z).ToVector3();
-
-			calibrateTransform = Microsoft.Xna.Framework.Matrix.CreateWorld(originOffset, captureAxisZ.ToVector3(), captureAxisY.ToVector3()).ToMatrix3D();
+			calibrateTransform = Microsoft.Xna.Framework.Matrix.CreateWorld(estimateOrigin.ToVector3D().ToVector3(), captureAxisZ.ToVector3(), captureAxisY.ToVector3()).ToMatrix3D();
 
 			calibrateTransform.Invert();
 		}
@@ -607,31 +629,6 @@ namespace STim
 			}
 
 			System.GC.Collect();
-		}
-
-		public void Shutdown()
-		{
-			using (StreamWriter streamWriter = new StreamWriter(STimSettings.CalibrationFile))
-			{
-				XmlSerializer serializer = new XmlSerializer(calibrateTransform.GetType());
-				serializer.Serialize(streamWriter, calibrateTransform);
-			}
-
-			if (KinectSensor != null)
-			{
-				KinectSensor.Stop();
-				KinectSensor.Dispose();
-			}
-
-			foreach (WagFaceTracker tracker in wagFaceTrackers)
-			{
-				tracker.FaceTracker.Dispose();
-			}
-
-			wagFaceTrackers.Clear();
-
-			IsInitialized = false;
-			StatusCtr.Stop();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
