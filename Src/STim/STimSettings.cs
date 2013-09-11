@@ -28,6 +28,7 @@ namespace STim
 		public static int ScreenGridColumns { get; set; }
 
 		public static bool IncludeStatusRender { get; set; }
+		public static string CalibrationFile { get; set; }
 
 	}
 }

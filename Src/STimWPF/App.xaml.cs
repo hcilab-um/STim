@@ -46,7 +46,7 @@ namespace STimWPF
 			STimSettings.ScreenGridColumns = Settings.Default.ScreenGridColumns;
 
 			STimSettings.IncludeStatusRender = Settings.Default.IncludeStatusRender;
-
+			STimSettings.CalibrationFile = Settings.Default.CalibrationFile;
 			OriginFinder originFinder = new OriginFinder();
 
 			//originFinder.TestOriginFinder(1000);

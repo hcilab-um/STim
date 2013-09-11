@@ -18,6 +18,8 @@ using System.Globalization;
 using STim.Util;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace STim
 {
@@ -155,12 +157,17 @@ namespace STim
 
 		public void Initialize(Dispatcher uiDispatcher, log4net.ILog visitLogger, log4net.ILog statusLogger)
 		{
+			XmlRootAttribute xRoot = new XmlRootAttribute();
+			xRoot.ElementName = typeof(Matrix3D).Name;
+			XmlSerializer serializer = new XmlSerializer(typeof(Matrix3D), xRoot);
+			XmlReader reader = XmlReader.Create(STimSettings.CalibrationFile);
+			calibrateTransform = (Matrix3D)serializer.Deserialize(reader);
+
 			OriginFinder = new OriginFinder();
 			VisitorCtr = new VisitorController();
 			DepthPercentF = new DepthPercentFilter(STimSettings.BlockPercentBufferSize);
 			StatusCtr = new StatusController(uiDispatcher, STimSettings.UploadPeriod, visitLogger, statusLogger) { VisitorContr = VisitorCtr };
 			captureCalibrationPositions = new Point3D[StandardCalibrationPositions.Length];
-
 			IsCalibrated = true;
 			CalibrationHeadIndex = 0;
 			UserHeadLocation = StandardCalibrationPositions[CalibrationHeadIndex];
@@ -604,6 +611,12 @@ namespace STim
 
 		public void Shutdown()
 		{
+			using (StreamWriter streamWriter = new StreamWriter(STimSettings.CalibrationFile))
+			{
+				XmlSerializer serializer = new XmlSerializer(calibrateTransform.GetType());
+				serializer.Serialize(streamWriter, calibrateTransform);
+			}
+
 			if (KinectSensor != null)
 			{
 				KinectSensor.Stop();
