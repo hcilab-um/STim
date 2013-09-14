@@ -62,5 +62,8 @@
     <Setting Name="CenterOffsetX" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.003</Value>
     </Setting>
+    <Setting Name="CalibrationFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Calibration.xml</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

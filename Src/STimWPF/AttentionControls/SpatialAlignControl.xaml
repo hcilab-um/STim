@@ -39,7 +39,7 @@
 								<MaterialGroup>
 									<DiffuseMaterial>
 										<DiffuseMaterial.Brush>
-											<SolidColorBrush Color="White"/>
+											<SolidColorBrush Color="Black"/>
 										</DiffuseMaterial.Brush>
 									</DiffuseMaterial>
 								</MaterialGroup>
@@ -49,28 +49,27 @@
 				</ModelVisual3D.Content>
 			</ModelVisual3D>
 		</Viewport3D>
-		<!--<Ellipse x:Name="HilightE" Fill="Green" Stroke="Green" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-			<Ellipse.Width>
-				<MultiBinding Converter="{StaticResource ResourceKey=hsConverter}" ConverterParameter="Width-NoParallax" FallbackValue="100">
+		<!--<Rectangle Fill="Transparent" Stroke="Green" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+			<Rectangle.Width>
+				<MultiBinding Converter="{StaticResource ResourceKey=hsConverter}" ConverterParameter="Width-Parallax" FallbackValue="100">
 					<Binding ElementName="saControl" Path="HeadLocation"/>
 					<Binding ElementName="saControl" Path="ObjectPosition"/>
 					<Binding ElementName="saControl" Path="ObjectDiameter"/>
 				</MultiBinding>
-			</Ellipse.Width>
-			<Ellipse.Height>
-				<MultiBinding Converter="{StaticResource ResourceKey=hsConverter}" ConverterParameter="Height-NoParallax" FallbackValue="100">
+			</Rectangle.Width>
+			<Rectangle.Height>
+				<MultiBinding Converter="{StaticResource ResourceKey=hsConverter}" ConverterParameter="Height-Parallax" FallbackValue="100">
 					<Binding ElementName="saControl" Path="HeadLocation"/>
 					<Binding ElementName="saControl" Path="ObjectPosition"/>
 					<Binding ElementName="saControl" Path="ObjectDiameter"/>
 				</MultiBinding>
-			</Ellipse.Height>
-			<Ellipse.Margin>
+			</Rectangle.Height>
+			<Rectangle.Margin>
 				<MultiBinding Converter="{StaticResource ResourceKey=hpConverter}" FallbackValue="0,0,0,0">
 					<Binding ElementName="saControl" Path="HeadLocation"/>
 					<Binding ElementName="saControl" Path="ObjectPosition"/>
 				</MultiBinding>
-			</Ellipse.Margin>
-		</Ellipse>-->
-
+			</Rectangle.Margin>
+		</Rectangle>-->
 	</Grid>
 </UserControl>

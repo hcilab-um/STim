@@ -262,5 +262,17 @@ namespace STimWPF.Properties {
                 this["CenterOffsetX"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Calibration.xml")]
+        public string CalibrationFile {
+            get {
+                return ((string)(this["CalibrationFile"]));
+            }
+            set {
+                this["CalibrationFile"] = value;
+            }
+        }
     }
 }

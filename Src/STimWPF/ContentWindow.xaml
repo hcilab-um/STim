@@ -1,4 +1,4 @@
-﻿<Window x:Class="STimWPF.ContentWindow" x:Name="contentW"
+﻿<Window x:Class="STimWPF.ContentWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				xmlns:converters="clr-namespace:STimWPF.Converters"
@@ -7,7 +7,8 @@
 				xmlns:displayControls="clr-namespace:STimWPF.DisplayControls"
 				xmlns:properties="clr-namespace:STimWPF.Properties"
 				WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
-				Title="WAG - ContentWindow" Loaded="contentW_Loaded" SizeChanged="contentW_SizeChanged">
+				x:Name="contentW" Title="WAG - ContentWindow" 
+				Loaded="contentW_Loaded" SizeChanged="contentW_SizeChanged">
 	<Window.Resources>
 		<converters:HeadDistanceConverter x:Key="hdConverter"/>
 		<converters:ApplicationModeVisibilityConverter x:Key="amvConverter"/>
