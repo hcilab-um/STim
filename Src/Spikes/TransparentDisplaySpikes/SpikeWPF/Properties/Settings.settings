@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SpikeWPF.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="NotificationZoneConstrain" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="DisplayWidthInMeters" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1.06</Value>
+    </Setting>
+    <Setting Name="DisplayHeightInMeters" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.58</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
