@@ -16,7 +16,7 @@ namespace STim.Interaction
 		private static readonly Vector3D kinectLocation = new Vector3D(0, 0, 0);
 		private double userDisplayDistance;
 		private double standardAngleInRadian;
-		private Zone interactZone;
+		private Zone zone;
 		private bool isSimulating;
 		private double closePercent;
 		public bool IsBlocked
@@ -66,12 +66,12 @@ namespace STim.Interaction
 
 		public Zone Zone
 		{
-			get { return interactZone; }
+			get { return zone; }
 			set
 			{
-				if (interactZone == value)
+				if (zone == value)
 					return;
-				interactZone = value;
+				zone = value;
 				OnPropertyChanged("Zone");
 			}
 		}
@@ -82,7 +82,7 @@ namespace STim.Interaction
 		{
 			standardAngleInRadian = ToolBox.AngleToRadian(90);
 			UserDisplayDistance = STimSettings.NotificationZoneConstrain;
-			interactZone = Zone.Ambient;
+			zone = Zone.Ambient;
 			IsSimulating = false;
 		}
 

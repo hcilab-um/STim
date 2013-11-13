@@ -7,6 +7,7 @@
 						 xmlns:graphic3d="clr-namespace:STimWPF.Graphic3D" 
 						 x:Name="saControl" mc:Ignorable="d" 
 						 d:DesignHeight="600" d:DesignWidth="1200">
+
 	<UserControl.Resources>
 		<converters:HeadViewMatrixConverter x:Key="hvmConverter"/>
 		<converters:HeadProjectionMatrixConverter x:Key="hpmConverter"/>
@@ -14,13 +15,15 @@
 		<converters:HighlightPositionConverter x:Key="hpConverter"/>
 		<converters:HighlightSizeConverter x:Key="hsConverter"/>
 	</UserControl.Resources>
-	<Grid Background="Transparent">
+
+	<Grid Background="Black">
 		<!--Background="{Binding ElementName=saControl, Path=Distance, Converter={StaticResource ResourceKey=dcConverter}, ConverterParameter=white}">-->
 		<Grid.Resources>
 			<graphic3d:BigPlanet x:Key="SphereSource1"/>
 			<MeshGeometry3D x:Key="SphereGeometry1" 
 											Positions="{Binding Source={StaticResource ResourceKey=SphereSource1}, Path=Points}"
 											TriangleIndices="{Binding Source={StaticResource ResourceKey=SphereSource1}, Path=TriangleIndices}"/>
+
 		</Grid.Resources>
 		<Viewport3D x:Name="Viewport" HorizontalAlignment="Stretch">
 			<Viewport3D.Camera>
@@ -31,6 +34,21 @@
 			<ModelVisual3D>
 				<ModelVisual3D.Content>
 					<Model3DGroup x:Name="model3dGroup">
+						<GeometryModel3D>
+							<GeometryModel3D.Geometry>
+								<MeshGeometry3D Positions="-0.1 -1 -0.25		0.1 -1 -0.25			0.1 1 -0.25			-0.1 1 -0.25"
+													TriangleIndices="0 1 2			2 3 0" />
+							</GeometryModel3D.Geometry>
+							<GeometryModel3D.Material>
+								<MaterialGroup>
+									<EmissiveMaterial>
+										<EmissiveMaterial.Brush>
+											<SolidColorBrush Color="White"/>
+										</EmissiveMaterial.Brush>
+									</EmissiveMaterial>
+								</MaterialGroup>
+							</GeometryModel3D.Material>
+						</GeometryModel3D>
 						<GeometryModel3D Geometry="{StaticResource ResourceKey=SphereGeometry1}">
 							<GeometryModel3D.Transform>
 								<TranslateTransform3D OffsetX="-0.003" OffsetY="-0.01" OffsetZ="-0.25"/>
@@ -49,27 +67,11 @@
 				</ModelVisual3D.Content>
 			</ModelVisual3D>
 		</Viewport3D>
-		<!--<Rectangle Fill="Transparent" Stroke="Green" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-			<Rectangle.Width>
-				<MultiBinding Converter="{StaticResource ResourceKey=hsConverter}" ConverterParameter="Width-Parallax" FallbackValue="100">
-					<Binding ElementName="saControl" Path="HeadLocation"/>
-					<Binding ElementName="saControl" Path="ObjectPosition"/>
-					<Binding ElementName="saControl" Path="ObjectDiameter"/>
-				</MultiBinding>
-			</Rectangle.Width>
-			<Rectangle.Height>
-				<MultiBinding Converter="{StaticResource ResourceKey=hsConverter}" ConverterParameter="Height-Parallax" FallbackValue="100">
-					<Binding ElementName="saControl" Path="HeadLocation"/>
-					<Binding ElementName="saControl" Path="ObjectPosition"/>
-					<Binding ElementName="saControl" Path="ObjectDiameter"/>
-				</MultiBinding>
-			</Rectangle.Height>
-			<Rectangle.Margin>
-				<MultiBinding Converter="{StaticResource ResourceKey=hpConverter}" FallbackValue="0,0,0,0">
-					<Binding ElementName="saControl" Path="HeadLocation"/>
-					<Binding ElementName="saControl" Path="ObjectPosition"/>
-				</MultiBinding>
-			</Rectangle.Margin>
-		</Rectangle>-->
+
+		<Label VerticalAlignment="Top" HorizontalAlignment="Right" Margin="20,20"
+					 FontSize="20" FontWeight="ExtraBold">Bird Shaman</Label>
+		<Label VerticalAlignment="Top" HorizontalAlignment="Right" Margin="20,40"
+					 FontSize="20" FontWeight="ExtraBold">Bird Shaman 2</Label>
+
 	</Grid>
 </UserControl>
