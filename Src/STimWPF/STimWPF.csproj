@@ -58,10 +58,6 @@
     <Reference Include="3DTools">
       <HintPath>..\SharedLib\3DTools.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV, Version=2.4.9.1847, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SharedLib\Emgu.CV.dll</HintPath>
-    </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharedLib\log4net.dll</HintPath>
@@ -94,12 +90,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationMode.cs" />
-    <Compile Include="AttentionControls\AnimatedRectangleControl.xaml.cs">
-      <DependentUpon>AnimatedRectangleControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="AttentionControls\NotificationControl.xaml.cs">
-      <DependentUpon>NotificationControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Converters\ApplicationModeVisibilityConverter.cs" />
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\DistanceColorConverter.cs" />
@@ -117,14 +107,6 @@
     <Compile Include="ContentWindow.xaml.cs">
       <DependentUpon>ContentWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="AttentionControls\AnimatedRectangleControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="AttentionControls\NotificationControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="AttentionControls\SpatialAlignControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
