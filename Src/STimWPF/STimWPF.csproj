@@ -93,7 +93,6 @@
     <Compile Include="Converters\ApplicationModeVisibilityConverter.cs" />
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\DistanceColorConverter.cs" />
-    <Compile Include="Converters\DistanceRectSizeConverter.cs" />
     <Compile Include="Converters\HeadDistanceConverter.cs" />
     <Compile Include="Converters\HeadProjectionMatrixConverter.cs" />
     <Compile Include="Converters\HeadViewMatrixConverter.cs" />
@@ -140,7 +139,6 @@
     <Compile Include="Converters\HighlightPositionConverter.cs" />
     <Compile Include="Converters\HighlightSizeConverter.cs" />
     <Compile Include="Converters\NotConverter.cs" />
-    <Compile Include="Converters\ZoneVisibilityConverter.cs" />
     <Compile Include="DisplayControls\InfoDisplayControl.xaml.cs">
       <DependentUpon>InfoDisplayControl.xaml</DependentUpon>
     </Compile>
