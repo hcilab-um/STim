@@ -14,7 +14,7 @@
    id="svg3265"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="New document 6">
+   sodipodi:docname="top-piece.svg">
   <defs
      id="defs3267" />
   <sodipodi:namedview
@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="947.49878"
-     inkscape:cy="1337.8648"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="932.74987"
+     inkscape:cy="1134.6628"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -43,7 +43,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -116,7 +116,7 @@
          sodipodi:role="line"
          id="tspan3854"
          x="-49.82938"
-         y="116.08375">447.537 mm</tspan></text>
+         y="116.08375">380.476 mm</tspan></text>
     <path
        style="fill:#808000;stroke:#860000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.50000001, 0.50000001;stroke-dashoffset:0"
        d="m 338.0893,-696.56006 c -138.51071,0 -138.51071,0 -138.51071,0"
