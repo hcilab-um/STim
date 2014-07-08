@@ -9,122 +9,96 @@ using STim.Util;
 
 namespace STim.Interaction
 {
-	public class VisitorController : INotifyPropertyChanged
-	{
+  public class VisitorController : INotifyPropertyChanged
+  {
 
-		private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0, 0, 1);
-		private static readonly Vector3D kinectLocation = new Vector3D(0, 0, 0);
-		private double userDisplayDistance;
-		private double standardAngleInRadian;
-		private Zone zone;
-		private bool isSimulating;
-		private double closePercent;
-		public bool IsBlocked
-		{
-			get { return (closePercent > STimSettings.BlockDepthPercent); }
-		}
+    private static readonly Vector3D STANDARD_VECTOR = new Vector3D(0, 0, 1);
+    private static readonly Vector3D kinectLocation = new Vector3D(0, 0, 0);
+    private double userDisplayDistance;
+    private Zone zone;
+    private double closePercent;
 
-		public double ClosePercent
-		{
-			get { return closePercent; }
-			set
-			{
-				closePercent = value;
-				OnPropertyChanged("ClosePercent");
-			}
-		}
+    public bool IsBlocked
+    {
+      get { return (closePercent > STimSettings.BlockDepthPercent); }
+    }
 
-		public bool IsSimulating
-		{
-			get { return isSimulating; }
-			set
-			{
-				isSimulating = value;
-				OnPropertyChanged("IsSimulating");
-			}
-		}
+    public double ClosePercent
+    {
+      get { return closePercent; }
+      set
+      {
+        closePercent = value;
+        OnPropertyChanged("ClosePercent");
+      }
+    }
 
-		public double StandardAngleInRadian
-		{
-			get { return standardAngleInRadian; }
-			set
-			{
-				standardAngleInRadian = value;
-				OnPropertyChanged("StandardAngleInRadian");
-			}
-		}
+    public double UserDisplayDistance
+    {
+      get { return userDisplayDistance; }
+      set
+      {
+        userDisplayDistance = value;
+        OnPropertyChanged("UserDisplayDistance");
+      }
+    }
 
-		public double UserDisplayDistance
-		{
-			get { return userDisplayDistance; }
-			set
-			{
-				userDisplayDistance = value;
-				OnPropertyChanged("UserDisplayDistance");
-			}
-		}
+    public Zone Zone
+    {
+      get { return zone; }
+      set
+      {
+        if (zone == value)
+          return;
+        zone = value;
+        OnPropertyChanged("Zone");
+      }
+    }
 
-		public Zone Zone
-		{
-			get { return zone; }
-			set
-			{
-				if (zone == value)
-					return;
-				zone = value;
-				OnPropertyChanged("Zone");
-			}
-		}
+    public VisitorController()
+    {
+      UserDisplayDistance = STimSettings.NotificationZoneConstrain;
+      zone = Zone.Ambient;
+    }
 
-		public JointType Head { get; set; }
+    private double DetectUserPosition(WagSkeleton skeleton)
+    {
+      if (ClosePercent > STimSettings.BlockDepthPercent)
+      {
+        return STimSettings.CloseZoneConstrain / 2;
+      }
 
-		public VisitorController()
-		{
-			standardAngleInRadian = ToolBox.AngleToRadian(90);
-			UserDisplayDistance = STimSettings.NotificationZoneConstrain;
-			zone = Zone.Ambient;
-			IsSimulating = false;
-		}
+      if (skeleton != null)
+      {
+        return skeleton.TransformedJoints[JointType.Head].Position.Z;
+      }
 
-		private double DetectUserPosition(WagSkeleton skeleton)
-		{
-			if (ClosePercent > STimSettings.BlockDepthPercent)
-			{
-				return STimSettings.CloseZoneConstrain / 2;
-			}
+      return STimSettings.NotificationZoneConstrain;
+    }
 
-			if (skeleton != null)
-			{
-				return skeleton.TransformedJoints[JointType.Head].Position.Z;
-			}
+    public Zone DetectZone(WagSkeleton skeleton)
+    {
+      Zone calculatedZone = Zone.Ambient;
+      UserDisplayDistance = DetectUserPosition(skeleton);
 
-			return STimSettings.NotificationZoneConstrain;
-		}
+      if (UserDisplayDistance < STimSettings.CloseZoneConstrain)
+        calculatedZone = Zone.Close;
+      else if (UserDisplayDistance >= STimSettings.CloseZoneConstrain && userDisplayDistance < STimSettings.InteractionZoneConstrain)
+        calculatedZone = Zone.Interaction;
+      else if (UserDisplayDistance >= STimSettings.InteractionZoneConstrain && userDisplayDistance < STimSettings.NotificationZoneConstrain)
+        calculatedZone = Zone.Notification;
+      else if (UserDisplayDistance >= STimSettings.NotificationZoneConstrain)
+        calculatedZone = Zone.Ambient;
 
-		public Zone DetectZone(WagSkeleton skeleton)
-		{
-			Zone calculatedZone = Zone.Ambient;
-			if (!IsSimulating)
-				UserDisplayDistance = DetectUserPosition(skeleton);
+      return calculatedZone;
+    }
 
-			if (UserDisplayDistance < STimSettings.CloseZoneConstrain)
-				calculatedZone = Zone.Close;
-			else if (UserDisplayDistance >= STimSettings.CloseZoneConstrain && userDisplayDistance < STimSettings.InteractionZoneConstrain)
-				calculatedZone = Zone.Interaction;
-			else if (UserDisplayDistance >= STimSettings.InteractionZoneConstrain && userDisplayDistance < STimSettings.NotificationZoneConstrain)
-				calculatedZone = Zone.Notification;
-			else if (UserDisplayDistance >= STimSettings.NotificationZoneConstrain)
-				calculatedZone = Zone.Ambient;
+    public event PropertyChangedEventHandler PropertyChanged;
 
-			return calculatedZone;
-		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged(String name)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(name));
-		}
-	}
+    private void OnPropertyChanged(String name)
+    {
+      if (PropertyChanged != null)
+        PropertyChanged(this, new PropertyChangedEventArgs(name));
+    }
+  }
 }

@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="STimWPF.DisplayControls.AmbientAnimationControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:STimWPF.Util"
+             xmlns:converters="clr-namespace:STimWPF.Converters"
+             mc:Ignorable="d" 
+             d:DesignWidth="1366" d:DesignHeight="768">
+
+    <UserControl.Resources>
+        <x:Array x:Key="vSampleWords" Type="util:AnimatedWord">
+            <util:AnimatedWord Text="Bird Shaman" Language="Latin" Size="50" Lightness="10"/>
+            <util:AnimatedWord Text="Bird Shaman" Language="Latin" Size="10" Lightness="30"/>
+            <util:AnimatedWord Text="gk }nr" Language="Inuit" Size="20" Lightness="70"/>
+            <util:AnimatedWord Text="Toonoo Sharky" Language="Latin" Size="30" Lightness="20"/>
+            <util:AnimatedWord Text="Cape Dorset" Language="Latin" Size="70" Lightness="50"/>
+            <util:AnimatedWord Text="Cape Dorset" Language="Inuit" Size="70" Lightness="50"/>
+        </x:Array>
+        
+        <converters:LanguageFontConverter x:Key="cLanguageFont" />
+        
+    </UserControl.Resources>
+
+    <Grid Background="Black">
+
+        <Rectangle Fill="White" Canvas.Top="0" Canvas.Left="700" Width="500" 
+                   Height="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}}"/>
+
+        <ListBox Background="Transparent" ItemsSource="{StaticResource ResourceKey=vSampleWords}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Label Content="{Binding Path=Text}" Foreground="White" FontSize="{Binding Path=Size}" 
+                           FontFamily="{Binding Path=Language, Converter={StaticResource ResourceKey=cLanguageFont}}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+    </Grid>
+</UserControl>

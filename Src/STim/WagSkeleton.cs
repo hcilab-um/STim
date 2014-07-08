@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Kinect;
-using Microsoft.Kinect.Toolkit.FaceTracking;
 using System.Windows.Media.Media3D;
 using System.ComponentModel;
+using Microsoft.Kinect.Toolkit.FaceTracking;
 
 namespace STim
 {

@@ -17,9 +17,9 @@ namespace STimWPF.DisplayControls
 	/// <summary>
 	/// Interaction logic for InfoDisplayControl.xaml
 	/// </summary>
-	public partial class InfoDisplayControl : UserControl
+	public partial class AmbientAnimationControl : UserControl
 	{
-		public InfoDisplayControl()
+    public AmbientAnimationControl()
 		{
 			InitializeComponent();
 		}

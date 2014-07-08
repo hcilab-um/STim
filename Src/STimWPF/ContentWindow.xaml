@@ -1,32 +1,27 @@
 ﻿<Window x:Class="STimWPF.ContentWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-				xmlns:converters="clr-namespace:STimWPF.Converters"
-				xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:converters="clr-namespace:STimWPF.Converters"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:attentionControls="clr-namespace:STimWPF.AttentionControls"
-				xmlns:displayControls="clr-namespace:STimWPF.DisplayControls"
-				xmlns:properties="clr-namespace:STimWPF.Properties"
-				WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
-				x:Name="contentW" Title="WAG - ContentWindow" 
-				Loaded="contentW_Loaded" SizeChanged="contentW_SizeChanged">
-	<Window.Resources>
-		<converters:HeadDistanceConverter x:Key="hdConverter"/>
-		<converters:ApplicationModeVisibilityConverter x:Key="amvConverter"/>
-		<converters:BoolVisibilityConverter x:Key="bvConverter"/>
-		<converters:ZoneVisibilityConverter x:Key="zvConverter" />
-		<properties:Settings x:Key="settings"/>
-	</Window.Resources>
-	<Grid>
-		<displayControls:InfoDisplayControl Visibility="{Binding Source={x:Static properties:Settings.Default},Path=ApplicationMode, Converter={StaticResource ResourceKey=amvConverter}, ConverterParameter=DisplayOnly}"/>
-		<attentionControls:SpatialAlignControl HeadLocation="{Binding ElementName=contentW, Path=CoreInstance.UserHeadLocation}" 
-												Distance ="{Binding ElementName=contentW, Path=CoreInstance.UserHeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"
-												Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Notification}" />
-												<!--Visibility="{Binding Source={x:Static properties:Settings.Default},Path=ApplicationMode, Converter={StaticResource ResourceKey=amvConverter}, ConverterParameter=AttractAttention}"/>-->
-		<attentionControls:NotificationControl Zone="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone}" 
-																Distance ="{Binding ElementName=contentW, Path=CoreInstance.UserHeadLocation, Converter={StaticResource ResourceKey=hdConverter}}"																
-																Visibility="{Binding ElementName=contentW, Path=CoreInstance.VisitorCtr.Zone, Converter={StaticResource ResourceKey=zvConverter}, ConverterParameter=Notification}"/>
-		
-		<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Foreground="Red" Text="Please move and align the black Dot with the metal ball, and click the calibrate button" 
-							 Visibility="{Binding ElementName=contentW, Path=CoreInstance.IsCalibrated, Converter={StaticResource ResourceKey=bvConverter}, ConverterParameter=ToHide}"/>
-	</Grid>
+		xmlns:displayControls="clr-namespace:STimWPF.DisplayControls"
+		xmlns:properties="clr-namespace:STimWPF.Properties"
+		WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
+		x:Name="contentW" Title="WAG - ContentWindow" 
+		Loaded="contentW_Loaded" SizeChanged="contentW_SizeChanged">
+    
+    <Window.Resources>
+        <converters:HeadDistanceConverter x:Key="hdConverter"/>
+        <converters:ApplicationModeVisibilityConverter x:Key="amvConverter"/>
+        <converters:BoolVisibilityConverter x:Key="bvConverter"/>
+        <converters:ZoneVisibilityConverter x:Key="zvConverter" />
+        <properties:Settings x:Key="settings"/>
+    </Window.Resources>
+    
+    <Grid>
+
+        <displayControls:AmbientAnimationControl Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMode, Converter={StaticResource ResourceKey=amvConverter}, ConverterParameter=AttractAttention}"/>
+        
+    </Grid>
+    
 </Window>

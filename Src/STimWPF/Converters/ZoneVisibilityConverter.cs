@@ -4,17 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 using System.Windows;
-using STimWPF.Util;
 
 namespace STimWPF.Converters
 {
-	class ApplicationModeVisibilityConverter: IValueConverter
+  class ZoneVisibilityConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			string modeName = (string)parameter;
-			ApplicationMode applicationMode = (ApplicationMode)value;
-			if (modeName.Equals(applicationMode.ToString()))
+      STim.Interaction.Zone targetZone = (STim.Interaction.Zone)Enum.Parse(typeof(STim.Interaction.Zone), parameter as String);
+      STim.Interaction.Zone zone = (STim.Interaction.Zone)value;
+			if (targetZone == zone)
 				return Visibility.Visible;
 			return Visibility.Hidden;
 		}

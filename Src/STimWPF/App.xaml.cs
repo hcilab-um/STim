@@ -29,34 +29,20 @@ namespace STimWPF
 
 			STimSettings.CloseZoneConstrain = Settings.Default.CloseZoneConstrain;
 			STimSettings.NotificationZoneConstrain = Settings.Default.NotificationZoneConstrain;
-
 			STimSettings.BlockPercentBufferSize = Settings.Default.BlockPercentBufferSize;
 			STimSettings.BlockDepthPercent = Settings.Default.BlockDepthPercent;
-
 			STimSettings.UploadPeriod = Settings.Default.UploadPeriod;
-
 			STimSettings.ImageFolder = Settings.Default.ImageFolder;
 			STimSettings.DateTimeFileNameFormat = Settings.Default.DateTimeFileNameFormat;
 			STimSettings.DateTimeLogFormat = Settings.Default.DateTimeLogFormat;
-
 			STimSettings.DisplayWidthInMeters = Settings.Default.DisplayWidthInMeters;
 			STimSettings.DisplayHeightInMeters = Settings.Default.DisplayHeightInMeters;
-
 			STimSettings.ScreenGridRows = Settings.Default.ScreenGridRows;
 			STimSettings.ScreenGridColumns = Settings.Default.ScreenGridColumns;
-
 			STimSettings.IncludeStatusRender = Settings.Default.IncludeStatusRender;
 			STimSettings.CalibrationFile = Settings.Default.CalibrationFile;
-			OriginFinder originFinder = new OriginFinder();
 
-			//originFinder.TestOriginFinder(1000);
-
-			Core.Instance.Initialize
-			(
-				Dispatcher,
-				log4net.LogManager.GetLogger("VisitLogger"),
-				log4net.LogManager.GetLogger("StatusLogger")
-			);
+			Core.Instance.Initialize(Dispatcher, log4net.LogManager.GetLogger("VisitLogger"), log4net.LogManager.GetLogger("StatusLogger"));
 
 			if (Settings.Default.Testing)
 			{

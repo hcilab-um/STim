@@ -71,13 +71,14 @@ namespace STimWPF
 
 		private void BtStartCalibration_Click(object sender, RoutedEventArgs e)
 		{
-			CoreInstance.ResetCalibration();
+			CoreInstance.Calibration.ResetCalibration();
 		}
 
 		private void BtCalibrate_Click(object sender, RoutedEventArgs e)
 		{
-			CoreInstance.Calibrate();
+      CoreInstance.Calibration.Calibrate(CoreInstance.ClosestVisitor);
 		}
 
 	}
+
 }
