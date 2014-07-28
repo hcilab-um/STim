@@ -11,12 +11,16 @@ namespace Kinect_Head_counter
     class Program
     {
         int frameNumber;
+        int seconds;
+        int timepassed;
         KinectSensor sensor;
         Skeleton[] skeletons;
 
         private void LoadKinect()
         {
             frameNumber = 0;
+            timepassed = 0;
+            seconds = 0;
             sensor = KinectSensor.KinectSensors[0];
             sensor.ColorFrameReady += sensor_ColorFrameReady;
 
@@ -33,7 +37,9 @@ namespace Kinect_Head_counter
 
         void sensor_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
-            frameNumber = frameNumber + 1;
+            //frameNumber = frameNumber + 1;
+            timepassed++;
+            seconds = timepassed / 30;
 
             e.OpenSkeletonFrame().CopySkeletonDataTo(skeletons);
             int counter = 0;
@@ -42,13 +48,20 @@ namespace Kinect_Head_counter
                 if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
                     counter++;
             }
+
+            //Console.WriteLine("Frame: {0}, Number of Skeletons: {1}",  frameNumber, counter);
+            if (timepassed == seconds * 30)
+                Console.WriteLine("Seconds passed: {0}, Number of Skeletons: {1}", seconds, counter);
+
             if (counter > 0)
             {
-                Console.WriteLine("Location of head: " + skeletons[counter].Joints[JointType.Head].Position.X + ", " + skeletons[counter].Joints[JointType.Head].Position.Y + ", " + skeletons[counter].Joints[JointType.Head].Position.Z);
-                Console.WriteLine("Found at: " + DateTime.Now);
+                if (timepassed == seconds * 30)
+                {
+                    Console.WriteLine("Location of head: " + skeletons[counter].Joints[JointType.Head].Position.X + ", " + skeletons[counter].Joints[JointType.Head].Position.Y + ", " + skeletons[counter].Joints[JointType.Head].Position.Z + "; Found at: " + DateTime.Now);
+                }
             }
 
-            Console.WriteLine("Frame: {0}, Number of Skeletons: {1}",  frameNumber, counter);
+            
         }
 
         private void UnloadKinect()
